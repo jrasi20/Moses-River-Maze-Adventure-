@@ -386,9 +386,7 @@
             max-width: 100%; max-height: 100%;
         }
 
-        @media (max-width: 700px) {
-            .maze-container { width: min(calc(100vw - 12px), calc((100dvh - 280px) * 1.25)); }
-        }
+        /* Mobile maze-container sizing moved to comprehensive mobile block below */
 
         .maze-grid {
             display: grid;
@@ -482,16 +480,7 @@
             overflow-x: hidden; overflow-y: hidden; -webkit-overflow-scrolling: touch;
         }
 
-        @media (max-width: 700px) {
-            .game-content { flex-direction: column; gap: 4px; }
-            .controls-panel {
-                width: 100%; flex-shrink: 0;
-                flex-direction: column; align-items: center;
-                overflow: visible; gap: 6px;
-            }
-            .buttons-section { flex-direction: row !important; justify-content: center; gap: 6px; flex: unset; }
-            .action-btn { height: 44px; flex: 1; max-width: 130px; }
-        }
+        /* Old mobile rules replaced by comprehensive mobile block below */
 
         .dpad-section {
             background: linear-gradient(135deg, #0d1b6e, #1a237e);
@@ -825,6 +814,181 @@
         @keyframes flashOut {
             from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             to   { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+        }
+
+        /* ===== MOBILE-ONLY FIXES (<=700px) ===== */
+        @media (max-width: 700px) {
+            /* --- GAME PAGE: strict viewport-height flex layout --- */
+            .game-page {
+                height: 100dvh;
+                overflow: hidden;
+            }
+
+            /* --- HUD: compact single row --- */
+            .game-header {
+                height: auto;
+                min-height: 40px;
+                padding: 4px 8px;
+                gap: 4px;
+            }
+            .game-title {
+                font-size: 11px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 120px;
+            }
+            .hud-stats { gap: 4px; }
+            .hud-card { padding: 1px 6px; min-width: 46px; }
+            .hud-label { font-size: 9px; letter-spacing: 0.3px; }
+            .hud-value { font-size: 16px; }
+            .hud-dots { max-width: 90px; gap: 1.5px; }
+            .hud-dot { width: 7px; height: 7px; }
+            #checkpointCount { font-size: 11px !important; }
+
+            /* --- GAME CONTENT: column layout, maze + controls --- */
+            .game-content {
+                flex-direction: column;
+                gap: 2px;
+                padding: 2px 2px 4px;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            /* --- MAZE WRAPPER: takes remaining space --- */
+            .maze-wrapper {
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            /* --- MAZE CONTAINER: fit within available height --- */
+            .maze-container {
+                width: min(calc(100vw - 8px), calc((100dvh - 220px) * 1.25));
+                max-height: 100%;
+            }
+
+            /* --- MAZE CELLS: ensure images don't overflow --- */
+            .maze-cell img {
+                width: 85%;
+                height: 85%;
+            }
+            .maze-cell.checkpoint img {
+                width: 70%;
+                height: 70%;
+            }
+            .cp-num {
+                font-size: 8px;
+                padding: 0px 2px;
+                line-height: 1.3;
+            }
+
+            /* --- START/FINISH OUTER LABELS: overlay on maze edge --- */
+            .outer-start-label,
+            .outer-finish-label {
+                font-size: 10px !important;
+                padding: 2px 5px !important;
+                border-radius: 4px !important;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.7) !important;
+            }
+
+            /* --- CONTROLS PANEL: horizontal row at bottom, fixed height --- */
+            .controls-panel {
+                width: 100%;
+                flex-shrink: 0;
+                flex-direction: row;
+                align-items: stretch;
+                gap: 4px;
+                overflow: visible;
+                height: auto;
+                max-height: 140px;
+            }
+
+            /* --- D-PAD: compact --- */
+            .dpad-section {
+                padding: 4px 6px;
+                border-radius: 8px;
+                flex-shrink: 0;
+            }
+            .dpad-label {
+                font-size: 9px;
+                margin-bottom: 2px;
+            }
+            .dpad {
+                gap: 2px;
+            }
+            .dpad-btn {
+                height: 36px;
+                font-size: 16px;
+                border-radius: 6px;
+                min-width: 36px;
+            }
+            .dpad-spacer {
+                height: 36px;
+            }
+
+            /* --- ACTION BUTTONS: vertical stack next to D-pad --- */
+            .buttons-section {
+                flex-direction: column !important;
+                flex: 1;
+                justify-content: space-evenly;
+                gap: 3px;
+                padding: 2px 0;
+            }
+            .action-btn {
+                height: 34px !important;
+                max-width: none !important;
+                font-size: 12px !important;
+                padding: 0 6px !important;
+                border-radius: 6px;
+            }
+
+            /* --- MODALS: ensure scrollable on small screens --- */
+            .modal-content {
+                max-height: 85vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 92%;
+                padding: 16px;
+            }
+            .puzzle-modal .modal-content {
+                overflow-y: auto;
+                max-height: 85vh;
+            }
+
+            /* --- PUZZLE MODAL: compact spacing --- */
+            .puzzle-star-icon { width: 24px; height: 24px; }
+            .puzzle-title { font-size: 16px; }
+            .puzzle-question { font-size: 15px; padding: 8px 10px; margin-bottom: 8px; }
+            .answer-input { padding: 8px; font-size: 16px; margin-bottom: 8px; }
+            .puzzle-btns { gap: 5px; }
+            .modal-button { padding: 9px 12px; font-size: 13px; }
+
+            /* --- DANGER MODAL: scale down --- */
+            .danger-title { font-size: 20px; }
+            .danger-img-box { width: 100px; height: 100px; margin-bottom: 8px; }
+            .danger-message { font-size: 14px; padding: 7px 10px; margin-bottom: 6px; }
+            .danger-better-luck { font-size: 16px; margin: 4px 0 10px; }
+
+            /* --- WIN MODAL: compact --- */
+            .win-title { font-size: 24px; }
+            .princess-img-box { width: 100px; height: 100px; margin-bottom: 8px; }
+            .score-table { padding: 8px; margin-bottom: 10px; }
+            .score-row { font-size: 13px; }
+        }
+
+        /* Extra small phones (<=380px) */
+        @media (max-width: 380px) {
+            .game-title { max-width: 80px; font-size: 10px; }
+            .hud-card { padding: 1px 4px; min-width: 40px; }
+            .hud-value { font-size: 14px; }
+            .hud-dots { display: none; }
+            .dpad-btn { height: 32px; font-size: 14px; min-width: 32px; }
+            .dpad-spacer { height: 32px; }
+            .action-btn { font-size: 11px !important; height: 30px !important; }
+            .maze-container {
+                width: min(calc(100vw - 6px), calc((100dvh - 200px) * 1.25));
+            }
         }
     </style>
 </head>
@@ -1620,18 +1784,23 @@
 
             const wRect = wrapper.getBoundingClientRect();
             const cRect = container.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 700;
 
             // START label → to the LEFT of the start cell (row 0)
             const startCell = document.querySelector('.maze-cell[data-x="0"][data-y="0"]');
             const outerStart = document.getElementById('outerStartLabel');
             if (startCell && outerStart) {
                 const sRect = startCell.getBoundingClientRect();
-                const labelH = 30;
+                const labelH = isMobile ? 22 : 30;
                 const topPos = sRect.top - wRect.top + sRect.height / 2 - labelH / 2;
                 const leftSpace = cRect.left - wRect.left;
-                outerStart.style.display = 'block'; // show first so offsetWidth is accurate
+                outerStart.style.display = 'block';
                 const labelW = outerStart.offsetWidth || 70;
-                if (leftSpace >= 50) {
+                if (isMobile) {
+                    // On mobile: overlay on the maze left edge
+                    outerStart.style.top = topPos + 'px';
+                    outerStart.style.left = (cRect.left - wRect.left) + 'px';
+                } else if (leftSpace >= 50) {
                     outerStart.style.top  = topPos + 'px';
                     outerStart.style.left = (cRect.left - wRect.left - labelW - 6) + 'px';
                 } else {
@@ -1645,10 +1814,16 @@
             const outerFinish = document.getElementById('outerFinishLabel');
             if (finishCell && outerFinish) {
                 const fRect = finishCell.getBoundingClientRect();
-                const labelH = 30;
+                const labelH = isMobile ? 22 : 30;
                 const topPos = fRect.top - wRect.top + fRect.height / 2 - labelH / 2;
                 const rightSpace = wRect.right - cRect.right;
-                if (rightSpace >= 50) {
+                if (isMobile) {
+                    // On mobile: overlay on the maze right edge
+                    outerFinish.style.top = topPos + 'px';
+                    outerFinish.style.left = 'auto';
+                    outerFinish.style.right = (wRect.right - cRect.right) + 'px';
+                    outerFinish.style.display = 'block';
+                } else if (rightSpace >= 50) {
                     outerFinish.style.top  = topPos + 'px';
                     outerFinish.style.left = (cRect.right - wRect.left + 6) + 'px';
                     outerFinish.style.display = 'block';
