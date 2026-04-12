@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="copyright" content="© 2025 Bible Explorer Kids. All rights reserved.">
+    <meta name="author" content="Bible Explorer Kids">
+    <title>Baby Moses River Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            text-decoration: none !important;
+        }
+
+        html, body {
+            width: 100%; height: 100dvh;
+            overflow: hidden;
+            -webkit-text-size-adjust: 100%;
+            font-family: 'Comic Neue', cursive;
+            background: #1a1a1a;
+        }
+
+        input, button, textarea {
+            font-family: 'Comic Neue', cursive;
+            font-size: 16px;
+        }
+
+        /* ===== WAVE BACKGROUND (shared) ===== */
+        .cover-waves {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .wave-layer {
+            position: absolute; bottom: -30%; left: -50%;
+            width: 200%; height: 80%;
+            background: rgba(0,150,255,0.07);
+            border-radius: 40% 60% 50% 45%;
+            animation: waveRoll linear infinite;
+        }
+        .wave-layer:nth-child(1) { animation-duration: 14s; bottom: -25%; }
+        .wave-layer:nth-child(2) { animation-duration: 20s; animation-delay: -6s; opacity: 0.6; bottom: -20%; background: rgba(0,100,220,0.06); }
+        .wave-layer:nth-child(3) { animation-duration: 26s; animation-delay: -12s; opacity: 0.4; bottom: -15%; background: rgba(100,200,255,0.05); }
+        @keyframes waveRoll {
+            0%   { transform: translateX(0) rotate(0deg) scaleY(1); }
+            50%  { transform: translateX(20%) rotate(180deg) scaleY(1.08); }
+            100% { transform: translateX(0) rotate(360deg) scaleY(1); }
+        }
+
+        /* Music hint */
+        .music-hint {
+            position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.5); color: rgba(255,255,255,0.85);
+            padding: 6px 16px; border-radius: 20px; font-size: 13px;
+            pointer-events: none; z-index: 50;
+            transition: opacity 0.6s ease;
+            border: 1px solid rgba(255,255,255,0.25);
+            white-space: nowrap;
+        }
+        .music-hint.hidden { opacity: 0; }
+
+        /* Glitter animation */
+        @keyframes glitterFall {
+            0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+            80%  { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(900deg) scale(0.2); opacity: 0; }
+        }
+        @keyframes glitterStar {
+            0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* ===== FLOAT ANIMATION ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* ===== WAVE IMAGE PULSE ===== */
+        @keyframes wavePulse {
+            0%, 100% { transform: scale(1) translateY(0); opacity: 0.65; }
+            50% { transform: scale(1.1) translateY(-5px); opacity: 0.9; }
+        }
+        .wave-deco {
+            object-fit: contain; pointer-events: none;
+            animation: wavePulse ease-in-out infinite;
+        }
+        /* Scattered waves on cover page */
+        .cover-wave-scatter {
+            position: absolute !important; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; overflow: hidden; z-index: 0;
+        }
+        .cover-wave-scatter img {
+            position: absolute; object-fit: contain; pointer-events: none;
+            animation: wavePulse ease-in-out infinite;
+            opacity: 0.72;
+        }
+        /* Waves inside side deco panels */
+        .side-wave-img {
+            width: 58px !important; height: auto !important;
+            object-fit: contain !important; pointer-events: none;
+            animation: wavePulse ease-in-out infinite !important;
+            opacity: 0.85;
+            filter: drop-shadow(0 2px 8px rgba(0,120,255,0.5));
+        }
+        /* Zero-height wave anchors — scroll with content, placed left/right */
+        .wave-anchor {
+            position: relative; height: 0; width: 100%;
+            pointer-events: none; overflow: visible; z-index: 2;
+        }
+        .wave-anchor img {
+            position: absolute; object-fit: contain;
+            animation: wavePulse ease-in-out infinite;
+            opacity: 0.88;
+            filter: drop-shadow(0 2px 8px rgba(0,160,255,0.5));
+        }
+        /* Logo styling */
+        .cover-logo {
+            width: 120px; height: auto; object-fit: contain;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5));
+        }
+        /* Controls panel wave area */
+        .controls-wave-area {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: space-evenly;
+            padding: 4px 2px; min-height: 60px;
+        }
+        .ctrl-wave-img {
+            width: 88%; max-width: 160px; height: auto;
+            animation: wavePulse ease-in-out infinite;
+            opacity: 0.8;
+            filter: brightness(0.85) sepia(1) saturate(3) hue-rotate(175deg) drop-shadow(0 2px 6px rgba(0,100,255,0.5));
+        }
+
+        /* ===== COVER PAGE ===== */
+        .cover-page {
+            display: flex; flex-direction: column;
+            height: 100dvh; overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: linear-gradient(180deg, #000d2e 0%, #003a99 45%, #0066cc 75%, #1a8ccc 100%);
+            padding: 16px 20px 80px;
+            text-align: center; align-items: center;
+            justify-content: flex-start; color: white;
+            position: relative;
+        }
+
+        .cover-page > *:not(.cover-waves):not(.cover-wave-scatter) { position: relative; z-index: 1; }
+
+        .cover-brand {
+            font-size: 23px; font-weight: 700;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            margin-top: 10px; margin-bottom: 5px;
+        }
+
+        .cover-title {
+            font-size: 40px; font-weight: 700;
+            margin-bottom: 14px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            color: #FFE680;
+            line-height: 1.2;
+        }
+
+        .hero-section {
+            display: flex; align-items: center; justify-content: center;
+            gap: 12px; margin-bottom: 14px;
+            flex-wrap: wrap; max-width: 560px;
+        }
+
+        .hero-section img {
+            width: 75px; height: 75px;
+            object-fit: contain;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+        }
+        .hero-section img:nth-child(2) { animation-delay: 0.4s; }
+        .hero-section img:nth-child(3) { animation-delay: 0.8s; }
+        .hero-section img:nth-child(4) { animation-delay: 1.2s; }
+        .hero-section img:nth-child(5) { animation-delay: 1.6s; }
+
+        .cover-story-box {
+            background: rgba(255,255,255,0.15);
+            padding: 14px 18px; border-radius: 14px;
+            margin-bottom: 12px; max-width: 580px;
+            font-size: 17px; line-height: 1.65;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255,255,255,0.3);
+            text-align: center;
+        }
+
+        .cover-story-box .mission {
+            display: block; margin-top: 10px;
+            color: #FFE680; font-weight: 700; font-style: italic;
+        }
+
+        .how-to-play-box {
+            background: rgba(255,255,255,0.12);
+            padding: 14px 18px; border-radius: 14px;
+            margin-bottom: 12px; max-width: 580px;
+            text-align: left;
+            border: 2px solid rgba(255,255,255,0.25);
+        }
+
+        .how-to-play-box h3 {
+            color: #FFD700; margin-bottom: 10px;
+            text-align: center; font-size: 19px;
+        }
+
+        .instr-item {
+            display: flex; align-items: flex-start;
+            gap: 10px; margin-bottom: 7px;
+            font-size: 16px; line-height: 1.5;
+        }
+
+        .instr-item .ei { font-size: 19px; flex-shrink: 0; width: 26px; text-align: center; }
+
+        .danger-box {
+            background: rgba(255,80,0,0.22);
+            padding: 12px 16px; border-radius: 14px;
+            margin-bottom: 12px; max-width: 580px;
+            text-align: left;
+            border: 2px solid rgba(255,140,0,0.45);
+        }
+
+        .danger-box h4 { color: #FFE680; margin-bottom: 7px; font-size: 16px; }
+        .danger-box p { font-size: 15px; line-height: 1.5; margin-bottom: 4px; }
+
+        .difficulty-selector {
+            display: flex; gap: 12px; margin-bottom: 14px;
+            justify-content: center; flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px; font-size: 17px; font-weight: 700;
+            border: 3px solid white; border-radius: 10px;
+            background: rgba(255,255,255,0.18); color: white;
+            cursor: pointer; transition: all 0.3s ease; min-width: 105px;
+        }
+
+        .difficulty-btn:hover { background: rgba(255,255,255,0.28); transform: scale(1.05); }
+        .difficulty-btn.selected {
+            background: #FFD700; color: #001a4d;
+            border-color: #FFD700;
+            box-shadow: 0 0 18px rgba(255,215,0,0.8);
+        }
+
+        .start-btn {
+            padding: 18px 48px; font-size: 24px; font-weight: 700;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #001a4d; border: none; border-radius: 14px;
+            cursor: pointer; margin-bottom: 14px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .start-btn:hover { transform: scale(1.07); }
+        .start-btn:active { transform: scale(0.96); }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+            50% { box-shadow: 0 12px 28px rgba(255,215,0,0.5); }
+        }
+
+        .score-info-box {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 16px; border-radius: 12px;
+            margin-bottom: 12px; max-width: 580px;
+            font-size: 15px; line-height: 1.5;
+            border: 1px solid rgba(255,215,0,0.3);
+            text-align: center;
+        }
+
+        .score-info-box strong { color: #FFD700; }
+        .cover-footer { font-size: 12px; opacity: 0.65; margin-bottom: 8px; }
+
+        /* ===== GAME PAGE ===== */
+        .game-page {
+            display: none; flex-direction: column;
+            height: 100dvh; overflow: hidden;
+            background: #e0e4ec;
+        }
+
+        /* ===== HUD ===== */
+        .game-header {
+            background: linear-gradient(135deg, #0d1b6e, #1a237e);
+            color: white;
+            padding: 7px 14px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+            flex-shrink: 0; height: 56px;
+            border-bottom: 3px solid #FFD700;
+        }
+
+        .game-title {
+            font-size: 15px; font-weight: 700;
+            color: #FFD700; letter-spacing: 0.3px;
+        }
+
+        .hud-stats { display: flex; gap: 8px; align-items: center; }
+
+        .hud-card {
+            display: flex; flex-direction: column; align-items: center;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,215,0,0.35);
+            border-radius: 8px; padding: 2px 10px; min-width: 60px;
+        }
+
+        .hud-label {
+            font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.7px; color: rgba(255,215,0,0.9); font-weight: 700;
+        }
+
+        .hud-value { font-size: 21px; font-weight: 700; color: white; line-height: 1.15; }
+
+        .hud-dots { display: flex; gap: 2px; align-items: center; flex-wrap: wrap; max-width: 125px; }
+        .hud-dot { width: 10px; height: 10px; background: rgba(255,255,255,0.2); border-radius: 50%; transition: all 0.3s; }
+        .hud-dot.done { background: #FFD700; box-shadow: 0 0 5px rgba(255,215,0,0.9); }
+
+        /* ===== GAME CONTENT ===== */
+        .game-content {
+            flex: 1; display: flex; overflow: hidden; gap: 6px; padding: 6px 6px 8px;
+        }
+
+        /* Side decoration panels */
+        .maze-side-deco {
+            width: 68px; flex-shrink: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: space-evenly;
+            padding: 8px 4px;
+            background: linear-gradient(180deg, rgba(0,50,120,0.18), rgba(0,100,180,0.12));
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .maze-side-deco img {
+            width: 52px; height: 52px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.35));
+        }
+
+        .maze-side-deco img:nth-child(1) { animation: float 3.2s ease-in-out infinite; }
+        .maze-side-deco img:nth-child(2) { animation: float 4s ease-in-out 0.6s infinite; }
+        .maze-side-deco img:nth-child(3) { animation: float 3.6s ease-in-out 1.2s infinite; }
+        .maze-side-deco img:nth-child(4) { animation: float 4.4s ease-in-out 1.8s infinite; }
+
+        @media (max-width: 700px) { .maze-side-deco { display: none; } }
+
+        .maze-wrapper {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            position: relative;
+            background: #dde6f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: visible;
+        }
+
+        /* Outer START / FINISH labels — positioned by JS */
+        .outer-start-label, .outer-finish-label {
+            position: absolute; z-index: 40;
+            font-size: 14px; font-weight: 700;
+            padding: 4px 10px; border-radius: 6px;
+            pointer-events: none; letter-spacing: 0.5px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.55);
+            white-space: nowrap; line-height: 1.5;
+            display: none; /* shown by JS once positioned */
+        }
+
+        .outer-start-label {
+            background: linear-gradient(135deg, #cc0000, #ff2222);
+            color: white; border: 2px solid #FFD700;
+        }
+
+        .outer-finish-label {
+            background: linear-gradient(135deg, #cc0000, #ff2222);
+            color: white; border: 2px solid #FFD700;
+        }
+
+        .maze-container {
+            position: relative;
+            width: min(calc(100vw - 220px), calc((100dvh - 94px) * 1.25));
+            aspect-ratio: 20/16;
+            max-width: 100%; max-height: 100%;
+        }
+
+        @media (max-width: 700px) {
+            .maze-container { width: min(calc(100vw - 12px), calc((100dvh - 280px) * 1.25)); }
+        }
+
+        .maze-grid {
+            display: grid;
+            grid-template-columns: repeat(20, 1fr);
+            grid-template-rows: repeat(16, 1fr);
+            gap: 0; width: 100%; height: 100%;
+        }
+
+        .maze-cell {
+            position: relative; background: #ccc;
+            border: 1px solid rgba(0,0,0,0.15);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+
+        .maze-cell img { width: 92%; height: 92%; object-fit: contain; pointer-events: none; }
+        /* Checkpoint star — slightly smaller so cp-num badge doesn't overlap */
+        .maze-cell.checkpoint img { width: 78%; height: 78%; }
+
+        .maze-cell.path { background: url("assets/images/new ocean.jpg") center/cover; border-color: #a0c8f0; }
+
+        /* START cell — RED */
+        .maze-cell.start {
+            background: linear-gradient(135deg, #cc0000, #ff3333);
+            border: 2px solid #FFD700;
+            animation: startGlow 1.8s ease-in-out infinite;
+        }
+        /* Once Moses leaves the start cell, show ocean path background */
+        .maze-cell.start.start-vacated {
+            background: url("assets/images/new ocean.jpg") center/cover !important;
+            border: 1px solid #a0c8f0 !important;
+            animation: none !important;
+            box-shadow: none !important;
+        }
+
+        @keyframes startGlow {
+            0%, 100% { box-shadow: 0 0 6px rgba(220,0,0,0.5), inset 0 0 8px rgba(255,215,0,0.3); }
+            50% { box-shadow: 0 0 16px rgba(255,50,50,0.95), inset 0 0 14px rgba(255,215,0,0.6); }
+        }
+
+        .maze-cell.checkpoint {
+            background: linear-gradient(135deg, #FFD700, #FF8C00);
+            border-color: #cc7700;
+        }
+
+        .maze-cell.checkpoint-done {
+            background: linear-gradient(135deg, #33cc55, #1a7a33) !important;
+            border-color: #FFD700 !important;
+            box-shadow: 0 0 8px rgba(50,200,80,0.9), inset 0 0 6px rgba(255,215,0,0.4) !important;
+        }
+
+        /* Checkpoint number badge — prominent */
+        .cp-num {
+            position: absolute; bottom: 0; right: 0;
+            background: #111; color: #FFD700;
+            font-size: 11px; font-weight: 700;
+            padding: 1px 4px; border-radius: 3px 0 0 0;
+            line-height: 1.5; z-index: 5; pointer-events: none;
+            border-top: 1px solid rgba(255,215,0,0.6);
+            border-left: 1px solid rgba(255,215,0,0.6);
+        }
+
+        /* FINISH cell — RED */
+        .maze-cell.finish {
+            background: linear-gradient(135deg, #cc0000, #ff3333);
+            border: 2px solid #FFD700;
+            animation: finishGlow 1.8s ease-in-out infinite;
+        }
+
+        /* Princess fills whole cell */
+        .maze-cell.finish img { width: 98%; height: 98%; }
+
+        @keyframes finishGlow {
+            0%, 100% { box-shadow: 0 0 6px rgba(220,0,0,0.5), inset 0 0 8px rgba(255,215,0,0.3); }
+            50% { box-shadow: 0 0 16px rgba(255,50,50,0.95), inset 0 0 14px rgba(255,215,0,0.6); }
+        }
+
+        .maze-cell.obstacle { background: linear-gradient(135deg, #5a3520, #321a0a); border-color: #1a0a00; }
+
+        #mosesSprite {
+            position: absolute; z-index: 20;
+            transition: left 0.13s ease-out, top 0.13s ease-out;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+            pointer-events: none;
+        }
+
+        /* ===== CONTROLS PANEL ===== */
+        .controls-panel {
+            display: flex; flex-direction: column; gap: 8px;
+            width: 182px; height: 100%;
+            overflow-x: hidden; overflow-y: hidden; -webkit-overflow-scrolling: touch;
+        }
+
+        @media (max-width: 700px) {
+            .game-content { flex-direction: column; gap: 4px; }
+            .controls-panel {
+                width: 100%; flex-shrink: 0;
+                flex-direction: column; align-items: center;
+                overflow: visible; gap: 6px;
+            }
+            .buttons-section { flex-direction: row !important; justify-content: center; gap: 6px; flex: unset; }
+            .action-btn { height: 44px; flex: 1; max-width: 130px; }
+        }
+
+        .dpad-section {
+            background: linear-gradient(135deg, #0d1b6e, #1a237e);
+            border-radius: 12px; padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+            border: 2px solid rgba(255,215,0,0.35);
+        }
+
+        .dpad-label { text-align: center; font-size: 11px; color: rgba(255,215,0,0.9); font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+
+        .dpad { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
+
+        .dpad-btn {
+            width: 100%; height: 52px; padding: 0;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white; border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px; font-size: 22px; font-weight: 700;
+            cursor: pointer; transition: all 0.1s;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+        }
+
+        .dpad-btn:active { transform: scale(0.88); background: linear-gradient(135deg, #b71c1c, #d32f2f); }
+        .dpad-spacer { width: 100%; height: 52px; }
+
+        .buttons-section {
+            display: flex; flex-direction: column;
+            flex: 1; /* fills remaining height after dpad */
+            justify-content: space-evenly; /* spread buttons evenly */
+            padding: 4px 0;
+        }
+
+        .action-btn {
+            height: 48px; /* thin fixed height */
+            padding: 0 10px; font-size: 14px; font-weight: 700;
+            border: none; border-radius: 8px;
+            color: white; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        }
+
+        .action-btn:active { transform: scale(0.95); }
+        .action-btn.info-btn { background: linear-gradient(135deg, #1565C0, #0D47A1); }
+        .action-btn.restart-btn { background: linear-gradient(135deg, #E65100, #BF360C); }
+        .action-btn.menu-btn { background: linear-gradient(135deg, #6A1B9A, #4A148C); }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none; position: fixed;
+            z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.65);
+            align-items: center; justify-content: center;
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white; margin: auto;
+            padding: 22px; border-radius: 18px;
+            max-width: 440px; width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* Instructions Modal */
+        .instructions-modal .modal-content {
+            background: linear-gradient(155deg, #0d47a1, #1565C0, #1976D2);
+            color: white;
+            border: 3px solid rgba(255,215,0,0.45);
+            overflow-y: auto; max-height: 88vh;
+        }
+
+        .instructions-modal .modal-content h2 { color: #FFE680; margin-bottom: 12px; font-size: 20px; text-align: center; }
+        .instructions-modal .modal-content .ii { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 9px; font-size: 14px; line-height: 1.5; }
+        .instructions-modal .modal-content .ii .ik { font-size: 17px; flex-shrink: 0; width: 22px; text-align: center; }
+
+        /* Danger Modal — red style */
+        .danger-modal .modal-content {
+            background: linear-gradient(155deg, #b71c1c, #c62828, #d32f2f);
+            color: white; text-align: center;
+            border: 3px solid rgba(255,200,0,0.4);
+        }
+
+        .danger-title { font-size: 25px; font-weight: 700; color: #FFE680; margin-bottom: 3px; }
+
+        .danger-img-box {
+            width: 130px; height: 130px; margin: 0 auto 12px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 50%; border: 4px solid rgba(255,215,0,0.55);
+            display: flex; align-items: center; justify-content: center;
+            padding: 8px; box-shadow: 0 0 20px rgba(200,0,0,0.4);
+        }
+
+        .danger-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; position: relative; z-index: 1; }
+
+        .danger-message {
+            font-size: 16px; font-weight: 700; line-height: 1.5;
+            background: rgba(0,0,0,0.2); padding: 9px 12px;
+            border-radius: 10px; margin-bottom: 8px;
+        }
+
+        .danger-better-luck {
+            font-size: 20px; font-weight: 700; color: #FFE680;
+            margin: 6px 0 14px;
+        }
+
+        .danger-modal .modal-button {
+            background: #FFD700;
+            color: #7a0000; border-color: #FFD700; font-size: 16px;
+            border-radius: 24px;
+        }
+
+        /* Puzzle Modal — wave background, no scroll */
+        .puzzle-modal .modal-content {
+            background: linear-gradient(155deg, #1b5e20, #2e7d32, #388e3c);
+            color: white;
+            border: 3px solid rgba(255,215,0,0.5);
+            padding: 20px;
+            position: relative; overflow: hidden;
+        }
+
+        /* Subtle wave pattern for puzzle modal */
+        .puzzle-modal .modal-content::before {
+            content: '';
+            position: absolute; bottom: -20px; left: -40px;
+            width: 140%; height: 80px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            animation: waveRoll 8s linear infinite;
+            pointer-events: none;
+        }
+
+        .puzzle-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+        .puzzle-star-icon { width: 32px; height: 32px; object-fit: contain; }
+        .puzzle-title { font-size: 19px; font-weight: 700; color: #FFE680; }
+
+        .puzzle-divider { height: 2px; background: linear-gradient(90deg, transparent, rgba(255,215,0,0.5), transparent); margin-bottom: 10px; }
+
+        .puzzle-question {
+            font-size: 17px; margin-bottom: 12px; line-height: 1.55;
+            font-weight: 700; background: rgba(0,0,0,0.2);
+            padding: 10px 12px; border-radius: 8px;
+            border-left: 4px solid #FFD700;
+        }
+
+        .answer-input {
+            width: 100%; padding: 10px; font-size: 17px;
+            border: 2px solid rgba(255,215,0,0.6); border-radius: 7px;
+            margin-bottom: 10px; background: rgba(255,255,255,0.96); color: #333;
+        }
+
+        .clue-box {
+            background: rgba(255,215,0,0.15); padding: 8px 10px;
+            border-radius: 7px; margin-bottom: 10px;
+            font-style: italic; border-left: 4px solid #FFD700; font-size: 14px;
+        }
+
+        .puzzle-btns { display: flex; flex-direction: column; gap: 7px; position: relative; z-index: 2; }
+
+        .modal-button {
+            padding: 11px 16px; font-size: 14px; font-weight: 700;
+            border: 2px solid white; border-radius: 7px;
+            cursor: pointer; transition: all 0.2s;
+        }
+
+        .modal-button:hover { transform: scale(1.02); }
+        .modal-button:active { transform: scale(0.97); }
+
+        .success-btn { background: #FFD700; color: #1b5e20; border-color: #FFD700; font-size: 15px; }
+        .clue-btn { background: rgba(255,255,255,0.15); color: white; }
+        .exit-btn { background: rgba(0,0,0,0.2); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.25); font-size: 13px; }
+
+        .puzzle-status { margin-top: 6px; font-size: 13px; text-align: center; min-height: 16px; color: #FFE680; position: relative; z-index: 2; }
+
+        /* ===== DANGER MODAL ANIMATIONS ===== */
+        @keyframes dangerShake {
+            0%,100% { transform: translateX(0) rotate(0deg); }
+            15%      { transform: translateX(-8px) rotate(-2deg); }
+            30%      { transform: translateX(8px) rotate(2deg); }
+            45%      { transform: translateX(-6px) rotate(-1deg); }
+            60%      { transform: translateX(6px) rotate(1deg); }
+            75%      { transform: translateX(-3px); }
+        }
+        @keyframes dangerBounce {
+            0%,100% { transform: scale(1) translateY(0); }
+            25%     { transform: scale(1.12) translateY(-8px) rotate(-6deg); }
+            50%     { transform: scale(0.95) translateY(4px) rotate(4deg); }
+            75%     { transform: scale(1.08) translateY(-4px) rotate(-3deg); }
+        }
+        @keyframes dangerRing {
+            0%   { transform: scale(0.7); opacity: 0.8; }
+            100% { transform: scale(1.9); opacity: 0; }
+        }
+        @keyframes floatDanger {
+            0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.9; }
+            33%      { transform: translateY(-12px) rotate(15deg); opacity: 1; }
+            66%      { transform: translateY(-6px) rotate(-10deg); opacity: 0.85; }
+        }
+        .danger-modal .modal-content {
+            position: relative; overflow: hidden;
+            animation: dangerShake 0.55s ease-in-out;
+        }
+        .danger-modal.active .modal-content { animation: dangerShake 0.55s ease-in-out; }
+        /* Pulsing rings inside danger-img-box */
+        .danger-ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 4px solid rgba(255,200,0,0.6);
+            top: 0; left: 0;
+            animation: dangerRing 1.4s ease-out infinite;
+            pointer-events: none;
+        }
+        .danger-ring:nth-child(2) { animation-delay: 0.7s; }
+        /* Floating danger particles */
+        .danger-particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+        .dp { position: absolute; font-size: 20px; animation: floatDanger ease-in-out infinite; }
+        .dp:nth-child(1) { top:8%;  left:4%;  animation-duration:2.1s; animation-delay:0s; }
+        .dp:nth-child(2) { top:12%; right:5%; animation-duration:2.6s; animation-delay:-0.8s; }
+        .dp:nth-child(3) { top:70%; left:3%;  animation-duration:2.3s; animation-delay:-1.2s; }
+        .dp:nth-child(4) { top:75%; right:4%; animation-duration:1.9s; animation-delay:-0.4s; }
+        .dp:nth-child(5) { top:42%; left:2%;  animation-duration:2.8s; animation-delay:-1.7s; }
+        .dp:nth-child(6) { top:45%; right:3%; animation-duration:2.4s; animation-delay:-0.6s; }
+        /* Danger image bounce */
+        .danger-img-box img { animation: dangerBounce 1.6s ease-in-out infinite; }
+
+        /* ===== WIN MODAL ANIMATIONS ===== */
+        @keyframes winTitlePop {
+            0%,100% { transform: scale(1);   text-shadow: 0 0 20px rgba(255,215,0,0.7); }
+            50%      { transform: scale(1.08); text-shadow: 0 0 40px rgba(255,215,0,1), 0 0 60px rgba(255,150,0,0.6); }
+        }
+        @keyframes princessFloat {
+            0%,100% { transform: translateY(0) scale(1); }
+            50%      { transform: translateY(-10px) scale(1.05); }
+        }
+        @keyframes winStar {
+            0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 1; }
+            80%  { opacity: 0.9; }
+            100% { transform: translateY(-120px) rotate(360deg) scale(0.3); opacity: 0; }
+        }
+        @keyframes winRingPulse {
+            0%,100% { transform: scale(1);   opacity: 0.5; }
+            50%      { transform: scale(1.15); opacity: 0.9; }
+        }
+        @keyframes winSparkle {
+            0%,100% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50%      { opacity: 1; transform: scale(1.2) rotate(180deg); }
+        }
+        /* Win Modal */
+        .win-modal .modal-content {
+            background: linear-gradient(155deg, #3a006e, #6a1b9a, #7b1fa2);
+            color: white; text-align: center;
+            border: 3px solid rgba(255,215,0,0.6);
+            position: relative; overflow: hidden;
+        }
+
+        .win-title { font-size: 30px; font-weight: 700; color: #FFE680; margin-bottom: 3px; animation: winTitlePop 1.8s ease-in-out infinite; display: inline-block; }
+        .win-sub { font-size: 14px; color: rgba(255,230,128,0.85); margin-bottom: 12px; }
+
+        /* Floating stars inside win modal */
+        .win-stars-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+        .ws { position: absolute; font-size: 18px; animation: winStar linear infinite; }
+        .ws:nth-child(1)  { left:10%; bottom:0; animation-duration:3s;   animation-delay:0s; }
+        .ws:nth-child(2)  { left:25%; bottom:0; animation-duration:2.6s; animation-delay:-1s; }
+        .ws:nth-child(3)  { left:40%; bottom:0; animation-duration:3.4s; animation-delay:-0.5s; }
+        .ws:nth-child(4)  { left:60%; bottom:0; animation-duration:2.8s; animation-delay:-1.8s; }
+        .ws:nth-child(5)  { left:75%; bottom:0; animation-duration:3.1s; animation-delay:-0.9s; }
+        .ws:nth-child(6)  { left:88%; bottom:0; animation-duration:2.4s; animation-delay:-2.2s; }
+        /* Sparkle dots */
+        .win-sparkle { position: absolute; width: 10px; height: 10px; background: #FFD700; border-radius: 50%; animation: winSparkle ease-in-out infinite; pointer-events: none; }
+        .win-sparkle:nth-child(7)  { top:15%; left:8%;  animation-duration:1.4s; animation-delay:0s; }
+        .win-sparkle:nth-child(8)  { top:20%; right:9%; animation-duration:1.8s; animation-delay:-0.6s; }
+        .win-sparkle:nth-child(9)  { top:65%; left:7%;  animation-duration:1.6s; animation-delay:-1.1s; }
+        .win-sparkle:nth-child(10) { top:70%; right:6%; animation-duration:2s;   animation-delay:-0.3s; }
+
+        .princess-img-box {
+            width: 130px; height: 130px; margin: 0 auto 12px;
+            background: rgba(255,255,255,0.15); border-radius: 50%;
+            border: 4px solid #FFD700;
+            display: flex; align-items: center; justify-content: center;
+            padding: 8px;
+            box-shadow: 0 0 20px rgba(255,215,0,0.4), 0 0 40px rgba(255,215,0,0.2);
+            animation: winRingPulse 2s ease-in-out infinite;
+            position: relative; z-index: 1;
+        }
+
+        .princess-img-box img { max-width: 100%; max-height: 100%; object-fit: contain; animation: princessFloat 2.4s ease-in-out infinite; }
+
+        .achieve-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #4a0080; font-size: 17px; font-weight: 700;
+            padding: 6px 18px; border-radius: 18px;
+            display: inline-block; margin-bottom: 6px;
+            box-shadow: 0 4px 12px rgba(255,165,0,0.4);
+        }
+
+        .achieve-msg { font-size: 14px; margin-bottom: 14px; font-style: italic; color: rgba(255,225,200,0.9); }
+
+        .score-table {
+            background: rgba(0,0,0,0.25); padding: 12px;
+            border-radius: 10px; margin-bottom: 14px;
+            text-align: left; border: 1px solid rgba(255,215,0,0.25);
+        }
+
+        .score-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
+        .score-row:last-child { margin-bottom: 0; }
+        .score-val { font-weight: 700; color: #FFD700; }
+
+        .win-btns { display: flex; flex-direction: column; gap: 8px; }
+        .win-play { background: #FFD700; color: #4a0080; border-color: #FFD700; font-size: 16px; }
+        .win-menu { background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.35); }
+
+        /* Incomplete Modal */
+        .incomplete-modal .modal-content {
+            background: linear-gradient(155deg, #e65100, #bf360c);
+            color: white; text-align: center;
+            border: 3px solid rgba(255,215,0,0.4);
+        }
+
+        .incomplete-modal h2 { color: #FFE680; margin-bottom: 10px; font-size: 21px; }
+        .incomplete-count { font-size: 34px; font-weight: 700; color: #FFE680; display: block; margin: 6px 0; }
+        .incomplete-msg { font-size: 15px; margin-bottom: 14px; line-height: 1.55; }
+        .incomplete-btn { background: #FFD700; color: #7a2000; border-color: #FFD700; }
+
+        audio { display: none; }
+
+        @keyframes flashIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+            to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes flashOut {
+            from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            to   { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Music hint -->
+    <div class="music-hint" id="musicHint">🎵 Tap anywhere to start music!</div>
+
+    <!-- ========== COVER PAGE ========== -->
+    <div id="coverPage" class="cover-page">
+        <div class="cover-waves" aria-hidden="true">
+            <div class="wave-layer"></div>
+            <div class="wave-layer"></div>
+            <div class="wave-layer"></div>
+        </div>
+
+        <!-- Waves: top of page -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%201.png" alt="" style="width:90px;left:2%;top:-18px;animation-duration:3s;animation-delay:0s;">
+            <img src="assets/images/wave%202.png" alt="" style="width:80px;right:2%;top:-10px;animation-duration:2.7s;animation-delay:-0.9s;">
+        </div>
+
+        <img src="assets/images/logo%201.png" alt="Bible Explorer Kids" class="cover-logo">
+        <div class="cover-brand">✝️ Bible Explorer Kids ✝️</div>
+        <div class="cover-title">🌊 Baby Moses River Adventure 🚼</div>
+
+        <!-- Waves: after title -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%201.png" alt="" style="width:85px;left:1%;top:-12px;animation-duration:3.2s;animation-delay:-0.5s;">
+            <img src="assets/images/wave%202.png" alt="" style="width:95px;right:1%;top:-8px;animation-duration:2.6s;animation-delay:-1.3s;">
+        </div>
+
+        <div class="hero-section">
+            <img src="assets/images/moses in basket.png" alt="Baby Moses">
+            <img src="assets/images/color croc 5.png" alt="Crocodile">
+            <img src="assets/images/shark 7.png" alt="Shark">
+            <img src="assets/images/octopus 5.png" alt="Octopus">
+            <img src="assets/images/squid 5.png" alt="Squid">
+        </div>
+
+        <!-- Waves: after hero -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%202.png" alt="" style="width:88px;left:2%;top:-14px;animation-duration:2.9s;animation-delay:-0.7s;">
+            <img src="assets/images/wave%201.png" alt="" style="width:78px;right:2%;top:-6px;animation-duration:3.5s;animation-delay:-1.8s;">
+        </div>
+
+        <div class="cover-story-box">
+            Long ago in Egypt, baby Moses was placed in a basket to float on the river Nile
+            in order to protect his life from Pharaoh's cruel law.
+            <span class="mission">🎯 Your mission is to guide him safely through the treacherous waters so he can reach Pharaoh's daughter safely!</span>
+        </div>
+
+        <!-- Waves: after story -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%201.png" alt="" style="width:92px;left:1%;top:-10px;animation-duration:3.4s;animation-delay:-0.3s;">
+            <img src="assets/images/wave%202.png" alt="" style="width:82px;right:1%;top:-16px;animation-duration:2.8s;animation-delay:-1.1s;">
+        </div>
+
+        <div class="how-to-play-box">
+            <h3>🎮 How to Play</h3>
+            <div class="instr-item"><span class="ei">⌨️</span><span><strong>Use arrow buttons</strong> (or keyboard arrows) to move baby Moses from START to FINISH.</span></div>
+            <div class="instr-item"><span class="ei">🌊</span><span><strong>Follow the blue water path</strong> — it's the only safe route for Moses!</span></div>
+            <div class="instr-item"><span class="ei">⭐</span><span><strong>Visit all 10 checkpoints in order</strong> and answer Bible questions correctly.</span></div>
+            <div class="instr-item"><span class="ei">💡</span><span><strong>Use clue buttons</strong> if you need help — each clue costs 5 points.</span></div>
+            <div class="instr-item"><span class="ei">🚫</span><span><strong>You must answer each question</strong> to continue — no skipping!</span></div>
+        </div>
+
+        <!-- Waves: after how-to-play -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%202.png" alt="" style="width:86px;left:2%;top:-12px;animation-duration:3.1s;animation-delay:-2s;">
+            <img src="assets/images/wave%201.png" alt="" style="width:96px;right:2%;top:-8px;animation-duration:2.5s;animation-delay:-0.6s;">
+        </div>
+
+        <div class="danger-box">
+            <h4>⚠️ What Happens If You Go Off the Safe Path?</h4>
+            <p>If Moses moves into a danger zone, he'll be engulfed by scary river creatures like crocodiles 🐊, sharks 🦈, or bombs 💣! Don't worry though - you'll restart from the beginning to try again! 💪</p>
+        </div>
+
+        <!-- Waves: after danger box -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%201.png" alt="" style="width:80px;left:1%;top:-10px;animation-duration:2.8s;animation-delay:-1.4s;">
+            <img src="assets/images/wave%202.png" alt="" style="width:90px;right:2%;top:-14px;animation-duration:3.3s;animation-delay:-0.4s;">
+        </div>
+
+        <div class="score-info-box">
+            <strong>⭐ Scoring:</strong> Earn <strong>+10 pts</strong> for each correct answer. Spend <strong>-5 pts</strong> per clue. Max score: <strong>100 pts!</strong>
+        </div>
+
+        <!-- Waves: above difficulty -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%202.png" alt="" style="width:84px;left:2%;top:-8px;animation-duration:3.6s;animation-delay:-2.2s;">
+            <img src="assets/images/wave%201.png" alt="" style="width:76px;right:1%;top:-12px;animation-duration:2.6s;animation-delay:-0.8s;">
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn" onclick="selectDifficulty('easy')">🟢 Easy</button>
+            <button class="difficulty-btn" onclick="selectDifficulty('medium')">🟡 Medium</button>
+            <button class="difficulty-btn" onclick="selectDifficulty('hard')">🔴 Hard</button>
+        </div>
+        <div id="difficultyHint" style="display:none;color:#FFD700;font-size:15px;font-weight:700;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">⚠️ Please choose a difficulty level first!</div>
+
+        <button class="start-btn" onclick="startGame()">🚀 Start Adventure!</button>
+        <div class="cover-footer">© 2025 Bible Explorer Kids · For personal use only</div>
+    </div>
+
+    <!-- ========== GAME PAGE ========== -->
+    <div id="gamePage" class="game-page">
+        <div class="game-header">
+            <div class="game-title">🌊 Baby Moses River Adventure</div>
+            <div class="hud-stats">
+                <div class="hud-card">
+                    <div class="hud-label">Score</div>
+                    <div class="hud-value" id="gameScore">0</div>
+                </div>
+                <div class="hud-card">
+                    <div class="hud-label">⭐ Checkpoints</div>
+                    <div class="hud-dots" id="hudDots"></div>
+                    <div class="hud-value" id="checkpointCount" style="font-size:13px;">0/10</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-content">
+            <!-- Left side decoration -->
+            <div class="maze-side-deco" id="leftDeco">
+                <img src="assets/images/crab 5.png" alt="Crab">
+                <img src="assets/images/wave%201.png" alt="" class="side-wave-img" style="animation-duration:3s;animation-delay:0s;">
+                <img src="assets/images/octopus 5.png" alt="Octopus">
+                <img src="assets/images/big snake.png" alt="Snake">
+                <img src="assets/images/wave%202.png" alt="" class="side-wave-img" style="animation-duration:2.7s;animation-delay:-1.2s;">
+                <img src="assets/images/orange lobster.png" alt="Lobster">
+            </div>
+
+            <div class="maze-wrapper" id="mazeWrapper">
+                <!-- Outer labels positioned by JS -->
+                <div class="outer-start-label" id="outerStartLabel">▶ START</div>
+                <div class="outer-finish-label" id="outerFinishLabel">FINISH ◀</div>
+                <div class="maze-container" id="mazeContainer">
+                    <div class="maze-grid" id="mazeGrid"></div>
+                    <img id="mosesSprite" src="assets/images/moses in basket.png" alt="Moses">
+                </div>
+            </div>
+
+            <!-- Right side decoration -->
+            <div class="maze-side-deco" id="rightDeco">
+                <img src="assets/images/shark 7.png" alt="Shark">
+                <img src="assets/images/wave%202.png" alt="" class="side-wave-img" style="animation-duration:3.3s;animation-delay:-0.6s;">
+                <img src="assets/images/squid 5.png" alt="Squid">
+                <img src="assets/images/fish 7.png" alt="Fish">
+                <img src="assets/images/wave%201.png" alt="" class="side-wave-img" style="animation-duration:2.9s;animation-delay:-1.8s;">
+                <img src="assets/images/color croc 5.png" alt="Croc">
+            </div>
+
+            <div class="controls-panel">
+                <div class="dpad-section">
+                    <div class="dpad-label">🕹️ MOVE MOSES</div>
+                    <div class="dpad">
+                        <div class="dpad-spacer"></div>
+                        <button class="dpad-btn" onclick="movePlayerByButton('up')">▲</button>
+                        <div class="dpad-spacer"></div>
+                        <button class="dpad-btn" onclick="movePlayerByButton('left')">◄</button>
+                        <div class="dpad-spacer"></div>
+                        <button class="dpad-btn" onclick="movePlayerByButton('right')">►</button>
+                        <div class="dpad-spacer"></div>
+                        <button class="dpad-btn" onclick="movePlayerByButton('down')">▼</button>
+                        <div class="dpad-spacer"></div>
+                    </div>
+                </div>
+                <div class="buttons-section">
+                    <button class="action-btn info-btn" onclick="showInstructions()">📖 Instructions</button>
+                    <button class="action-btn restart-btn" onclick="restartGame()">🔄 Restart</button>
+                    <button class="action-btn menu-btn" onclick="showCoverPage()">🏠 Main Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODALS ========== -->
+
+    <div id="instructionsModal" class="modal instructions-modal">
+        <div class="modal-content">
+            <h2>📖 How to Play</h2>
+            <div class="ii"><span class="ik">🎯</span><span><strong>Mission:</strong> Guide baby Moses through the Nile River to reach Pharaoh's daughter at FINISH!</span></div>
+            <div class="ii"><span class="ik">⌨️</span><span><strong>Controls:</strong> Arrow buttons or keyboard keys (↑ ↓ ← →) move Moses one step at a time.</span></div>
+            <div class="ii"><span class="ik">🌊</span><span><strong>Safe Path:</strong> Stay on blue water cells — the only safe route!</span></div>
+            <div class="ii"><span class="ik">⚠️</span><span><strong>Dangers:</strong> Brown cells with creatures and 💣 bombs send Moses ALL the way back to START — and reset checkpoints!</span></div>
+            <div class="ii"><span class="ik">⭐</span><span><strong>Checkpoints:</strong> Visit all 10 gold stars IN ORDER and answer Bible questions correctly.</span></div>
+            <div class="ii"><span class="ik">❓</span><span><strong>Questions:</strong> Try as many times as needed. Answer correctly to unlock each checkpoint!</span></div>
+            <div class="ii"><span class="ik">💡</span><span><strong>Clues:</strong> Each clue costs 5 points — use them wisely!</span></div>
+            <div class="ii"><span class="ik">🏆</span><span><strong>Winning:</strong> Reach FINISH after ALL 10 checkpoints are done!</span></div>
+            <div class="ii"><span class="ik">⭐</span><span><strong>Score:</strong> +10 pts per correct answer, -5 pts per clue. Max score: 100!</span></div>
+            <button class="modal-button" onclick="closeInstructionsModal()" style="background:#FFD700;color:#0d47a1;border-color:#FFD700;margin-top:12px;">✅ Got It!</button>
+        </div>
+    </div>
+
+    <div id="dangerModal" class="modal danger-modal">
+        <div class="modal-content">
+            <!-- Floating danger particles -->
+            <div class="danger-particles" aria-hidden="true">
+                <span class="dp">💥</span>
+                <span class="dp">⚠️</span>
+                <span class="dp">🌊</span>
+                <span class="dp">💦</span>
+                <span class="dp">😱</span>
+                <span class="dp">🔥</span>
+            </div>
+            <div class="danger-title">💥 Moses Hit an Obstacle! 💥</div>
+            <div class="danger-message" id="dangerMessage"></div>
+            <div class="danger-img-box" style="position:relative;">
+                <!-- Pulsing rings behind image -->
+                <div class="danger-ring"></div>
+                <div class="danger-ring"></div>
+                <img id="dangerImage" src="" alt="Danger">
+            </div>
+            <div class="danger-better-luck">Better Luck Next Time!</div>
+            <button class="modal-button" onclick="closeDangerModal()">↩️ Try Again from Start</button>
+        </div>
+    </div>
+
+    <div id="puzzleModal" class="modal puzzle-modal">
+        <div class="modal-content">
+            <div class="puzzle-header">
+                <img src="assets/images/star 7.png" alt="Star" class="puzzle-star-icon">
+                <div class="puzzle-title" id="puzzleTitle">Checkpoint</div>
+                <img src="assets/images/star 7.png" alt="Star" class="puzzle-star-icon">
+            </div>
+            <div class="puzzle-divider"></div>
+            <div class="puzzle-question" id="puzzleQuestion"></div>
+            <div class="clue-box" id="clueBox" style="display:none;"></div>
+            <input type="text" class="answer-input" id="answerInput" placeholder="Type your answer here...">
+            <div class="puzzle-btns">
+                <button class="modal-button success-btn" onclick="checkAnswer()">✅ Submit Answer</button>
+                <button class="modal-button clue-btn" id="clueButton" onclick="showClue()">💡 Show Clue (-5 pts)</button>
+                <button class="modal-button exit-btn" onclick="exitToMainMenu()">🏠 Exit to Main Menu</button>
+            </div>
+            <div id="puzzleStatus" class="puzzle-status"></div>
+        </div>
+    </div>
+
+    <div id="winModal" class="modal win-modal">
+        <div class="modal-content">
+            <!-- Floating stars & sparkles background -->
+            <div class="win-stars-bg" aria-hidden="true">
+                <span class="ws">⭐</span>
+                <span class="ws">🌟</span>
+                <span class="ws">✨</span>
+                <span class="ws">⭐</span>
+                <span class="ws">🌟</span>
+                <span class="ws">✨</span>
+                <div class="win-sparkle"></div>
+                <div class="win-sparkle"></div>
+                <div class="win-sparkle"></div>
+                <div class="win-sparkle"></div>
+            </div>
+            <div class="win-title">🎉 You Did It! 🎉</div>
+            <div class="win-sub">Moses has safely reached Pharaoh's daughter!</div>
+            <div class="princess-img-box">
+                <img src="assets/images/newest princess.png" alt="Princess">
+            </div>
+            <div class="achieve-badge" id="achievementLevel">Amazing!</div>
+            <div class="achieve-msg" id="achievementMessage">Great job!</div>
+            <div class="score-table">
+                <div class="score-row"><span>🎯 Difficulty:</span><span class="score-val" id="finalDifficulty">Easy</span></div>
+                <div class="score-row"><span>⭐ Checkpoints:</span><span class="score-val" id="finalCheckpoints">10/10</span></div>
+                <div class="score-row"><span>💡 Clues Used:</span><span class="score-val" id="finalCluesUsed">0</span></div>
+                <div class="score-row"><span>🏆 Final Score:</span><span class="score-val" id="finalScore">100</span></div>
+            </div>
+            <div class="win-btns">
+                <button class="modal-button win-play" onclick="playAgain()">🔄 Play Again</button>
+                <button class="modal-button win-menu" onclick="showCoverPage()">🏠 Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="incompleteModal" class="modal incomplete-modal">
+        <div class="modal-content">
+            <h2>⭐ Almost There!</h2>
+            <div class="incomplete-msg">
+                You've completed
+                <span class="incomplete-count" id="completedCount">0</span>
+                out of 10 checkpoints.
+            </div>
+            <p class="incomplete-msg">You need ALL 10 golden star checkpoints before Moses can reach the princess!</p>
+            <button class="modal-button incomplete-btn" onclick="closeIncompleteModal()">🗺️ Keep Exploring!</button>
+        </div>
+    </div>
+
+    <!-- ========== AUDIO ========== -->
+    <!-- Cover page music (separate from game music) -->
+    <audio id="coverMusic" loop preload="auto"></audio>
+    <audio id="bgMusic" loop preload="auto"></audio>
+    <audio id="moveSound" preload="auto"></audio>
+    <audio id="checkpointSound"></audio>
+    <audio id="successChime"></audio>
+    <audio id="successSound"></audio>
+    <audio id="wrongSound"></audio>
+    <audio id="splashSound"></audio>
+    <audio id="dangerSound"></audio>
+    <audio id="gameOverSound"></audio>
+    <audio id="winSound"></audio>
+    <audio id="bigWinSound"></audio>
+    <audio id="btnClickSound"></audio>
+
+    <script>
+        /*
+         * © 2025 Bible Explorer Kids. All rights reserved.
+         * Unauthorized copying, distribution, or reproduction prohibited.
+         * Licensed for personal, non-commercial use only.
+         */
+
+        // ========== QUESTION BANK ==========
+        const questionBank = {
+            easy: [
+                { question: "What is the name of the famous river where Moses floated in his basket?", answer: "NILE", clues: ["Egypt's longest river", "Starts with N", "4 letters: N-I-L-E"] },
+                { question: "What was baby Moses placed inside to float on the river?", answer: "BASKET", clues: ["A woven container", "Made from papyrus reeds", "6 letters: B-A-S-K-E-T"] },
+                { question: "What was baby Moses doing when the princess found him?", answer: "CRYING", clues: ["What babies do when upset", "He was shedding tears", "Starts with C, rhymes with trying"] },
+                { question: "Who watched over baby Moses from a distance as he floated?", answer: "MIRIAM", clues: ["Moses' older sister", "She stayed nearby to watch", "6 letters: M-I-R-I-A-M"] },
+                { question: "What country did Moses live in as a baby?", answer: "EGYPT", clues: ["Land of the great pyramids", "In North Africa", "5 letters: E-G-Y-P-T"] },
+                { question: "Who found baby Moses floating in the river?", answer: "PRINCESS", clues: ["Pharaoh's daughter", "An Egyptian royal lady", "8 letters: P-R-I-N-C-E-S-S"] },
+                { question: "What sticky black substance waterproofed Moses' basket?", answer: "TAR", clues: ["Used to seal boats from water", "Very sticky and black", "3 letters: T-A-R"] },
+                { question: "Who was watching over and protecting baby Moses in the river?", answer: "GOD", clues: ["The creator of all things", "All-knowing protector", "3 letters: G-O-D"] },
+                { question: "What was the title of Egypt's ruler who gave the cruel order?", answer: "PHARAOH", clues: ["The Egyptian king", "Rhymes with arrow", "7 letters: P-H-A-R-A-O-H"] },
+                { question: "What group of people was Moses born into?", answer: "HEBREW", clues: ["God's chosen people", "Also called Israelites", "6 letters: H-E-B-R-E-W"] },
+                { question: "How many months did Moses' mother hide him before setting him afloat?", answer: "THREE", clues: ["More than two, less than four", "The number 3", "5 letters: T-H-R-E-E"] },
+                { question: "What tall plants along the riverbank hid Moses' basket?", answer: "REEDS", clues: ["Tall water plants like long grass", "Also called bulrushes", "5 letters: R-E-E-D-S"] },
+                { question: "Moses' basket was coated with tar and what other substance?", answer: "PITCH", clues: ["Similar to tar — also sticky and dark", "Keeps water out", "5 letters: P-I-T-C-H"] },
+                { question: "What river plant material was Moses' basket woven from?", answer: "PAPYRUS", clues: ["Used to make ancient paper in Egypt", "Grows in tall bundles by rivers", "7 letters: P-A-P-Y-R-U-S"] },
+                { question: "What did Moses' mother do to protect him from Pharaoh?", answer: "HID", clues: ["She kept him secret for three months", "Past tense of hide", "3 letters: H-I-D"] }
+            ],
+            medium: [
+                { question: "What river plant was Moses' basket carefully woven from?", answer: "PAPYRUS", clues: ["Used to make ancient Egyptian paper", "Grows in tall bundles by rivers", "P-A-P-Y-R-U-S"] },
+                { question: "What is the name of Moses' brave sister who kept watch over him?", answer: "MIRIAM", clues: ["His older sister who guarded him", "Starts with M", "M-I-R-I-A-M"] },
+                { question: "Moses was placed among the ___ along the Nile riverbank.", answer: "REEDS", clues: ["Tall river plants that provided cover", "Also called bulrushes", "R-E-E-D-S"] },
+                { question: "What does the name 'Moses' mean? 'Because I ___ him out of the water'", answer: "DREW", clues: ["Past tense of the word draw", "To pull something out", "Rhymes with new and blue"] },
+                { question: "Moses was hidden for how many months before being set afloat?", answer: "THREE", clues: ["The number after two", "3 months total", "T-H-R-E-E"] },
+                { question: "What did the princess feel when she heard baby Moses crying?", answer: "PITY", clues: ["She felt deep compassion for him", "Feeling sorry for someone", "P-I-T-Y"] },
+                { question: "Moses grew up living in whose royal household?", answer: "PHARAOH", clues: ["The Egyptian ruler", "Moses was raised as his grandson", "P-H-A-R-A-O-H"] },
+                { question: "Moses' mother coated his basket with tar and ___ to keep water out.", answer: "PITCH", clues: ["A sticky dark substance like tar", "Used to seal gaps", "P-I-T-C-H"] },
+                { question: "Pharaoh feared the Israelites because of their growing ___.", answer: "NUMBERS", clues: ["How many there were", "Their population was growing", "N-U-M-B-E-R-S"] },
+                { question: "Who ordered the Hebrew baby boys to be killed?", answer: "PHARAOH", clues: ["The ruler of Egypt", "His fear caused harsh laws", "Rhymes with arrow"] },
+                { question: "Who were the women commanded to kill the Hebrew baby boys?", answer: "MIDWIVES", clues: ["They helped deliver babies", "Two were Shiphrah and Puah", "M-I-D-W-I-V-E-S"] },
+                { question: "Why did the midwives refuse Pharaoh's command? They feared ___.", answer: "GOD", clues: ["Their loyalty was to the Creator", "He rules over all kings", "G-O-D"] },
+                { question: "What did the Israelites continue to do even under oppression?", answer: "MULTIPLY", clues: ["They grew in number", "The opposite of decrease", "M-U-L-T-I-P-L-Y"] },
+                { question: "Who ended up nursing baby Moses after he was found in the river?", answer: "JOCHEBED", clues: ["Moses' own mother", "Hired by Pharaoh's daughter", "J-O-C-H-E-B-E-D"] },
+                { question: "What did Pharaoh's daughter name the baby she found floating?", answer: "MOSES", clues: ["Means drawn out of water", "He became Israel's greatest leader", "M-O-S-E-S"] },
+                { question: "Miriam asked: shall I find a ___ from the Hebrew women to care for him?", answer: "NURSE", clues: ["Someone who feeds and cares for babies", "A caregiver for infants", "N-U-R-S-E"] },
+                { question: "Pharaoh ordered all Hebrew baby ___ to be thrown into the Nile river.", answer: "BOYS", clues: ["Male babies only, not the girls", "B-O-Y-S"] },
+                { question: "Where did Jochebed place Moses' basket? Among the ___ along the bank.", answer: "REEDS", clues: ["Tall water grass", "Also called bulrushes", "R-E-E-D-S"] }
+            ],
+            hard: [
+                { question: "What was Moses' mother's name? (Exodus 6:20)", answer: "JOCHEBED", clues: ["A Hebrew woman of great faith", "Mother of Moses, Aaron, and Miriam", "J-O-C-H-E-B-E-D"] },
+                { question: "What was Moses' brother's name?", answer: "AARON", clues: ["Also became a great leader of Israel", "Later became the first high priest", "A-A-R-O-N"] },
+                { question: "What does the name 'Moses' mean? 'Because I ___ him out of the water'", answer: "DREW", clues: ["Past tense of draw", "To pull something out of water", "Rhymes with blue and new"] },
+                { question: "In which book of the Bible is Moses' birth story found?", answer: "EXODUS", clues: ["The second book of the Bible", "Means departure or exit", "E-X-O-D-U-S"] },
+                { question: "Moses' basket was woven from papyrus, then coated in tar and ___.", answer: "PITCH", clues: ["Second waterproofing material used", "Very similar to tar, also black and sticky", "P-I-T-C-H"] },
+                { question: "What tribe of Israel did Moses belong to? The tribe of ___.", answer: "LEVI", clues: ["One of the twelve sons of Jacob", "The priestly tribe of Israel", "L-E-V-I"] },
+                { question: "Stephen said Moses was 'mighty in words and ___' (Acts 7:22).", answer: "DEEDS", clues: ["Actions and mighty works he did", "Things he performed", "D-E-E-D-S"] },
+                { question: "Who was Moses' father? (Exodus 6:20)", answer: "AMRAM", clues: ["A Levite man of great faith", "He married Jochebed", "A-M-R-A-M"] },
+                { question: "Moses' name was given by the ___ who found him in the river.", answer: "PRINCESS", clues: ["Pharaoh's royal daughter", "The Egyptian woman who adopted him", "P-R-I-N-C-E-S-S"] },
+                { question: "Exodus 2:10 says Moses was adopted as the princess's ___.", answer: "SON", clues: ["A male child", "She raised him like her own child", "S-O-N"] },
+                { question: "The Hebrews made bricks in Egypt. What did they mix into the clay?", answer: "STRAW", clues: ["Dried grass or hay", "Mixed into clay to strengthen bricks", "S-T-R-A-W"] },
+                { question: "Pharaoh feared: 'They will join our enemies and ___ against us'.", answer: "FIGHT", clues: ["To battle or oppose", "The opposite of peace", "F-I-G-H-T"] },
+                { question: "Pharaoh wanted to kill Hebrew babies because he feared their growing ___.", answer: "NUMBERS", clues: ["How many Israelites there were", "Their population was growing rapidly", "N-U-M-B-E-R-S"] },
+                { question: "What material were the Israelites forced to make for Pharaoh's cities?", answer: "BRICKS", clues: ["Made with straw and mud", "Used to build Pharaoh's store cities", "B-R-I-C-K-S"] },
+                { question: "What emotion drove Pharaoh to oppress the Israelites so harshly?", answer: "FEAR", clues: ["He worried they'd join his enemies", "The opposite of courage", "F-E-A-R"] },
+                { question: "What was the name of the first store city the Israelites built for Pharaoh?", answer: "PITHOM", clues: ["Starts with P", "One of two treasure cities", "P-I-T-H-O-M"] },
+                { question: "What was the second store city built by Hebrew slaves that starts with R?", answer: "RAMESES", clues: ["Named after a pharaoh", "Starts with R", "R-A-M-E-S-E-S"] },
+                { question: "Name one Hebrew midwife who bravely defied Pharaoh's command.", answer: "SHIPHRAH", clues: ["Her name starts with Sh", "One of two brave midwives", "S-H-I-P-H-R-A-H"] },
+                { question: "What emotion moved Pharaoh's daughter when she heard Moses cry?", answer: "COMPASSION", clues: ["A deep feeling of care and mercy", "What she felt seeing a helpless baby", "C-O-M-P-A-S-S-I-O-N"] },
+                { question: "What future role of Moses is hinted at in his miraculous rescue from water?", answer: "DELIVERER", clues: ["He would rescue Israel from Egypt", "A title meaning rescuer or savior", "D-E-L-I-V-E-R-E-R"] },
+                { question: "Moses' mother saw he was a fine child — in Hebrew this means he was ___.", answer: "GOOD", clues: ["A positive quality", "Opposite of bad", "G-O-O-D"] }
+            ]
+        };
+
+        // ========== RIVER DANGERS (paired — image + message stay together) ==========
+        const riverDangers = [
+            { src: "assets/images/color croc 5.png",   msg: "A hungry crocodile snapped at Moses' basket!" },
+            { src: "assets/images/shark 7.png",         msg: "A fierce shark attacked the basket!" },
+            { src: "assets/images/octopus 5.png",       msg: "A giant octopus grabbed the basket with its tentacles!" },
+            { src: "assets/images/squid 5.png",         msg: "A sneaky squid pulled Moses underwater!" },
+            { src: "assets/images/crab 5.png",          msg: "A giant crab grabbed onto Moses' basket!" },
+            { src: "assets/images/orange lobster.png",  msg: "A huge lobster pinched right through the basket!" },
+            { src: "assets/images/fish 7.png",          msg: "A large fish knocked Moses' basket over!" },
+            { src: "assets/images/big snake.png",       msg: "A slithery river snake coiled around the basket!" }
+        ];
+
+        // ========== AUDIO ELEMENTS ==========
+        const coverMusic     = document.getElementById('coverMusic');
+        const bgMusic        = document.getElementById('bgMusic');
+        const moveSound      = document.getElementById('moveSound');
+        const checkpointSound= document.getElementById('checkpointSound');
+        const successChime   = document.getElementById('successChime');
+        const successSound   = document.getElementById('successSound');
+        const wrongSound     = document.getElementById('wrongSound');
+        const splashSound    = document.getElementById('splashSound');
+        const dangerSound    = document.getElementById('dangerSound');
+        const gameOverSound  = document.getElementById('gameOverSound');
+        const winSound       = document.getElementById('winSound');
+        const bigWinSound    = document.getElementById('bigWinSound');
+        const btnClickSound  = document.getElementById('btnClickSound');
+
+        coverMusic.src      = 'assets/audio/background music loop.mp3';
+        bgMusic.src         = 'assets/audio/bg music 2.mp3';
+        moveSound.src       = 'assets/audio/pop.mp3';
+        checkpointSound.src = 'assets/audio/chime2.mp3';
+        successChime.src    = 'assets/audio/success 3.mp3';
+        successSound.src    = 'assets/audio/success 4.mp3';
+        wrongSound.src      = 'assets/audio/error 3.mp3';
+        splashSound.src     = 'assets/audio/water splash.mp3';
+        dangerSound.src     = 'assets/audio/uh oh.mp3';
+        gameOverSound.src   = 'assets/audio/game over.mp3';
+        winSound.src        = 'assets/audio/win sound.mp3';
+        bigWinSound.src     = 'assets/audio/success trumpet.mp3';
+        btnClickSound.src   = 'assets/audio/magic button click 2.mp3';
+
+        coverMusic.volume      = 0.28;
+        bgMusic.volume         = 0.22;
+        moveSound.volume       = 0.4;
+        checkpointSound.volume = 0.75;
+        successChime.volume    = 0.8;
+        successSound.volume    = 0.8;
+        wrongSound.volume      = 0.75;
+        splashSound.volume     = 0.75;
+        dangerSound.volume     = 0.8;
+        gameOverSound.volume   = 0.7;
+        winSound.volume        = 0.8;
+        bigWinSound.volume     = 0.8;
+
+        // ========== GAME STATE ==========
+        let currentDifficulty = 'easy';
+        let gameScore = 0;
+        let cluesUsed = 0;
+        let completedCheckpoints = new Set();
+        let sessionQuestions = [];
+        let playerX = 0, playerY = 0;
+        let gameBlocked = false;
+        let currentClueIndex = 0;
+        let currentPuzzleCheckpointIndex = 0;
+        let mazeData = [];
+        let audioUnlocked = false;
+        let moveSoundTimer = null;
+
+        // ========== PLAY SOUND HELPERS ==========
+        function playSound(sound) {
+            if (!sound || !audioUnlocked) return;
+            sound.currentTime = 0;
+            sound.play().catch(() => {});
+        }
+
+        function playMoveSound() {
+            if (!audioUnlocked || moveSoundTimer) return;
+            moveSoundTimer = setTimeout(() => { moveSoundTimer = null; }, 150);
+            moveSound.currentTime = 0;
+            moveSound.play().catch(() => {});
+        }
+
+        // ========== AUDIO UNLOCK (iOS/Android — first interaction) ==========
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('click', unlockAudio, { once: true });
+
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            audioUnlocked = true;
+            coverMusic.play().catch(() => {});
+            const hint = document.getElementById('musicHint');
+            if (hint) hint.classList.add('hidden');
+        }
+
+        function startCoverMusic() {
+            if (!audioUnlocked) return;
+            bgMusic.pause();
+            if (coverMusic.paused) coverMusic.play().catch(() => {});
+        }
+
+        function startBgMusic() {
+            if (!audioUnlocked) return;
+            coverMusic.pause();
+            if (bgMusic.paused) bgMusic.play().catch(() => {});
+        }
+
+        function stopBgMusic() {
+            bgMusic.pause();
+        }
+
+        function stopAllMusic() {
+            bgMusic.pause();
+            coverMusic.pause();
+        }
+
+        // ========== GLITTER / CONFETTI ON WIN ==========
+        function launchGlitter() {
+            const existing = document.getElementById('glitterContainer');
+            if (existing) existing.remove();
+
+            const wrap = document.createElement('div');
+            wrap.id = 'glitterContainer';
+            wrap.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1500;overflow:hidden;';
+            document.body.appendChild(wrap);
+
+            const colors = ['#FFD700','#FFF176','#FFFFFF','#FFB347','#FF69B4','#87CEEB','#98FB98','#FF6347'];
+            for (let i = 0; i < 130; i++) {
+                setTimeout(() => {
+                    if (!wrap.parentNode) return;
+                    const p = document.createElement('div');
+                    const size = 5 + Math.random() * 10;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const isSquare = Math.random() > 0.55;
+                    const dur = 2 + Math.random() * 2.5;
+                    p.style.cssText = `
+                        position:absolute;
+                        left:${Math.random()*100}%;
+                        top:-15px;
+                        width:${size}px;
+                        height:${size}px;
+                        background:${color};
+                        border-radius:${isSquare ? '2px' : '50%'};
+                        box-shadow:0 0 ${size/2}px ${color};
+                        animation:glitterFall ${dur}s ease-in forwards;
+                    `;
+                    wrap.appendChild(p);
+                }, i * 18);
+            }
+            setTimeout(() => { if (wrap.parentNode) wrap.remove(); }, 7000);
+        }
+
+        // ========== LEVENSHTEIN DISTANCE ==========
+        function levenshtein(a, b) {
+            const m = a.length, n = b.length;
+            const dp = [];
+            for (let i = 0; i <= m; i++) {
+                dp[i] = [i];
+                for (let j = 1; j <= n; j++) dp[i][j] = i === 0 ? j : 0;
+            }
+            for (let i = 1; i <= m; i++)
+                for (let j = 1; j <= n; j++)
+                    dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1]
+                        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+            return dp[m][n];
+        }
+
+        // ========== FUZZY ANSWER MATCHING ==========
+        function isAnswerCorrect(userAnswer, correctAnswer) {
+            const norm = s => s.trim().toUpperCase().replace(/['\-.,!?]/g, '').replace(/\s+/g, ' ');
+            const user    = norm(userAnswer);
+            const correct = norm(correctAnswer);
+            if (!user) return false;
+            if (user === correct) return true;
+
+            let maxErr = 0;
+            if (correct.length >= 7) maxErr = 2;
+            else if (correct.length >= 4) maxErr = 1;
+            if (maxErr > 0 && levenshtein(user, correct) <= maxErr) return true;
+
+            const synonyms = {
+                'CRYING':      ['CRY','CRIED','WEEPING','WEEPS','TEARS'],
+                'REEDS':       ['REED','BULRUSHES','RUSHES','BULRUSH'],
+                'HEBREW':      ['HEBREWS','ISRAELITE','ISRAELITES','JEWISH','ISRAEL','JEW'],
+                'GOD':         ['LORD','JESUS','HOLY SPIRIT','YAHWEH','THE LORD'],
+                'NILE':        ['NILE RIVER','THE NILE','RIVER NILE'],
+                'PAPYRUS':     ['PAPYRI','PAPIRUS'],
+                'BASKET':      ['BASKETS','BOX','CRADLE','ARK'],
+                'EGYPT':       ['EGYPTIAN','EGIPT'],
+                'PRINCESS':    ['PHARAOHS DAUGHTER','PHAROAHS DAUGHTER','DAUGHTER OF PHARAOH','THE PRINCESS','KINGS DAUGHTER'],
+                'BOYS':        ['BOY','SONS','SON','MALE','MALES','MALE BABIES','BABY BOYS'],
+                'MIRIAM':      ['MARYAM','MIRIYAM','MARIA'],
+                'THREE':       ['3','THREE MONTHS','3 MONTHS'],
+                'PHARAOH':     ['FARAOH','PHARO','PHAROAH','FARAO'],
+                'DREW':        ['DRAW','DRAWN','PULLED','TAKEN','PULLED OUT','TAKEN OUT'],
+                'PITCH':       ['BITUMEN','RESIN'],
+                'MOTHER':      ['MOM','MAMA','HIS MOTHER','MOSES MOTHER','JOCHEBED'],
+                'NURSE':       ['NURSEMAID','CAREGIVER','WET NURSE'],
+                'TAR':         ['ASPHALT','BITUMEN'],
+                'HID':         ['HIDE','HIDDEN','HID HIM'],
+                'PITY':        ['COMPASSION','MERCY','SYMPATHY','FELT SORRY'],
+                'AARON':       ['ARON'],
+                'EXODUS':      ['THE BOOK OF EXODUS','BOOK OF EXODUS'],
+                'SON':         ['ADOPTED SON','HER SON'],
+                'DEEDS':       ['DEED','WORKS','ACTS','ACTIONS'],
+                'FIGHT':       ['BATTLE','WAR','REBEL','REVOLT'],
+                'NUMBERS':     ['NUMBER','POPULATION','STRENGTH','GROWING'],
+                'STRAW':       ['HAY','GRASS'],
+                'LEVI':        ['LEVITE','LEVITES'],
+                'AMRAM':       ['AMRAN'],
+                'GOOD':        ['FINE','BEAUTIFUL','LOVELY'],
+                'SHIPHRAH':    ['PUAH','SHIFRA','SHIPHRA'],
+                'PUAH':        ['SHIPHRAH','SHIFRA'],
+                'BRICKS':      ['BRICK','CLAY BRICKS'],
+                'FEAR':        ['AFRAID','SCARED','TERROR'],
+                'PITHOM':      ['PITOM'],
+                'RAMESES':     ['RAAMSES','RAMSES','RAMESSES'],
+                'COMPASSION':  ['PITY','MERCY','SYMPATHY','LOVE'],
+                'DELIVERER':   ['RESCUER','SAVIOR','SAVIOUR','LIBERATOR'],
+                'MULTIPLY':    ['GROW','INCREASE','MULTIPLIED'],
+                'MIDWIVES':    ['MIDWIFE'],
+                'JOCHEBED':    ['JOCABED','JOKEBED'],
+                'MOSES':       ['MOISES','MOSE'],
+            };
+
+            const syns = synonyms[correct] || [];
+            const userNoSp = user.replace(/\s/g, '');
+            return syns.some(s => {
+                const sn = norm(s);
+                return user === sn || userNoSp === sn.replace(/\s/g, '');
+            });
+        }
+
+        // ========== SELECT DIFFICULTY ==========
+        function selectDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            playSound(btnClickSound);
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        // ========== SELECT SESSION QUESTIONS (random pool each game) ==========
+        function selectSessionQuestions() {
+            const pool = questionBank[currentDifficulty];
+            sessionQuestions = [...pool].sort(() => Math.random() - 0.5).slice(0, 10);
+        }
+
+        // ========== START GAME ==========
+        function startGame() {
+            const selected = document.querySelector('.difficulty-btn.selected');
+            if (!selected) {
+                const btns = document.querySelector('.difficulty-selector');
+                if (btns) {
+                    btns.style.outline = '3px solid #FFD700';
+                    btns.style.borderRadius = '8px';
+                    setTimeout(() => { btns.style.outline = ''; }, 1800);
+                }
+                const hint = document.getElementById('difficultyHint');
+                if (hint) { hint.style.display = 'block'; setTimeout(() => { hint.style.display = 'none'; }, 2500); }
+                playSound(btnClickSound);
+                return;
+            }
+            playSound(btnClickSound);
+            selectSessionQuestions();
+            showGamePage();
+            initializeGame();
+        }
+
+        // ========== INITIALIZE GAME ==========
+        function initializeGame() {
+            document.removeEventListener('keydown', handleKeyPress);
+            document.addEventListener('keydown', handleKeyPress);
+
+            gameScore = 0;
+            cluesUsed = 0;
+            completedCheckpoints.clear();
+            currentClueIndex = 0;
+            currentPuzzleCheckpointIndex = 0;
+            gameBlocked = false;
+            playerX = 0; playerY = 0;
+
+            generateMaze();
+            renderMaze();
+            buildHudDots();
+            updateHUD();
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    resetPlayerPosition();
+                    positionOuterLabels();
+                });
+            });
+
+            startBgMusic();
+        }
+
+        // ========== MAZE LAYOUTS ==========
+        const mazeLayouts = {
+            easy: [
+                [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [0,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
+                [0,1,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+                [0,1,1,5,1,1,1,1,1,1,1,1,1,1,1,1,0,14,0,1],
+                [0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,14],
+                [0,1,0,1,1,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [0,1,0,1,0,1,1,0,0,0,0,0,0,14,0,14,0,1,0,1],
+                [0,1,0,1,0,1,1,1,1,1,1,1,0,1,1,10,0,1,0,1],
+                [0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1],
+                [0,1,1,1,1,1,1,1,0,14,0,1,0,1,0,1,11,14,1,7],
+                [0,1,0,1,0,1,0,1,1,1,1,1,0,1,0,14,0,1,1,14],
+                [0,1,0,1,0,1,0,0,0,0,0,0,0,1,0,1,8,1,14,14],
+                [0,1,0,1,0,14,1,1,1,1,1,1,1,1,0,1,14,14,1,1],
+                [0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,9,14,1,14,14],
+                [0,1,14,1,1,1,1,1,1,1,1,1,1,14,1,1,1,1,12,13]
+            ],
+            medium: [
+                [2,1,3,1,1,1,1,1,1,1,1,1,1,1,1,14,1,1,1,0],
+                [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,0],
+                [1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0],
+                [1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,6,0],
+                [1,0,0,0,0,0,14,0,0,0,0,14,0,0,0,0,0,0,1,0],
+                [1,14,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                [1,14,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                [0,0,8,0,0,14,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                [0,0,1,0,0,14,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                [0,0,1,1,1,1,1,1,1,9,0,0,0,14,0,0,0,0,0,0],
+                [0,0,0,1,0,0,1,0,1,1,1,1,10,1,1,11,1,1,1,14],
+                [0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,14],
+                [0,0,0,14,1,1,1,1,1,1,1,1,14,0,0,12,1,1,1,13]
+            ],
+            hard: [
+                [2,1,3,1,1,1,1,1,1,1,1,1,1,1,1,14,1,1,1,0],
+                [1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,14,0,0,1,0],
+                [1,14,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,14,1,0],
+                [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0],
+                [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1],
+                [1,1,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,1,1],
+                [1,0,1,0,0,0,1,0,0,14,0,1,0,0,0,0,0,0,6,14],
+                [1,0,0,14,0,0,14,0,1,0,0,14,0,0,0,0,0,0,1,1],
+                [1,14,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,14,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,1],
+                [1,0,8,1,1,14,14,1,1,1,0,0,0,1,0,0,0,1,0,1],
+                [1,0,1,0,0,14,1,0,0,14,0,0,0,1,0,0,0,1,0,1],
+                [1,0,1,1,1,1,1,1,1,9,0,0,0,14,0,0,0,14,0,1],
+                [1,0,0,1,0,0,1,0,1,1,1,1,10,1,1,11,1,1,1,14],
+                [1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,14],
+                [1,14,1,14,1,1,1,1,1,1,1,1,14,0,0,12,1,1,1,13]
+            ]
+        };
+
+        function generateMaze() {
+            mazeData = mazeLayouts[currentDifficulty].map(row => [...row]);
+        }
+
+        // ========== RENDER MAZE ==========
+        function renderMaze() {
+            const grid = document.getElementById('mazeGrid');
+            grid.innerHTML = '';
+            for (let y = 0; y < 16; y++) {
+                for (let x = 0; x < 20; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'maze-cell';
+                    cell.dataset.x = x; cell.dataset.y = y;
+                    const ct = mazeData[y][x];
+
+                    if (ct === 1) {
+                        cell.classList.add('path');
+                    }
+                    else if (ct === 2) {
+                        // START — RED cell, Moses sprite overlaid, no in-cell text
+                        cell.classList.add('start');
+                    }
+                    else if (ct >= 3 && ct <= 12) {
+                        cell.classList.add('checkpoint');
+                        const img = document.createElement('img');
+                        img.src = 'assets/images/star 7.png'; img.alt = 'Star';
+                        cell.appendChild(img);
+                        const num = document.createElement('div');
+                        num.className = 'cp-num';
+                        num.textContent = (ct - 2);
+                        cell.appendChild(num);
+                    }
+                    else if (ct === 13) {
+                        // FINISH — RED cell, princess fills whole cell
+                        cell.classList.add('finish');
+                        const img = document.createElement('img');
+                        img.src = 'assets/images/newest princess.png'; img.alt = 'Princess';
+                        cell.appendChild(img);
+                    }
+                    else if (ct === 14) {
+                        cell.classList.add('obstacle');
+                        const img = document.createElement('img');
+                        img.src = 'assets/images/black bomb.png'; img.alt = 'Bomb';
+                        cell.appendChild(img);
+                    }
+                    else if (ct === 0) {
+                        cell.classList.add('obstacle');
+                        const ri = Math.floor(Math.random() * riverDangers.length);
+                        const d = riverDangers[ri];
+                        cell.dataset.dangerSrc = d.src;
+                        cell.dataset.dangerMsg = d.msg;
+                        const img = document.createElement('img');
+                        img.src = d.src; img.alt = 'Danger';
+                        cell.appendChild(img);
+                    }
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        // ========== POSITION OUTER START / FINISH LABELS ==========
+        function positionOuterLabels() {
+            const wrapper = document.getElementById('mazeWrapper');
+            const container = document.getElementById('mazeContainer');
+            if (!wrapper || !container) return;
+
+            const wRect = wrapper.getBoundingClientRect();
+            const cRect = container.getBoundingClientRect();
+
+            // START label → to the LEFT of the start cell (row 0)
+            const startCell = document.querySelector('.maze-cell[data-x="0"][data-y="0"]');
+            const outerStart = document.getElementById('outerStartLabel');
+            if (startCell && outerStart) {
+                const sRect = startCell.getBoundingClientRect();
+                const labelH = 30;
+                const topPos = sRect.top - wRect.top + sRect.height / 2 - labelH / 2;
+                const leftSpace = cRect.left - wRect.left;
+                outerStart.style.display = 'block'; // show first so offsetWidth is accurate
+                const labelW = outerStart.offsetWidth || 70;
+                if (leftSpace >= 50) {
+                    outerStart.style.top  = topPos + 'px';
+                    outerStart.style.left = (cRect.left - wRect.left - labelW - 6) + 'px';
+                } else {
+                    outerStart.style.top  = topPos + 'px';
+                    outerStart.style.left = '4px';
+                }
+            }
+
+            // FINISH label → to the RIGHT of the finish cell (row 15)
+            const finishCell = document.querySelector('.maze-cell.finish');
+            const outerFinish = document.getElementById('outerFinishLabel');
+            if (finishCell && outerFinish) {
+                const fRect = finishCell.getBoundingClientRect();
+                const labelH = 30;
+                const topPos = fRect.top - wRect.top + fRect.height / 2 - labelH / 2;
+                const rightSpace = wRect.right - cRect.right;
+                if (rightSpace >= 50) {
+                    outerFinish.style.top  = topPos + 'px';
+                    outerFinish.style.left = (cRect.right - wRect.left + 6) + 'px';
+                    outerFinish.style.display = 'block';
+                } else {
+                    outerFinish.style.top  = topPos + 'px';
+                    outerFinish.style.right = '4px';
+                    outerFinish.style.left = 'auto';
+                    outerFinish.style.display = 'block';
+                }
+            }
+        }
+
+        // ========== MOSES SPRITE POSITIONING ==========
+        function positionMosesSprite() {
+            const sprite = document.getElementById('mosesSprite');
+            if (!sprite) return;
+            const cells = document.querySelectorAll('.maze-cell');
+            const cell  = cells[playerY * 20 + playerX];
+            if (!cell) return;
+            const grid = document.getElementById('mazeGrid');
+            const gRect = grid.getBoundingClientRect();
+            const cRect = cell.getBoundingClientRect();
+            const pad = 0.04;
+            sprite.style.left    = (cRect.left - gRect.left + cRect.width * pad) + 'px';
+            sprite.style.top     = (cRect.top  - gRect.top  + cRect.height * pad) + 'px';
+            sprite.style.width   = (cRect.width  * (1 - pad * 2)) + 'px';
+            sprite.style.height  = (cRect.height * (1 - pad * 2)) + 'px';
+            sprite.style.display = 'block';
+        }
+
+        function resetPlayerPosition() {
+            document.querySelectorAll('.maze-cell.player').forEach(c => c.classList.remove('player'));
+            const cells = document.querySelectorAll('.maze-cell');
+            const pc    = cells[playerY * 20 + playerX];
+            if (pc) pc.classList.add('player');
+            positionMosesSprite();
+        }
+
+        // ========== HUD DOTS ==========
+        function buildHudDots() {
+            const bar = document.getElementById('hudDots');
+            if (!bar) return;
+            bar.innerHTML = '';
+            for (let i = 0; i < 10; i++) {
+                const d = document.createElement('div');
+                d.className = 'hud-dot';
+                d.id = 'dot_' + i;
+                bar.appendChild(d);
+            }
+        }
+
+        function updateHudDots() {
+            for (let i = 0; i < 10; i++) {
+                const d = document.getElementById('dot_' + i);
+                if (d) d.classList.toggle('done', completedCheckpoints.has(i));
+            }
+        }
+
+        function markCheckpointCellDone(cpIdx) {
+            const ct = cpIdx + 3;
+            for (const c of document.querySelectorAll('.maze-cell')) {
+                const x = parseInt(c.dataset.x), y = parseInt(c.dataset.y);
+                if (mazeData[y] && mazeData[y][x] === ct) {
+                    c.classList.add('checkpoint-done');
+                    break;
+                }
+            }
+        }
+
+        function resetCheckpointVisuals() {
+            document.querySelectorAll('.maze-cell.checkpoint-done').forEach(c => c.classList.remove('checkpoint-done'));
+        }
+
+        // ========== MOVE PLAYER ==========
+        function movePlayer(newX, newY) {
+            if (gameBlocked) return;
+            if (newX < 0 || newX > 19 || newY < 0 || newY > 15) return;
+
+            const newCell = document.querySelector(`.maze-cell[data-x="${newX}"][data-y="${newY}"]`);
+            const ct = mazeData[newY][newX];
+
+            playMoveSound();
+
+            // Creature obstacle
+            if (ct === 0) {
+                gameBlocked = true;
+                playSound(splashSound);
+                showDangerModal(newCell.dataset.dangerSrc, newCell.dataset.dangerMsg);
+                return;
+            }
+            // Bomb
+            if (ct === 14) {
+                gameBlocked = true;
+                playSound(splashSound);
+                showDangerModal('assets/images/black bomb.png', 'A bomb exploded right next to Moses!');
+                return;
+            }
+
+            // FINISH — check BEFORE moving so Moses doesn't land there when blocked
+            if (ct === 13) {
+                if (completedCheckpoints.size === 10) {
+                    playerX = newX; playerY = newY;
+                    resetPlayerPosition();
+                    gameBlocked = true;
+                    updateHUD();
+                    showWinModal();
+                } else {
+                    showIncompleteModal();
+                }
+                return;
+            }
+
+            // If Moses is leaving the start cell, vacate it visually
+            const prevStart = document.querySelector('.maze-cell.start:not(.start-vacated)');
+            if (prevStart && (parseInt(prevStart.dataset.x) !== newX || parseInt(prevStart.dataset.y) !== newY)) {
+                prevStart.classList.add('start-vacated');
+            }
+
+            // Move Moses
+            playerX = newX; playerY = newY;
+            resetPlayerPosition();
+
+            // Checkpoint
+            if (ct >= 3 && ct <= 12) {
+                const cpIdx = ct - 3;
+                if (!completedCheckpoints.has(cpIdx)) {
+                    if (completedCheckpoints.size === cpIdx) {
+                        playSound(checkpointSound);
+                        currentPuzzleCheckpointIndex = cpIdx;
+                        showPuzzleModal(cpIdx);
+                    } else {
+                        const nextNeeded = completedCheckpoints.size + 1;
+                        showFlashMessage(`Find Checkpoint ${nextNeeded} first! ⭐`, 'warning');
+                    }
+                }
+            }
+
+            updateHUD();
+        }
+
+        function movePlayerByButton(dir) {
+            if (gameBlocked) return;
+            let nx = playerX, ny = playerY;
+            if (dir === 'up')    ny--;
+            else if (dir === 'down')  ny++;
+            else if (dir === 'left')  nx--;
+            else if (dir === 'right') nx++;
+            movePlayer(nx, ny);
+        }
+
+        function handleKeyPress(e) {
+            if (gameBlocked) return;
+            if      (e.key === 'ArrowUp')    { e.preventDefault(); movePlayerByButton('up'); }
+            else if (e.key === 'ArrowDown')  { e.preventDefault(); movePlayerByButton('down'); }
+            else if (e.key === 'ArrowLeft')  { e.preventDefault(); movePlayerByButton('left'); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); movePlayerByButton('right'); }
+        }
+
+        // Swipe gestures
+        let tStartX = 0, tStartY = 0;
+        document.addEventListener('touchstart', e => {
+            tStartX = e.changedTouches[0].clientX;
+            tStartY = e.changedTouches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', e => {
+            if (gameBlocked) return;
+            const dx = e.changedTouches[0].clientX - tStartX;
+            const dy = e.changedTouches[0].clientY - tStartY;
+            if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+            if (Math.abs(dx) > Math.abs(dy)) movePlayerByButton(dx > 0 ? 'right' : 'left');
+            else                              movePlayerByButton(dy > 0 ? 'down'  : 'up');
+        }, { passive: true });
+
+        // ========== PUZZLE MODAL ==========
+        function showPuzzleModal(cpIdx) {
+            gameBlocked = true;
+            currentPuzzleCheckpointIndex = cpIdx;
+            const q = sessionQuestions[cpIdx];
+            if (!q) { gameBlocked = false; return; }
+
+            currentClueIndex = 0;
+            document.getElementById('puzzleTitle').textContent = `⭐ Checkpoint ${cpIdx + 1} of 10`;
+            document.getElementById('puzzleQuestion').textContent = q.question;
+            document.getElementById('clueBox').style.display = 'none';
+            document.getElementById('clueBox').textContent = '';
+            document.getElementById('answerInput').value = '';
+            document.getElementById('puzzleStatus').textContent = '';
+            document.getElementById('clueButton').style.display = 'block';
+            document.getElementById('puzzleModal').classList.add('active');
+            setTimeout(() => document.getElementById('answerInput').focus(), 300);
+        }
+
+        function showClue() {
+            playSound(btnClickSound);
+            const q = sessionQuestions[currentPuzzleCheckpointIndex];
+            if (!q) return;
+            gameScore = Math.max(0, gameScore - 5);
+            cluesUsed++;
+            const box = document.getElementById('clueBox');
+            if (currentClueIndex < q.clues.length) {
+                box.textContent = '💡 ' + q.clues[currentClueIndex];
+                box.style.display = 'block';
+                currentClueIndex++;
+            }
+            if (currentClueIndex >= q.clues.length) document.getElementById('clueButton').style.display = 'none';
+            updateHUD();
+        }
+
+        function checkAnswer() {
+            playSound(btnClickSound);
+            const userAnswer = document.getElementById('answerInput').value;
+            if (!userAnswer.trim()) {
+                document.getElementById('puzzleStatus').textContent = 'Please type an answer first!';
+                return;
+            }
+            const q = sessionQuestions[currentPuzzleCheckpointIndex];
+            if (!q) return;
+
+            if (isAnswerCorrect(userAnswer, q.answer)) {
+                gameScore += 10;
+                playSound(successChime);
+                showFlashMessage('✅ Correct!', 'success');
+                completedCheckpoints.add(currentPuzzleCheckpointIndex);
+                markCheckpointCellDone(currentPuzzleCheckpointIndex);
+                updateHudDots();
+                document.getElementById('puzzleStatus').textContent = 'Great job! Well done! 🎉';
+                setTimeout(() => {
+                    document.getElementById('puzzleModal').classList.remove('active');
+                    gameBlocked = false;
+                }, 1500);
+            } else {
+                playSound(wrongSound);
+                showFlashMessage('❌ Not quite right!', 'error');
+                setTimeout(() => {
+                    document.getElementById('answerInput').value = '';
+                    document.getElementById('answerInput').focus();
+                    document.getElementById('puzzleStatus').textContent = 'That\'s not right. Try again or use a clue!';
+                }, 1300);
+            }
+            updateHUD();
+        }
+
+        // ========== FLASH MESSAGE ==========
+        function showFlashMessage(msg, type) {
+            const d = document.createElement('div');
+            d.style.cssText = `
+                position:fixed; top:50%; left:50%;
+                transform:translate(-50%,-50%);
+                z-index:2000; padding:24px 40px;
+                border-radius:16px;
+                font-family:'Comic Neue',cursive;
+                font-size:26px; font-weight:700;
+                text-align:center; color:white;
+                animation:flashIn 0.22s ease-out;
+            `;
+            if (type === 'success') {
+                d.style.background = 'linear-gradient(135deg,#2e7d32,#388e3c)';
+                d.style.border = '4px solid #FFD700';
+            } else if (type === 'error') {
+                d.style.background = 'linear-gradient(135deg,#c62828,#d32f2f)';
+                d.style.border = '4px solid #FF8A80';
+            } else {
+                d.style.background = 'linear-gradient(135deg,#e65100,#bf360c)';
+                d.style.border = '4px solid #FFD700';
+            }
+            d.textContent = msg;
+            document.body.appendChild(d);
+            setTimeout(() => {
+                d.style.animation = 'flashOut 0.22s ease-in';
+                setTimeout(() => d.remove(), 220);
+            }, 1050);
+        }
+
+        // ========== DANGER MODAL ==========
+        function showDangerModal(imgSrc, msg) {
+            // Water splash → uh oh → game over
+            playSound(splashSound);
+            setTimeout(() => {
+                stopAllMusic();
+                playSound(dangerSound);
+            }, 250);
+            setTimeout(() => playSound(gameOverSound), 750);
+
+            document.getElementById('dangerMessage').textContent = msg + ' Remember to follow the blue water path to keep Moses safe!';
+            document.getElementById('dangerImage').src = imgSrc || 'assets/images/color croc 5.png';
+            document.getElementById('dangerModal').classList.add('active');
+        }
+
+        function closeDangerModal() {
+            playSound(btnClickSound);
+            document.getElementById('dangerModal').classList.remove('active');
+            completedCheckpoints.clear();
+            resetCheckpointVisuals();
+            // Restore start cell appearance when Moses resets there
+            document.querySelectorAll('.maze-cell.start-vacated').forEach(c => c.classList.remove('start-vacated'));
+            updateHudDots();
+            gameBlocked = false;
+            playerX = 0; playerY = 0;
+            resetPlayerPosition();
+            updateHUD();
+            bgMusic.currentTime = 0;
+            startBgMusic();
+        }
+
+        // ========== WIN MODAL ==========
+        function showWinModal() {
+            stopAllMusic();
+            playSound(successSound);
+            setTimeout(() => {
+                playSound(bigWinSound);
+                // After the trumpet finishes, start cover page music until modal is dismissed
+                bigWinSound.addEventListener('ended', () => {
+                    startCoverMusic();
+                }, { once: true });
+            }, 300);
+            setTimeout(() => launchGlitter(), 400);
+
+            document.getElementById('finalDifficulty').textContent =
+                currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1);
+            document.getElementById('finalCheckpoints').textContent = '10/10';
+            document.getElementById('finalCluesUsed').textContent = cluesUsed;
+            document.getElementById('finalScore').textContent = gameScore;
+
+            let level, msg;
+            if      (gameScore >= 90) { level = '🏆 Bible Scholar!';      msg = 'You know Moses\' story amazingly well!'; }
+            else if (gameScore >= 75) { level = '⭐ Excellent Explorer!'; msg = 'You\'ve learned so much about Moses!'; }
+            else if (gameScore >= 55) { level = '🌟 Great Adventurer!';   msg = 'You understand Moses\' journey well!'; }
+            else if (gameScore >= 35) { level = '👍 Good Job!';           msg = 'You\'re learning about God\'s amazing plans!'; }
+            else                      { level = '📖 Keep Learning!';      msg = 'Read the story again and try once more!'; }
+
+            document.getElementById('achievementLevel').textContent  = level;
+            document.getElementById('achievementMessage').textContent = msg;
+            document.getElementById('winModal').classList.add('active');
+        }
+
+        function playAgain() {
+            playSound(btnClickSound);
+            document.getElementById('winModal').classList.remove('active');
+            coverMusic.pause(); // stop cover music that was playing in the win modal
+            selectSessionQuestions();
+            initializeGame(); // → startBgMusic()
+        }
+
+        // ========== INCOMPLETE MODAL ==========
+        function showIncompleteModal() {
+            playSound(btnClickSound);
+            document.getElementById('completedCount').textContent = completedCheckpoints.size;
+            document.getElementById('incompleteModal').classList.add('active');
+        }
+
+        function closeIncompleteModal() {
+            playSound(btnClickSound);
+            document.getElementById('incompleteModal').classList.remove('active');
+            gameBlocked = false;
+        }
+
+        // ========== UPDATE HUD ==========
+        function updateHUD() {
+            document.getElementById('gameScore').textContent = gameScore;
+            document.getElementById('checkpointCount').textContent = completedCheckpoints.size + '/10';
+        }
+
+        // ========== PAGE NAVIGATION ==========
+        function showGamePage() {
+            document.getElementById('coverPage').style.display = 'none';
+            document.getElementById('gamePage').style.display = 'flex';
+        }
+
+        function showCoverPage() {
+            playSound(btnClickSound);
+            ['puzzleModal','dangerModal','winModal','incompleteModal','instructionsModal'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            document.getElementById('gamePage').style.display = 'none';
+            document.getElementById('coverPage').style.display = 'flex';
+            startCoverMusic();
+        }
+
+        function exitToMainMenu() {
+            playSound(btnClickSound);
+            document.getElementById('puzzleModal').classList.remove('active');
+            gameBlocked = false;
+            showCoverPage();
+        }
+
+        function restartGame() {
+            playSound(btnClickSound);
+            ['puzzleModal','dangerModal','winModal','incompleteModal','instructionsModal'].forEach(id => {
+                document.getElementById(id).classList.remove('active');
+            });
+            selectSessionQuestions();
+            initializeGame();
+        }
+
+        function showInstructions() {
+            playSound(btnClickSound);
+            document.getElementById('instructionsModal').classList.add('active');
+        }
+
+        function closeInstructionsModal() {
+            playSound(btnClickSound);
+            document.getElementById('instructionsModal').classList.remove('active');
+        }
+
+        window.onclick = e => {
+            if (e.target === document.getElementById('instructionsModal')) closeInstructionsModal();
+        };
+
+        // Reposition on resize
+        window.addEventListener('resize', () => {
+            if (document.getElementById('gamePage').style.display !== 'none') {
+                requestAnimationFrame(() => {
+                    positionMosesSprite();
+                    positionOuterLabels();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

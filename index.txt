@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baby Moses Interactive River Adventure Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Comic+Neue:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(135deg, #87CEEB, #4A90E2);
+            color: #333;
+            line-height: 1.4;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .game-container {
+            max-width: 100vw;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* COVER PAGE STYLES */
+       .cover-page {
+    background: linear-gradient(135deg, #4A90E2, #87CEEB);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 20px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}        
+        .cover-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(24px, 6vw, 48px);
+            font-weight: 700;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .cover-subtitle {
+            font-size: clamp(16px, 4vw, 24px);
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .cover-story {
+            font-size: clamp(14px, 3vw, 18px);
+            margin: 20px 0;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .instructions-box {
+            background: rgba(255,255,255,0.2);
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            max-width: 700px;
+        }
+        
+        .instruction-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 15px 0;
+            font-size: clamp(12px, 3vw, 16px);
+        }
+        
+        .difficulty-selector {
+            background: rgba(255,255,255,0.2);
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            max-width: 500px;
+        }
+        
+        .difficulty-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(16px, 4vw, 22px);
+            margin-bottom: 15px;
+        }
+        
+        .difficulty-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .difficulty-btn {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: clamp(14px, 3vw, 18px);
+            font-family: 'Fredoka', cursive;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+.start-label,
+.finish-label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px;
+    font-weight: bold;
+    background: rgba(255,255,255,0.85);
+    padding: 1px 4px;
+    border-radius: 4px;
+    z-index: 4;
+    white-space: nowrap;
+}
+
+.start-label {
+    left: -42px;
+}
+
+.finish-label {
+    right: -46px;
+}
+        
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .difficulty-btn.selected {
+            background: linear-gradient(45deg, #7ED321, #5CB85C);
+            box-shadow: 0 0 20px rgba(126, 211, 33, 0.5);
+        }
+        
+        .start-button {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: clamp(16px, 4vw, 24px);
+            font-family: 'Fredoka', cursive;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+        }
+        
+        /* GAME PAGE STYLES */
+        .game-page {
+            display: none;
+            padding: 10px;
+            background: linear-gradient(135deg, #E0F6FF, #B8E6FF);
+            min-height: 100vh;
+        }
+        
+        .game-header {
+            text-align: center;
+            background: linear-gradient(135deg, #4A90E2, #357ABD);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .game-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(18px, 5vw, 28px);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: clamp(12px, 3vw, 16px);
+        }
+        
+        .controls-info {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: clamp(10px, 2.5vw, 14px);
+        }
+        
+        .maze-container {
+        background: linear-gradient(135deg, #eaf8ff, #d9f1ff);
+    border: 4px solid #4A90E2;
+    border-radius: 15px;
+    padding: 18px;
+    margin: 15px 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+        
+    .maze-grid {
+    display: grid;
+    grid-template-columns: repeat(20, 36px);
+    grid-template-rows: repeat(16, 36px);
+    gap: 2px;
+    justify-content: center;
+    border: 3px solid #333;
+    border-radius: 10px;
+    background: #87CEEB;
+    margin: 0 auto;
+    width: max-content;
+    max-width: none;
+    aspect-ratio: auto;
+}
+   .maze-cell {
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: bold;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.maze-cell img {
+    width: 78%;
+    height: 78%;
+    object-fit: contain;
+    display: block;
+    position: relative;
+    z-index: 2;
+    image-rendering: auto;
+}
+.path {
+    background:
+        linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)),
+        url("assets/images/new ocean.jpg") center/cover no-repeat;
+    border: 1px solid rgba(255,255,255,0.35);
+}
+
+.obstacle {
+    background: linear-gradient(45deg, #8B4513, #A0522D);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+                
+        .start {
+            background: linear-gradient(45deg, #90EE90, #98FB98);
+            border: 2px solid #32CD32;
+        }
+        
+        .checkpoint {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            border: 2px solid #FF8C00;
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #FFD700; }
+            to { box-shadow: 0 0 15px #FFD700, 0 0 25px #FFD700; }
+        }
+        
+        .finish {
+            background: linear-gradient(45deg, #FF69B4, #FFB6C1);
+            border: 2px solid #FF1493;
+            animation: sparkle 1.5s infinite;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes flashIn {
+            from { 
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            to { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes flashOut {
+            from { 
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            to { 
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        .player {
+            background: linear-gradient(45deg, #90EE90, #98FB98) !important;
+            border: 3px solid #32CD32 !important;
+            animation: playerGlow 1s infinite alternate;
+            z-index: 10;
+        }
+        
+        @keyframes playerGlow {
+            from { box-shadow: 0 0 10px #32CD32; }
+            to { box-shadow: 0 0 20px #32CD32, 0 0 30px #32CD32; }
+        }
+        
+        .engulfed {
+            background: linear-gradient(45deg, #FF4444, #CC0000) !important;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .completed-checkpoint {
+            background: linear-gradient(45deg, #32CD32, #90EE90) !important;
+            border-color: #228B22 !important;
+        }
+        
+        .blocked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+    background: linear-gradient(135deg, #FFE4E1, #FFC0CB);
+    margin: 3vh auto;
+    padding: 24px;
+    border: 4px solid #FF6B6B;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    animation: modalSlide 0.5s ease-out;
+    max-height: 94vh;
+    overflow: hidden;
+}        
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(18px, 5vw, 24px);
+            color: #D32F2F;
+            margin-bottom: 15px;
+        }
+        
+        .modal-text {
+            font-size: clamp(14px, 4vw, 18px);
+            color: #B71C1C;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .modal-button {
+            background: linear-gradient(45deg, #4A90E2, #357ABD);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: clamp(14px, 4vw, 18px);
+            font-family: 'Fredoka', cursive;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* PUZZLE MODAL STYLES */
+       .puzzle-modal .modal-content {
+    background: linear-gradient(135deg, #E8F5E8, #D4F1D4);
+    border-color: #7ED321;
+    max-width: 600px;
+    max-height: 94vh;
+    overflow: hidden;
+}
+
+.game-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 22px;
+    flex-wrap: nowrap;
+    margin-top: 12px;
+}
+
+.side-panel {
+    width: 260px;
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+@media (max-width: 1100px) {
+    .game-main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .side-panel {
+        width: 100%;
+        flex: 1 1 auto;
+        align-items: center;
+    }
+}
+        
+        .puzzle-title {
+            font-family: 'Fredoka', cursive;
+            font-size: clamp(16px, 4vw, 22px);
+            color: #2E7D32;
+            margin-bottom: 15px;
+        }
+        
+        .puzzle-question {
+            font-size: clamp(14px, 3vw, 18px);
+            color: #1B5E20;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .clue-box {
+            background: rgba(255,255,255,0.7);
+            border: 2px solid #7ED321;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #2E7D32;
+            display: none;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 15px;
+            font-size: clamp(14px, 4vw, 18px);
+            border: 3px solid #7ED321;
+            border-radius: 10px;
+            text-align: center;
+            font-family: 'Comic Neue', cursive;
+            margin: 15px 0;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(126, 211, 33, 0.5);
+        }
+        
+        .clue-button {
+            background: linear-gradient(45deg, #FFA500, #FF8C00);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: clamp(12px, 3vw, 16px);
+            font-family: 'Fredoka', cursive;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .clue-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .clue-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* WIN MODAL STYLES */
+        .win-modal .modal-content {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-color: #FF8C00;
+            animation: winCelebration 2s ease-in-out;
+        }
+        
+        @keyframes winCelebration {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .score-breakdown {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        /* INSTRUCTIONS MODAL */
+        .instructions-modal .modal-content {
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-color: #2196F3;
+            max-width: 600px;
+        }
+        
+        /* CONTROL BUTTON STYLES */
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3) !important;
+        }
+        
+        .control-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+        }
+        
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .maze-grid {
+                gap: 0.5px;
+            }
+            
+            .maze-cell {
+                font-size: clamp(6px, 2.5vw, 12px);
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .difficulty-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- COVER PAGE -->
+        <div class="cover-page" id="coverPage">
+            <div class="cover-title"> Baby Moses Interactive River Adventure </div>
+            <div class="cover-subtitle">Help Baby Moses Navigate the Dangerous Nile River!</div>
+
+
+
+            
+         <div style="display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; margin:20px 0;">
+    <div style="width:90px; height:90px; border-radius:18px; background:rgba(255,255,255,0.22); border:3px solid rgba(255,255,255,0.35); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <img src="assets/images/moses in basket.png" alt="Baby Moses" style="width:78%; height:78%; object-fit:contain;">
+    </div>
+    <div style="font-size:clamp(22px,5vw,36px); font-weight:bold;">➜</div>
+    <div style="width:90px; height:90px; border-radius:18px; background:rgba(255,255,255,0.22); border:3px solid rgba(255,255,255,0.35); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <img src="assets/images/new ocean.jpg" alt="River" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <div style="font-size:clamp(22px,5vw,36px); font-weight:bold;">➜</div>
+    <div style="width:90px; height:90px; border-radius:18px; background:rgba(255,255,255,0.22); border:3px solid rgba(255,255,255,0.35); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+        <img src="assets/images/newest princess.png" alt="Princess" style="width:82%; height:82%; object-fit:contain;">
+    </div>
+</div>
+            
+            <div class="cover-story">
+                Long ago in Egypt, baby Moses was placed in a basket to float on the river Nile in order to protect his life from Pharaoh's cruel law. 
+                Your mission is to guide him safely through the treacherous waters so he can reach Pharaoh's daughter safely!
+            </div>
+            
+            <div class="instructions-box">
+    <h3 style="font-family: 'Fredoka', cursive; font-size: clamp(16px, 4vw, 22px); margin-bottom: 20px;">How to Play</h3>
+
+    <div class="instruction-item">
+        <img src="assets/images/moses in basket.png" alt="" style="width:30px; height:30px; object-fit:contain;">
+        <span><strong>Use arrow keys</strong> to move baby Moses from START through the maze to reach Pharaoh's daughter at FINISH.</span>
+    </div>
+
+    <div class="instruction-item">
+        <img src="assets/images/new ocean.jpg" alt="" style="width:30px; height:30px; object-fit:cover; border-radius:6px;">
+        <span><strong>Follow the blue water path</strong> — it is the only safe route for Moses.</span>
+    </div>
+
+    <div class="instruction-item">
+        <img src="assets/images/color croc 5.png" alt="" style="width:30px; height:30px; object-fit:contain;">
+        <span><strong>Avoid brown danger zones</strong> — Moses can be engulfed by river creatures or hit a bomb.</span>
+    </div>
+
+    <div class="instruction-item">
+        <img src="assets/images/star 7.png" alt="" style="width:30px; height:30px; object-fit:contain;">
+        <span><strong>Visit all 10 checkpoints</strong> in order and answer Bible questions correctly.</span>
+    </div>
+
+    <div class="instruction-item">
+        <img src="assets/images/star 7.png" alt="" style="width:30px; height:30px; object-fit:contain;">
+        <span><strong>Use clue buttons</strong> if you need help, but each clue reduces your points.</span>
+    </div>
+
+    <div class="instruction-item">
+        <img src="assets/images/big snake.png" alt="" style="width:30px; height:30px; object-fit:contain;">
+        <span><strong>You must answer each question</strong> to continue — no skipping allowed.</span>
+    </div>
+</div>            
+            <div class="difficulty-selector">
+    <div class="difficulty-title">Choose Your Adventure Level</div>
+    <div class="difficulty-buttons">
+        <button class="difficulty-btn selected" onclick="selectDifficulty('easy')" data-difficulty="easy">
+            Easy Explorer (More clues, easier maze)
+        </button>
+        <button class="difficulty-btn" onclick="selectDifficulty('medium')" data-difficulty="medium">
+            Brave Adventurer (Standard challenge)
+        </button>
+        <button class="difficulty-btn" onclick="selectDifficulty('hard')" data-difficulty="hard">
+            Bible Scholar (Fewer clues, complex maze)
+        </button>
+    </div>
+</div>
+            
+            <div style="background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.4); border-radius: 15px; padding: 20px; margin: 20px 0; max-width: 650px;">
+    <h4 style="color: #FFE4E1; font-size: clamp(14px, 4vw, 18px); margin-bottom: 10px;">What Happens If You Go Off the Safe Path?</h4>
+    <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+        <img src="assets/images/color croc 5.png" alt="" style="width:42px; height:42px; object-fit:contain;">
+        <img src="assets/images/big snake.png" alt="" style="width:42px; height:42px; object-fit:contain;">
+        <img src="assets/images/black bomb.png" alt="" style="width:42px; height:42px; object-fit:contain;">
+    </div>
+    <p style="font-size: clamp(12px, 3vw, 16px);">
+        If Moses moves into a danger zone, he will be engulfed by river creatures or hit a bomb.
+        Then you will restart from the beginning and try again.
+    </p>
+</div>
+           <button class="start-button" onclick="startGame()">Start Adventure!</button>
+        </div>
+        
+        <!-- GAME PAGE -->
+
+        <div class="game-page" id="gamePage">
+            <div class="game-header">
+                <div class="game-title">Baby Moses River Adventure</div>
+                <div class="game-info">
+                    <div>Checkpoints: <span id="checkpointProgress">0/10</span></div>
+<div>Difficulty: <span id="currentDifficulty">Easy</span></div>
+<div>Score: <span id="gameScore">100</span>/100</div>
+                </div>
+               <div class="controls-info">
+    Use Arrow Keys: ↑ ↓ ← → to move Moses • Visit checkpoints in order • Answer questions to continue
+</div>            </div>
+            
+            
+
+		<div class="game-main">
+    <div class="maze-container">
+        <div class="maze-grid" id="gameGrid"></div>
+    </div>
+
+    <div class="side-panel">
+        <div style="text-align:center;">
+            <div style="font-size: clamp(14px, 3vw, 18px); font-weight: bold; margin-bottom: 15px; color: #4A90E2;">Touch Controls</div>
+            <div style="display: inline-block; background: rgba(255,255,255,0.92); border: 3px solid #4A90E2; border-radius: 15px; padding: 20px;">
+                <div style="display: flex; justify-content: center; margin-bottom: 10px;">
+                    <button class="control-btn" onclick="movePlayerByButton('up')" style="background: linear-gradient(45deg, #4A90E2, #357ABD); color: white; border: none; padding: 15px 20px; font-size: 24px; border-radius: 10px; cursor: pointer; margin: 2px; min-width: 60px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">⬆️</button>
+                </div>
+                <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px;">
+                    <button class="control-btn" onclick="movePlayerByButton('left')" style="background: linear-gradient(45deg, #4A90E2, #357ABD); color: white; border: none; padding: 15px 20px; font-size: 24px; border-radius: 10px; cursor: pointer; margin: 2px; min-width: 60px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">⬅️</button>
+                    <button class="control-btn" onclick="movePlayerByButton('down')" style="background: linear-gradient(45deg, #4A90E2, #357ABD); color: white; border: none; padding: 15px 20px; font-size: 24px; border-radius: 10px; cursor: pointer; margin: 2px; min-width: 60px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">⬇️</button>
+                    <button class="control-btn" onclick="movePlayerByButton('right')" style="background: linear-gradient(45deg, #4A90E2, #357ABD); color: white; border: none; padding: 15px 20px; font-size: 24px; border-radius: 10px; cursor: pointer; margin: 2px; min-width: 60px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">➡️</button>
+                </div>
+                <div style="font-size: 14px; color: #666; margin-top: 10px;">Tap arrows to move Moses</div>
+            </div>
+        </div>
+
+        <div style="text-align:center;">
+            <button class="modal-button" onclick="showInstructions()" style="margin: 5px;">Instructions</button>
+            <button class="modal-button" onclick="resetGame()" style="margin: 5px;">Restart Game</button>
+            <button class="modal-button" onclick="showCoverPage()" style="margin: 5px;">Main Menu</button>
+        </div>
+    </div>
+</div>
+
+
+
+    
+    <!-- DANGER MODAL -->
+    <div id="dangerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">Moses Hit an Obstacle!</div>
+            <div class="modal-text" id="dangerText">
+                Moses has been engulfed by a dangerous river creature! 
+                Remember to follow the blue water path to keep him safe.
+            </div>
+            <div style="margin: 20px 0;">
+    <img id="dangerImage" src="assets/images/color croc 5.png" alt="Danger" style="width:70px; height:70px; object-fit:contain;">
+</div>
+            <div style="font-size: 24px; color: #D32F2F; font-weight: bold; margin: 15px 0;">Try Again!</div>
+           <button class="modal-button" onclick="closeDangerModal()">Try Again from Start</button>
+        </div>
+    </div>
+    
+    <!-- PUZZLE MODAL -->
+
+<div id="puzzleModal" class="modal puzzle-modal">
+    <div class="modal-content">
+        <div class="puzzle-title" id="puzzleTitle">Checkpoint Puzzle</div>
+        <div class="puzzle-question" id="puzzleQuestion">Answer the Bible question to continue!</div>
+        <div class="clue-box" id="clueBox">Click "Show Clue" for help</div>
+        <input type="text" class="answer-input" id="answerInput" placeholder="Type your answer here." maxlength="20">
+        <div style="margin: 20px 0;">
+            <button class="modal-button" onclick="checkAnswer()" style="background: linear-gradient(45deg, #7ED321, #5CB85C);">Submit Answer</button>
+            <button class="clue-button" id="clueButton" onclick="showClue()">Show Clue (-5 points)</button>
+        </div>
+        <div style="font-size: 12px; color: #666; margin-top: 10px;" id="puzzleStatus">
+            Answer correctly to continue your journey!
+        </div>
+    </div>
+</div>    
+    <!-- WIN MODAL -->
+    <div id="winModal" class="modal win-modal">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:center; align-items:center; gap:16px; margin-bottom:20px;">
+    <img src="assets/images/star 7.png" alt="" style="width:55px; height:55px; object-fit:contain;">
+    <img src="assets/images/newest princess.png" alt="" style="width:70px; height:70px; object-fit:contain;">
+    <img src="assets/images/star 7.png" alt="" style="width:55px; height:55px; object-fit:contain;">
+</div>
+          <div class="modal-text">
+    You've successfully completed the Baby Moses River Adventure!<br>
+    You helped Moses navigate safely through the Nile River.<br>
+    You also learned important Bible truths about God's protection and plan.
+</div>
+            
+           <div class="score-breakdown">
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Your Adventure Results:</div>
+    <div>Difficulty Level: <span id="finalDifficulty">Easy</span></div>
+    <div>Checkpoints Completed: <span id="finalCheckpoints">10/10</span></div>
+    <div>Clues Used: <span id="finalCluesUsed">0</span></div>
+    <div>Final Score: <span id="finalScore">100</span>/100 points</div>
+</div>
+
+<div style="background: rgba(255,255,255,0.3); border-radius: 10px; padding: 20px; margin: 20px 0; text-align: left;">
+    <div style="font-size: 18px; font-weight: bold; margin-bottom: 15px; text-align: center;">Your Score Means</div>
+    <div style="font-size: 14px; line-height: 1.6;">
+        <div style="margin: 8px 0;"><strong>90-100 points:</strong> Bible Scholar! You know Moses' story amazingly well!</div>
+        <div style="margin: 8px 0;"><strong>80-89 points:</strong> Excellent Explorer! You've learned so much about Moses!</div>
+        <div style="margin: 8px 0;"><strong>70-79 points:</strong> Great Adventurer! You understand Moses' journey well!</div>
+        <div style="margin: 8px 0;"><strong>60-69 points:</strong> Good Job! You're learning about God's amazing plans!</div>
+        <div style="margin: 8px 0;"><strong>Below 60:</strong> Keep Learning! Read the story again and try once more!</div>
+    </div>
+</div>
+
+<div style="font-size: 20px; color: #FF8C00; font-weight: bold; margin: 20px 0; padding: 15px; background: rgba(255,255,255,0.3); border-radius: 10px;">
+    <div style="margin-bottom: 10px;">Your Achievement Level:</div>
+    <div id="achievementLevel">Bible Scholar!</div>
+    <div style="font-size: 14px; margin-top: 5px;" id="achievementMessage">You know Moses' story amazingly well!</div>
+</div>
+
+            <div style="margin: 20px 0;">
+               <button class="modal-button" onclick="resetGame()" style="background: linear-gradient(45deg, #7ED321, #5CB85C);">Play Again</button>
+<button class="modal-button" onclick="showCoverPage()">Main Menu</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- INSTRUCTIONS MODAL -->
+    <div id="instructionsModal" class="modal instructions-modal">
+        <div class="modal-content">
+            <div class="modal-title">How to Play Baby Moses Adventure</div>
+            <div style="text-align: left; font-size: 14px; line-height: 1.6;">
+              <div style="margin: 15px 0;"><strong>Your Mission:</strong> Guide baby Moses safely through the Nile River to reach Pharaoh's daughter.</div>
+<div style="margin: 15px 0;"><strong>Controls:</strong> Use arrow keys (↑ ↓ ← →) to move Moses one step at a time through the maze.</div>
+<div style="margin: 15px 0;"><strong>Safe Path:</strong> Stay on the blue water cells.</div>
+<div style="margin: 15px 0;"><strong>Dangers:</strong> Avoid brown cells with creatures and bombs.</div>
+<div style="margin: 15px 0;"><strong>Checkpoints:</strong> Visit all 10 checkpoints in order.</div>
+<div style="margin: 15px 0;"><strong>Questions:</strong> Answer Bible questions correctly to continue.</div>
+<div style="margin: 15px 0;"><strong>Clues:</strong> Each clue costs 5 points.</div>
+<div style="margin: 15px 0;"><strong>Winning:</strong> Reach the finish after completing all checkpoints.</div>
+<div style="margin: 15px 0;"><strong>Scoring:</strong> Start with 100 points and lose 5 points for each clue.</div>
+            </div>
+            <button class="modal-button" onclick="closeInstructions()">Got It!</button>
+        </div>
+    </div>
+    <audio id="bgMusic" src="assets/audio/bg music 2.mp3" loop preload="auto"></audio>
+<audio id="moveSound" src="assets/audio/pop.mp3" preload="auto"></audio>
+<audio id="selectSound" src="assets/audio/magic button click 2.mp3" preload="auto"></audio>
+<audio id="startSound" src="assets/audio/click 3.mp3" preload="auto"></audio>
+<audio id="checkpointSound" src="assets/audio/chime2.mp3" preload="auto"></audio>
+<audio id="correctSound" src="assets/audio/success 4.mp3" preload="auto"></audio>
+<audio id="wrongSound" src="assets/audio/error 3.mp3" preload="auto"></audio>
+<audio id="uhohSound" src="assets/audio/uh oh.mp3" preload="auto"></audio>
+<audio id="splashSound" src="assets/audio/water splash.mp3" preload="auto"></audio>
+<audio id="gameOverSound" src="assets/audio/game over.mp3" preload="auto"></audio>
+<audio id="winSound" src="assets/audio/win sound.mp3" preload="auto"></audio>
+<audio id="bigWinSound" src="assets/audio/success trumpet.mp3" preload="auto"></audio>
+    <script>
+        // Game state variables
+        let playerPosition = { x: 0, y: 0 };
+        let gameScore = 100;
+        let currentPuzzle = null;
+        let completedCheckpoints = new Set();
+        let currentDifficulty = 'easy';
+        let cluesUsed = 0;
+        let currentClueIndex = 0;
+        let gameBlocked = false;
+
+const checkpointSound = document.getElementById('checkpointSound');
+const correctSound = document.getElementById('correctSound');
+const wrongSound = document.getElementById('wrongSound');
+const uhohSound = document.getElementById('uhohSound');
+const splashSound = document.getElementById('splashSound');
+const gameOverSound = document.getElementById('gameOverSound');
+const winSound = document.getElementById('winSound');
+const bigWinSound = document.getElementById('bigWinSound');
+
+
+document.addEventListener('click', () => {
+    if (bgMusic && bgMusic.paused) {
+        bgMusic.volume = 0.22;
+        bgMusic.play().catch(() => {});
+    }
+}, { once: true });
+
+/* IMAGE ASSETS */
+const img = {
+    moses: "assets/images/moses in basket.png",
+    croc: "assets/images/color croc 5.png",
+    snake: "assets/images/big snake.png",
+    princess: "assets/images/newest princess.png",
+    star: "assets/images/star 7.png",
+    bomb: "assets/images/black bomb.png",
+ shark: "assets/images/shark 7.png",
+lobster: "assets/images/orange lobster.png",
+octopus: "assets/images/octopus 5.png",
+squid: "assets/images/squid 5.png",
+crab: "assets/images/crab 5.png",
+water: "assets/images/wave.png",
+fish: "assets/images/fish 7.png",
+ocean: "assets/images/new ocean.jpg",
+
+
+};
+        
+        // Maze layouts for different difficulties - simple water trails with strategic bomb placement
+        const mazeLayouts = {
+            easy: [
+                [2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [0,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3],
+                [0,1,14,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],
+                [0,1,1,5,1,1,1,1,1,1,1,1,1,1,1,1,0,14,0,1],
+                [0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,1,0,1,0,14],
+                [0,1,0,1,1,6,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [0,1,0,1,0,1,1,0,0,0,0,0,0,14,0,14,0,1,0,1],
+                [0,1,0,1,0,1,1,1,1,1,1,1,0,1,1,10,0,1,0,1],
+                [0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1],
+                [0,1,1,1,1,1,1,1,0,14,0,1,0,1,0,1,11,14,1,7],
+                [0,1,0,1,0,1,0,1,1,1,1,1,0,1,0,14,0,1,1,14],
+                [0,1,0,1,0,1,0,0,0,0,0,0,0,1,0,1,8,1,14,14],
+                [0,1,0,1,0,14,1,1,1,1,1,1,1,1,0,1,14,14,1,1],
+                [0,1,0,0,0,0,0,0,0,0,0,0,0,1,1,9,14,1,14,14],
+                [0,1,14,1,1,1,1,1,1,1,1,1,1,14,1,1,1,1,12,13]
+            ],
+            medium: [
+                [2,1,3,1,1,1,1,1,1,1,1,1,1,1,1,14,1,1,1,0],
+                [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,0],
+                [1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0],
+                [1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,6,0],
+                [1,0,0,0,0,0,14,0,0,0,0,14,0,0,0,0,0,0,1,0],
+                [1,14,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                [1,14,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                [0,0,8,0,0,14,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                [0,0,1,0,0,14,0,0,0,0,0,0,0,1,0,0,0,0,0,0],
+                [0,0,1,1,1,1,1,1,1,9,0,0,0,14,0,0,0,0,0,0],
+                [0,0,0,1,0,0,1,0,1,1,1,1,10,1,1,11,1,1,1,14],
+                [0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,14],
+                [0,0,0,14,1,1,1,1,1,1,1,1,14,0,0,12,1,1,1,13]
+            ],
+            hard: [
+                [2,1,3,1,1,1,1,1,1,1,1,1,1,1,1,14,1,1,1,0],
+                [1,0,1,0,0,0,0,0,0,0,0,0,0,0,1,14,0,0,1,0],
+                [1,14,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,14,1,0],
+                [1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,1,0],
+                [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1],
+                [1,1,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,1,1],
+                [1,0,1,0,0,0,1,0,0,14,0,1,0,0,0,0,0,0,6,14],
+                [1,0,0,14,0,0,14,0,1,0,0,14,0,0,0,0,0,0,1,1],
+                [1,14,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+                [1,14,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,1],
+                [1,0,8,1,1,14,14,1,1,1,0,0,0,1,0,0,0,1,0,1],
+                [1,0,1,0,0,14,1,0,0,14,0,0,0,1,0,0,0,1,0,1],
+                [1,0,1,1,1,1,1,1,1,9,0,0,0,14,0,0,0,14,0,1],
+                [1,0,0,1,0,0,1,0,1,1,1,1,10,1,1,11,1,1,1,14],
+                [1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,0,1,14],
+                [1,14,1,14,1,1,1,1,1,1,1,1,14,0,0,12,1,1,1,13]
+            ]
+        };
+        
+       // River dangers (use images instead of emojis)
+const riverDangerImages = [
+    "assets/images/color croc 5.png",
+    "assets/images/shark 7.png",
+    "assets/images/octopus 5.png",
+    "assets/images/squid 5.png",
+    "assets/images/crab 5.png",
+    "assets/images/orange lobster.png",
+    "assets/images/fish 7.png",
+    "assets/images/big snake.png"
+];
+
+const dangerMessages = [
+    "A hungry alligator snapped up Moses!",
+    "A fierce shark attacked the basket!",
+    "A giant octopus grabbed Moses with its tentacles!",
+    "A sneaky squid pulled Moses underwater!",
+    "A crab grabbed onto Moses!",
+    "A giant lobster pinched the basket!",
+    "Another alligator appeared!",
+    "A slithery snake scared Moses!"
+];
+
+// Checkpoint data (remove emojis completely)
+const checkpointData = {
+    3: { num: 1, title: 'The Special Basket' },
+    4: { num: 2, title: 'The Brave Watcher' },
+    5: { num: 3, title: 'The Great River' },
+    6: { num: 4, title: 'The Name\'s Meaning' },
+    7: { num: 5, title: 'The Baby\'s Sound' },
+    8: { num: 6, title: 'Moses\' People' },
+    9: { num: 7, title: 'Divine Protection' },
+    10:{ num: 8, title: 'The Egyptian King' },
+    11:{ num: 9, title: 'The Hiding Place' },
+    12:{ num: 10, title: 'Future Leader' }
+};        
+        // Puzzle questions with multiple clues
+        const puzzles = {
+            3: {
+                question: 'Complete this Bible verse: "She got a _____ basket for him and coated it with tar and pitch."',
+                answer: 'PAPYRUS',
+                clues: [
+                    '💡 Ancient Egyptian writing material made from river plants',
+                    '💡 This plant grows along the Nile River and was used to make paper',
+                    '💡 It starts with "P" and rhymes with "Cyprus"'
+                ]
+            },
+            4: {
+                question: 'Who stood at a distance to watch what would happen to baby Moses?',
+                answer: 'MIRIAM',
+                clues: [
+                    '💡 Moses\' sister whose name starts with "M"',
+                    '💡 She was brave and watched over her baby brother',
+                    '💡 Her name has 6 letters: M-I-R-I-A-M'
+                ]
+            },
+            5: {
+                question: 'What is the name of the famous river where Moses was placed?',
+                answer: 'NILE',
+                clues: [
+                    '💡 Egypt\'s most important river, starts with "N"',
+                    '💡 The longest river in the world, flows through Egypt',
+                    '💡 It\'s only 4 letters long and rhymes with "smile"'
+                ]
+            },
+            6: {
+                question: 'What does "Moses" mean? "Because I _____ him out of the water."',
+                answer: 'DREW',
+                clues: [
+                    '💡 What you do when you pull something from water (4 letters)',
+                    '💡 Past tense of "draw" - to pull or take out',
+                    '💡 Rhymes with "new" and "blue"'
+                ]
+            },
+            7: {
+                question: 'What was baby Moses doing when found? "The baby was _____"',
+                answer: 'CRYING',
+                clues: [
+                    '💡 The sound babies make when they\'re upset or scared',
+                    '💡 What babies do when they need attention',
+                    '💡 Starts with "C" and ends with "ING"'
+                ]
+            },
+            8: {
+                question: 'What group of people was baby Moses born into? The princess said: "This is one of the _____ children."',
+                answer: 'HEBREW',
+                clues: [
+                    '💡 God\'s chosen people who were slaves in Egypt, starts with "H"',
+                    '💡 Another name for the Israelites',
+                    '💡 6 letters: H-E-B-R-E-W'
+                ]
+            },
+            9: {
+                question: 'Who was watching over and protecting baby Moses?',
+                answer: 'GOD',
+                clues: [
+                    '💡 The Creator of heaven and earth',
+                    '💡 The one who has plans for everyone\'s life',
+                    '💡 Only 3 letters, starts with "G"'
+                ]
+            },
+            10: {
+                question: 'What was the title of Egypt\'s ruler during Moses\' time?',
+                answer: 'PHARAOH',
+                clues: [
+                    '💡 Rhymes with "arrow", Egyptian king\'s title',
+                    '💡 The ruler who made the law about Hebrew babies',
+                    '💡 7 letters: P-H-A-R-A-O-H'
+                ]
+            },
+            11: {
+                question: 'Where was Moses hidden? Among the _____ along the riverbank',
+                answer: 'REEDS',
+                clues: [
+                    '💡 Tall grass-like plants that grow by water',
+                    '💡 They provided camouflage for Moses\' basket',
+                    '💡 5 letters, starts with "R" and ends with "S"'
+                ]
+            },
+            12: {
+                question: 'When Moses grew up, he led God\'s people out of _____',
+                answer: 'EGYPT',
+                clues: [
+                    '💡 The country where they were slaves',
+                    '💡 The land of pyramids and pharaohs',
+                    '💡 5 letters: E-G-Y-P-T'
+                ]
+            }
+        };
+        
+        // Game functions
+       function selectDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    document.querySelector(`[data-difficulty="${difficulty}"]`).classList.add('selected');
+
+    if (selectSound) {
+        selectSound.currentTime = 0;
+        selectSound.volume = 0.7;
+        selectSound.play().catch(() => {});
+    }
+}
+
+       function startGame() {
+    document.getElementById('coverPage').style.display = 'none';
+    document.getElementById('gamePage').style.display = 'block';
+    initializeGame();
+
+    if (startSound) {
+        startSound.currentTime = 0;
+        startSound.volume = 0.8;
+        startSound.play().catch(() => {});
+    }
+
+    if (bgMusic) {
+        bgMusic.currentTime = 0;
+        bgMusic.volume = 0.22;
+        bgMusic.play().catch(() => {});
+    }
+}
+        function showCoverPage() {
+            document.getElementById('gamePage').style.display = 'none';
+            document.getElementById('coverPage').style.display = 'flex';
+            closeAllModals();
+        }
+        
+        function initializeGame() {
+            playerPosition = { x: 0, y: 0 };
+            gameScore = 100;
+            completedCheckpoints.clear();
+            cluesUsed = 0;
+            gameBlocked = false;
+            updateGameInfo();
+            generateGameGrid();
+            
+            // Add keyboard event listener
+            document.addEventListener('keydown', handleKeyPress);
+        }
+        
+        
+function generateGameGrid() {
+    const gameGrid = document.getElementById('gameGrid');
+    gameGrid.innerHTML = '';
+
+    const currentMaze = mazeLayouts[currentDifficulty];
+
+    for (let y = 0; y < 16; y++) {
+        for (let x = 0; x < 20; x++) {
+            const cell = document.createElement('div');
+            cell.className = 'maze-cell';
+            cell.dataset.x = x;
+            cell.dataset.y = y;
+
+            const cellType = currentMaze[y][x];
+
+            if (cellType === 0) {
+    cell.classList.add('obstacle');
+
+    const randomIndex = Math.floor(Math.random() * riverDangerImages.length);
+    const dangerSrc = riverDangerImages[randomIndex];
+
+    cell.dataset.dangerIndex = randomIndex;
+    cell.dataset.dangerSrc = dangerSrc;
+
+    cell.innerHTML = `<img src="${dangerSrc}" alt="Obstacle" onerror="this.src='assets/images/color croc 5.png'; this.style.objectFit='contain';">`;
+
+} else if (cellType === 1) {
+                cell.classList.add('path');
+                cell.innerHTML = '';
+
+            } else if (cellType === 14) {
+    cell.classList.add('obstacle');
+    cell.dataset.dangerIndex = 'bomb';
+    cell.dataset.dangerSrc = 'assets/images/black bomb.png';
+    cell.innerHTML = `<img src="assets/images/black bomb.png" alt="Bomb" onerror="this.src='assets/images/color croc 5.png';">`;
+} else if (cellType === 2) {
+    cell.classList.add('start', 'player');
+    cell.innerHTML = `
+        <div class="start-label">START</div>
+        <img src="assets/images/moses in basket.png" alt="Moses" style="width:100%; height:100%; object-fit:contain; position:relative; z-index:2;">
+    `;
+} else if (cellType >= 3 && cellType <= 12) {
+                const data = checkpointData[cellType];
+                cell.classList.add('checkpoint');
+                cell.innerHTML = `
+                    <div style="position:absolute; top:2px; left:2px; font-size:9px; font-weight:bold; z-index:3;">${data.num}</div>
+                    <img src="assets/images/star 7.png" alt="Checkpoint" style="width:82%; height:82%; object-fit:contain;">
+                `;
+
+            } else if (cellType === 13) {
+    cell.classList.add('finish');
+    cell.innerHTML = `
+        <div class="finish-label">FINISH</div>
+        <img src="assets/images/newest princess.png" alt="Princess" style="width:88%; height:88%; object-fit:contain;">
+    `;
+}
+
+            gameGrid.appendChild(cell);
+        }
+    }
+}
+
+
+        
+        function handleKeyPress(event) {
+            if (gameBlocked) return;
+            
+            let newX = playerPosition.x;
+            let newY = playerPosition.y;
+            
+            switch(event.key) {
+                case 'ArrowUp':
+                    newY = Math.max(0, playerPosition.y - 1);
+                    event.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    newY = Math.min(15, playerPosition.y + 1);
+                    event.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    newX = Math.max(0, playerPosition.x - 1);
+                    event.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    newX = Math.min(19, playerPosition.x + 1);
+                    event.preventDefault();
+                    break;
+                default:
+                    return;
+            }
+            
+            movePlayer(newX, newY);
+        }
+        
+        function movePlayerByButton(direction) {
+            if (gameBlocked) return;
+            
+            let newX = playerPosition.x;
+            let newY = playerPosition.y;
+            
+            switch(direction) {
+                case 'up':
+                    newY = Math.max(0, playerPosition.y - 1);
+                    break;
+                case 'down':
+                    newY = Math.min(15, playerPosition.y + 1);
+                    break;
+                case 'left':
+                    newX = Math.max(0, playerPosition.x - 1);
+                    break;
+                case 'right':
+                    newX = Math.min(19, playerPosition.x + 1);
+                    break;
+                default:
+                    return;
+            }
+            
+            movePlayer(newX, newY);
+        }
+        
+        function movePlayer(newX, newY) {
+            const currentMaze = mazeLayouts[currentDifficulty];
+            const cellType = currentMaze[newY][newX];
+            
+            // Check if move is valid (adjacent cell)
+            const deltaX = Math.abs(newX - playerPosition.x);
+            const deltaY = Math.abs(newY - playerPosition.y);
+            if (deltaX + deltaY !== 1) return; // Only allow one step moves
+
+if (moveSound) {
+    moveSound.currentTime = 0;
+    moveSound.volume = 0.6;
+    moveSound.play().catch(() => {});
+}
+            
+            // Remove player from current position
+            const currentCell = document.querySelector(`[data-x="${playerPosition.x}"][data-y="${playerPosition.y}"]`);
+            currentCell.classList.remove('player');
+            const currentCellType = currentMaze[playerPosition.y][playerPosition.x];
+            
+           if (currentCellType === 2) {
+    currentCell.className = 'maze-cell start';
+    currentCell.innerHTML = '<div style="position:absolute; top:2px; left:2px; font-size:9px; font-weight:bold;">START</div>';
+} else if (currentCellType === 1) {
+    currentCell.className = 'maze-cell path';
+    currentCell.innerHTML = '';
+} else if (currentCellType === 14) {
+    currentCell.className = 'maze-cell obstacle';
+    currentCell.innerHTML = `<img src="assets/images/black bomb.png" alt="Bomb">`;
+} else if (currentCellType >= 3 && currentCellType <= 12) {
+    const data = checkpointData[currentCellType];
+    currentCell.className = 'maze-cell checkpoint';
+    if (completedCheckpoints.has(currentCellType)) {
+        currentCell.classList.add('completed-checkpoint');
+    }
+    currentCell.innerHTML = `
+        <div style="position:absolute; top:2px; left:2px; font-size:9px; font-weight:bold; z-index:3;">${data.num}</div>
+        <img src="assets/images/star 7.png" alt="Checkpoint" style="width:78%; height:78%; object-fit:contain;">
+    `;
+}
+            
+            
+            // Move to new position
+            playerPosition = { x: newX, y: newY };
+            const newCell = document.querySelector(`[data-x="${newX}"][data-y="${newY}"]`);
+            
+           if (cellType === 0 || cellType === 14) {
+    newCell.classList.add('engulfed');
+
+    let image, message;
+
+    if (cellType === 14) {
+        image = newCell.dataset.dangerSrc || "assets/images/black bomb.png";
+        message = "Moses hit a dangerous bomb!";
+    } else {
+        const hitIndex = parseInt(newCell.dataset.dangerIndex, 10);
+        image = newCell.dataset.dangerSrc || "assets/images/color croc 5.png";
+        message = dangerMessages[hitIndex] || "A dangerous river creature attacked Moses!";
+    }
+
+    if (splashSound) {
+        splashSound.currentTime = 0;
+        splashSound.volume = 0.75;
+        splashSound.play().catch(() => {});
+    }
+
+    setTimeout(() => {
+        if (uhohSound) {
+            uhohSound.currentTime = 0;
+            uhohSound.volume = 0.8;
+            uhohSound.play().catch(() => {});
+        }
+    }, 120);
+
+    setTimeout(() => {
+        if (gameOverSound) {
+            gameOverSound.currentTime = 0;
+            gameOverSound.volume = 0.8;
+            gameOverSound.play().catch(() => {});
+        }
+    }, 260);
+
+    showDangerModal(image, message);
+
+    setTimeout(() => {
+        newCell.classList.remove('engulfed');
+        resetPlayerPosition();
+    }, 1000);
+}else if (cellType >= 3 && cellType <= 12) {
+                // Hit checkpoint
+                newCell.classList.add('player');
+                
+                if (completedCheckpoints.has(cellType)) {
+                    // Show Moses on completed checkpoint but keep trophy visible
+                    newCell.innerHTML = '<div style="font-size: 0.6em; line-height: 1;">' + checkpointData[cellType].num + '</div><div style="font-size: 0.8em;"><img src="assets/images/moses in basket.png" style="width:100%;height:100%;"></div>';
+                } else {
+                    // Show Moses on uncompleted checkpoint
+                   newCell.innerHTML = `<img src="assets/images/moses in basket.png" alt="Moses" style="width:94%; height:94%; object-fit:contain;">`;
+                    gameBlocked = true; // Block movement until puzzle is solved
+
+if (checkpointSound) {
+    checkpointSound.currentTime = 0;
+    checkpointSound.volume = 0.75;
+    checkpointSound.play().catch(() => {});
+}
+
+
+                    showPuzzleModal(cellType);
+                }
+                
+            } else if (cellType === 13) {
+                // Reached finish
+                newCell.classList.add('player');
+                newCell.innerHTML = '<img src="assets/images/moses in basket.png" alt="Moses" style="width:100%;height:100%;object-fit:contain;">';
+                
+                if (completedCheckpoints.size === 10) {
+                    setTimeout(() => showWinModal(), 500);
+                } else {
+                    alert(`You need to visit all 10 checkpoints first! You've completed ${completedCheckpoints.size}/10.`);
+                }
+                
+            } else {
+                // Safe path
+                newCell.classList.add('player');
+                newCell.innerHTML = '<img src="assets/images/moses in basket.png" alt="Moses" style="width:100%;height:100%;object-fit:contain;">';
+            }
+        }
+        
+        function resetPlayerPosition() {
+            // Move player back to start
+            const currentCell = document.querySelector(`[data-x="${playerPosition.x}"][data-y="${playerPosition.y}"]`);
+            currentCell.classList.remove('player');
+            
+            // Reset all completed checkpoints back to original state
+            completedCheckpoints.clear();
+            updateGameInfo();
+            
+            // Regenerate the grid to reset checkpoint appearances
+            generateGameGrid();
+            
+            playerPosition = { x: 0, y: 0 };
+            const startCell = document.querySelector(`[data-x="0"][data-y="0"]`);
+            startCell.classList.add('player');
+            startCell.innerHTML = '<div style="position:absolute; top:2px; left:2px; font-size:9px; font-weight:bold; z-index:3;">START</div><img src="assets/images/color moses 3 new.png" alt="Moses" style="width:94%;height:94%;object-fit:contain;">';
+        }
+        
+       function showDangerModal(image, message) {
+    document.getElementById("dangerImage").src = image;
+    document.getElementById('dangerText').textContent = message + ' Remember to follow the blue water path to keep Moses safe.';
+    document.getElementById('dangerModal').style.display = 'block';
+}
+        
+        function closeDangerModal() {
+            document.getElementById('dangerModal').style.display = 'none';
+        }
+        
+        function showPuzzleModal(checkpointValue) {
+            currentPuzzle = checkpointValue;
+            currentClueIndex = 0;
+            
+            const data = checkpointData[checkpointValue];
+            const puzzle = puzzles[checkpointValue];
+            
+            document.getElementById('puzzleTitle').textContent = `Checkpoint ${data.num}: ${data.title}`;
+            document.getElementById('puzzleQuestion').textContent = puzzle.question;
+            document.getElementById('clueBox').style.display = 'none';
+            document.getElementById('answerInput').value = '';
+            document.getElementById('clueButton').disabled = false;
+            document.getElementById('clueButton').textContent = 'Show Clue (-5 points)';
+            document.getElementById('puzzleStatus').textContent = 'Answer correctly to continue your journey!';
+            
+            document.getElementById('puzzleModal').style.display = 'block';
+            document.getElementById('answerInput').focus();
+        }
+        
+        function showClue() {
+            if (currentClueIndex < puzzles[currentPuzzle].clues.length) {
+                const clue = puzzles[currentPuzzle].clues[currentClueIndex];
+                document.getElementById('clueBox').textContent = clue;
+                document.getElementById('clueBox').style.display = 'block';
+                
+                gameScore = Math.max(0, gameScore - 5);
+                cluesUsed++;
+                updateGameInfo();
+                
+                currentClueIndex++;
+                
+                if (currentClueIndex >= puzzles[currentPuzzle].clues.length) {
+                    document.getElementById('clueButton').disabled = true;
+                    document.getElementById('clueButton').textContent = 'No More Clues';
+                } else {
+                    document.getElementById('clueButton').textContent = 'Next Clue (-5 points)';
+                }
+                
+                document.getElementById('puzzleStatus').textContent = `Clue ${currentClueIndex} shown. Points remaining: ${gameScore}`;
+            }
+        }
+        
+        
+function checkAnswer() {
+    const userAnswer = document.getElementById('answerInput').value.trim().toUpperCase();
+    const correctAnswer = puzzles[currentPuzzle].answer;
+
+    if (isAnswerCorrect(userAnswer, correctAnswer)) {
+        if (correctSound) {
+            correctSound.currentTime = 0;
+            correctSound.volume = 0.8;
+            correctSound.play().catch(() => {});
+        }
+
+        showFlashMessage("That's Correct! Great Job!", 'success');
+
+        setTimeout(() => {
+            completedCheckpoints.add(currentPuzzle);
+            updateGameInfo();
+
+            const checkpointCell = document.querySelector(`[data-x="${playerPosition.x}"][data-y="${playerPosition.y}"]`);
+            checkpointCell.classList.add('completed-checkpoint');
+            checkpointCell.innerHTML =
+                '<div style="position:absolute; top:2px; left:2px; font-size:9px; font-weight:bold; z-index:3;">' +
+                checkpointData[currentPuzzle].num +
+                '</div><img src="assets/images/star 7.png" alt="Checkpoint" style="width:78%; height:78%; object-fit:contain;">';
+
+            document.getElementById('puzzleModal').style.display = 'none';
+            gameBlocked = false;
+        }, 1500);
+
+    } else {
+        if (wrongSound) {
+            wrongSound.currentTime = 0;
+            wrongSound.volume = 0.8;
+            wrongSound.play().catch(() => {});
+        }
+
+        showFlashMessage("Not Quite Right! Try Again!", 'error');
+
+        setTimeout(() => {
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+            document.getElementById('puzzleStatus').textContent =
+                "You didn't get it quite right. Please try again or use a clue for help.";
+        }, 1500);
+    }
+}
+
+
+
+
+        
+        function isAnswerCorrect(userAnswer, correctAnswer) {
+            // Direct match
+            if (userAnswer === correctAnswer) return true;
+            
+            // Handle close variations for each answer
+            switch(correctAnswer) {
+                case 'CRYING':
+                    return userAnswer === 'CRY' || userAnswer === 'CRYING';
+                case 'REEDS':
+                    return userAnswer === 'REED' || userAnswer === 'REEDS';
+                case 'GOD':
+                    return userAnswer === 'GOD' || userAnswer === 'JESUS' || userAnswer === 'HOLY SPIRIT';
+                case 'HEBREW':
+                    return userAnswer === 'HEBREW' || userAnswer === 'ISRAELITE' || userAnswer === 'ISRAELITES';
+                default:
+                    return false;
+            }
+        }
+        
+        function showFlashMessage(message, type) {
+            // Create flash message element
+            const flashDiv = document.createElement('div');
+            flashDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 2000;
+                padding: 30px 50px;
+                border-radius: 20px;
+                font-family: 'Fredoka', cursive;
+                font-size: 28px;
+                font-weight: 700;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                animation: flashIn 0.3s ease-out;
+            `;
+            
+            if (type === 'success') {
+                flashDiv.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+                flashDiv.style.color = 'white';
+                flashDiv.style.border = '4px solid #2E7D32';
+            } else {
+                flashDiv.style.background = 'linear-gradient(135deg, #f44336, #d32f2f)';
+                flashDiv.style.color = 'white';
+                flashDiv.style.border = '4px solid #B71C1C';
+            }
+            
+            flashDiv.textContent = message;
+            document.body.appendChild(flashDiv);
+            
+            // Remove after animation
+            setTimeout(() => {
+                flashDiv.style.animation = 'flashOut 0.3s ease-in';
+                setTimeout(() => {
+                    document.body.removeChild(flashDiv);
+                }, 300);
+            }, 1200);
+        }
+        
+        function showWinModal() {
+if (winSound) {
+    winSound.currentTime = 0;
+    winSound.volume = 0.85;
+    winSound.play().catch(() => {});
+}
+
+setTimeout(() => {
+    if (bigWinSound) {
+        bigWinSound.currentTime = 0;
+        bigWinSound.volume = 0.9;
+        bigWinSound.play().catch(() => {});
+    }
+}, 300);
+            document.getElementById('finalDifficulty').textContent = currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1);
+            document.getElementById('finalCheckpoints').textContent = `${completedCheckpoints.size}/10`;
+            document.getElementById('finalCluesUsed').textContent = cluesUsed;
+            document.getElementById('finalScore').textContent = gameScore;
+            
+            // Determine achievement level based on score ranges
+            let achievementLevel, achievementMessage;
+            if (gameScore >= 90) {
+                achievementLevel = '🏆 Bible Scholar!';
+                achievementMessage = 'You know Moses\' story amazingly well!';
+            } else if (gameScore >= 80) {
+                achievementLevel = '🥇 Excellent Explorer!';
+                achievementMessage = 'You\'ve learned so much about Moses!';
+            } else if (gameScore >= 70) {
+                achievementLevel = '🥈 Great Adventurer!';
+                achievementMessage = 'You understand Moses\' journey well!';
+            } else if (gameScore >= 60) {
+                achievementLevel = '🥉 Good Job!';
+                achievementMessage = 'You\'re learning about God\'s amazing plans!';
+            } else {
+                achievementLevel = '📚 Keep Learning!';
+                achievementMessage = 'Read the story again and try once more!';
+            }
+            
+            document.getElementById('achievementLevel').textContent = achievementLevel;
+            document.getElementById('achievementMessage').textContent = achievementMessage;
+            
+            document.getElementById('winModal').style.display = 'block';
+        }
+        
+        function updateGameInfo() {
+            document.getElementById('gameScore').textContent = gameScore;
+            document.getElementById('checkpointProgress').textContent = `${completedCheckpoints.size}/10`;
+            document.getElementById('currentDifficulty').textContent = currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1);
+        }
+        
+        function resetGame() {
+            closeAllModals();
+            document.removeEventListener('keydown', handleKeyPress);
+            initializeGame();
+        }
+        
+        function showInstructions() {
+            document.getElementById('instructionsModal').style.display = 'block';
+        }
+        
+        function closeInstructions() {
+            document.getElementById('instructionsModal').style.display = 'none';
+        }
+        
+        function closeAllModals() {
+            document.getElementById('dangerModal').style.display = 'none';
+            document.getElementById('puzzleModal').style.display = 'none';
+            document.getElementById('winModal').style.display = 'none';
+            document.getElementById('instructionsModal').style.display = 'none';
+        }
+        
+        // Handle Enter key in answer input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('answerInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+        });
+        
+        // Initialize the game when page loads
+        window.onload = function() {
+            // Game starts on cover page
+        };
+    </script>
+</body>
+</html>
+
