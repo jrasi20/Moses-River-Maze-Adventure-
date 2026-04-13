@@ -817,8 +817,8 @@
             to   { opacity: 0; transform: translate(-50%, -50%) scale(0.7); }
         }
 
-        /* ===== MOBILE-ONLY FIXES (<=700px) ===== */
-        @media (max-width: 700px) {
+        /* ===== MOBILE PORTRAIT (<=700px) ===== */
+        @media (max-width: 700px) and (orientation: portrait) {
             /* --- GAME PAGE: strict viewport-height flex layout --- */
             .game-page {
                 height: 100dvh;
@@ -870,56 +870,50 @@
                 max-height: 100%;
             }
 
-            /* --- MAZE CELLS: ensure images fit nicely --- */
-            .maze-cell img {
-                width: 88%;
-                height: 88%;
+            /* --- CHECKPOINT STARS: force visible on small cells --- */
+            .maze-cell.checkpoint {
+                position: relative;
             }
             .maze-cell.checkpoint img {
-                width: 72%;
-                height: 72%;
-            }
-            .maze-cell.finish img {
-                width: 95%;
-                height: 95%;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: contain;
             }
             .cp-num {
-                font-size: 8px;
-                padding: 0px 2px;
-                line-height: 1.3;
+                font-size: 9px;
+                padding: 0px 3px;
+                line-height: 1.2;
+                background: rgba(0,0,0,0.85);
+                z-index: 10;
+            }
+            /* Princess fills entire cell */
+            .maze-cell.finish img {
+                width: 100% !important;
+                height: 100% !important;
             }
 
-            /* --- MOBILE START/FINISH LABELS: shown above/below maze --- */
+            /* --- MOBILE START/FINISH LABELS: flush with maze edges --- */
             .mobile-start-label,
             .mobile-finish-label {
-                display: block !important;
+                display: flex !important;
+                flex-shrink: 0;
+                padding: 1px 0;
             }
             .mobile-start-label {
-                text-align: left;
-                padding: 2px 6px;
-                flex-shrink: 0;
+                justify-content: flex-start;
+            }
+            .mobile-finish-label {
+                justify-content: flex-end;
             }
             .mobile-start-label span,
             .mobile-finish-label span {
                 display: inline-block;
-                font-size: 12px;
+                font-size: 11px;
                 font-weight: 700;
                 padding: 2px 10px;
                 border-radius: 5px;
                 letter-spacing: 0.5px;
                 box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            }
-            .mobile-start-label span {
-                background: linear-gradient(135deg, #cc0000, #ff2222);
-                color: white;
-                border: 2px solid #FFD700;
-            }
-            .mobile-finish-label {
-                text-align: right;
-                padding: 2px 6px;
-                flex-shrink: 0;
-            }
-            .mobile-finish-label span {
                 background: linear-gradient(135deg, #cc0000, #ff2222);
                 color: white;
                 border: 2px solid #FFD700;
@@ -949,75 +943,114 @@
                 border-radius: 8px;
                 flex-shrink: 0;
             }
-            .dpad-label {
-                font-size: 9px;
-                margin-bottom: 2px;
-            }
-            .dpad {
-                gap: 2px;
-            }
+            .dpad-label { font-size: 9px; margin-bottom: 2px; }
+            .dpad { gap: 2px; }
             .dpad-btn {
-                height: 34px;
-                font-size: 16px;
-                border-radius: 6px;
-                min-width: 34px;
+                height: 34px; font-size: 16px;
+                border-radius: 6px; min-width: 34px;
             }
-            .dpad-spacer {
-                height: 34px;
-            }
+            .dpad-spacer { height: 34px; }
 
             /* --- ACTION BUTTONS: vertical stack next to D-pad --- */
             .buttons-section {
                 flex-direction: column !important;
                 flex: 1;
                 justify-content: space-evenly;
-                gap: 3px;
-                padding: 2px 0;
+                gap: 3px; padding: 2px 0;
             }
             .action-btn {
-                height: 32px !important;
-                max-width: none !important;
-                font-size: 12px !important;
-                padding: 0 6px !important;
+                height: 32px !important; max-width: none !important;
+                font-size: 12px !important; padding: 0 6px !important;
                 border-radius: 6px;
             }
 
-            /* --- MODALS: ensure scrollable on small screens --- */
+            /* --- MODALS: scrollable --- */
             .modal-content {
-                max-height: 85vh;
-                overflow-y: auto;
+                max-height: 85vh; overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                width: 92%;
-                padding: 16px;
+                width: 92%; padding: 16px;
             }
-            .puzzle-modal .modal-content {
-                overflow-y: auto;
-                max-height: 85vh;
-            }
-
-            /* --- PUZZLE MODAL: compact spacing --- */
+            .puzzle-modal .modal-content { overflow-y: auto; max-height: 85vh; }
             .puzzle-star-icon { width: 24px; height: 24px; }
             .puzzle-title { font-size: 16px; }
             .puzzle-question { font-size: 15px; padding: 8px 10px; margin-bottom: 8px; }
             .answer-input { padding: 8px; font-size: 16px; margin-bottom: 8px; }
             .puzzle-btns { gap: 5px; }
             .modal-button { padding: 9px 12px; font-size: 13px; }
-
-            /* --- DANGER MODAL: scale down --- */
             .danger-title { font-size: 20px; }
             .danger-img-box { width: 100px; height: 100px; margin-bottom: 8px; }
             .danger-message { font-size: 14px; padding: 7px 10px; margin-bottom: 6px; }
             .danger-better-luck { font-size: 16px; margin: 4px 0 10px; }
-
-            /* --- WIN MODAL: compact --- */
             .win-title { font-size: 24px; }
             .princess-img-box { width: 100px; height: 100px; margin-bottom: 8px; }
             .score-table { padding: 8px; margin-bottom: 10px; }
             .score-row { font-size: 13px; }
         }
 
-        /* Extra small phones (<=380px) */
-        @media (max-width: 380px) {
+        /* ===== MOBILE LANDSCAPE (<=700px height, wide) ===== */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .game-page { height: 100dvh; overflow: hidden; }
+
+            .game-header {
+                height: auto; min-height: 32px;
+                padding: 2px 8px;
+            }
+            .game-title { font-size: 11px; max-width: 140px; }
+            .hud-value { font-size: 14px; }
+            .hud-label { font-size: 8px; }
+
+            .game-content {
+                flex-direction: row;
+                gap: 4px; padding: 2px 4px;
+                flex: 1; overflow: hidden;
+            }
+
+            /* Hide side decorations in landscape too */
+            .maze-side-deco { display: none; }
+
+            .maze-wrapper {
+                flex: 1; min-height: 0;
+                overflow: visible;
+            }
+            .maze-container {
+                width: min(calc(100vw - 200px), calc((100dvh - 50px) * 1.25));
+                max-height: calc(100dvh - 50px);
+            }
+
+            /* Checkpoint stars visible in landscape */
+            .maze-cell.checkpoint img {
+                width: 100% !important; height: 100% !important;
+            }
+            .maze-cell.finish img {
+                width: 100% !important; height: 100% !important;
+            }
+
+            /* Mobile labels hidden in landscape — use desktop-style outer labels */
+            .mobile-start-label,
+            .mobile-finish-label {
+                display: none !important;
+            }
+
+            .controls-panel {
+                width: 170px; flex-shrink: 0;
+                flex-direction: column;
+                height: 100%; overflow: hidden;
+            }
+            .dpad-section { padding: 4px; }
+            .dpad-btn { height: 36px; min-width: 36px; font-size: 16px; }
+            .dpad-spacer { height: 36px; }
+            .buttons-section {
+                flex-direction: column; flex: 1;
+                justify-content: space-evenly; gap: 4px;
+            }
+            .action-btn { height: 34px; font-size: 12px; }
+
+            /* Modals in landscape */
+            .modal-content { max-height: 90vh; width: 80%; }
+        }
+
+        /* Extra small phones portrait (<=380px) */
+        @media (max-width: 380px) and (orientation: portrait) {
             .game-title { max-width: 80px; font-size: 10px; }
             .hud-card { padding: 1px 4px; min-width: 40px; }
             .hud-value { font-size: 14px; }
@@ -1030,7 +1063,7 @@
             }
         }
 
-        /* Hidden by default, shown on mobile */
+        /* Hidden by default, shown on mobile portrait */
         .mobile-start-label,
         .mobile-finish-label {
             display: none;
@@ -2033,21 +2066,9 @@
             else if (e.key === 'ArrowRight') { e.preventDefault(); movePlayerByButton('right'); }
         }
 
-        // Swipe gestures
-        let tStartX = 0, tStartY = 0;
-        document.addEventListener('touchstart', e => {
-            tStartX = e.changedTouches[0].clientX;
-            tStartY = e.changedTouches[0].clientY;
-        }, { passive: true });
-
-        document.addEventListener('touchend', e => {
-            if (gameBlocked) return;
-            const dx = e.changedTouches[0].clientX - tStartX;
-            const dy = e.changedTouches[0].clientY - tStartY;
-            if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
-            if (Math.abs(dx) > Math.abs(dy)) movePlayerByButton(dx > 0 ? 'right' : 'left');
-            else                              movePlayerByButton(dy > 0 ? 'down'  : 'up');
-        }, { passive: true });
+        // Swipe gestures DISABLED on touch devices (D-pad only)
+        // Pinch-zoom, scroll, and swipe were causing unintentional Moses moves.
+        // Movement is controlled exclusively via the D-pad buttons and keyboard arrows.
 
         // ========== PUZZLE MODAL ==========
         function showPuzzleModal(cpIdx) {
