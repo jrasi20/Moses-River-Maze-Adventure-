@@ -1117,15 +1117,14 @@
                 padding: 1px 0;
                 justify-content: flex-start;
             }
-            /* --- FINISH LABEL: fixed at bottom-left of screen in landscape --- */
+            /* --- FINISH LABEL: normal flow below maze, scrolls with content --- */
             .mobile-finish-label {
                 display: flex !important;
-                position: fixed !important;
-                bottom: 4px;
-                left: 6px;
-                width: auto !important;
-                z-index: 100;
-                padding: 0;
+                position: static !important;
+                width: calc(20 * 24px);
+                justify-content: flex-end;
+                padding: 2px 0 8px 0;
+                flex-shrink: 0;
             }
             .mobile-start-label span,
             .mobile-finish-label span {
