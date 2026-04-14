@@ -93,7 +93,7 @@
             pointer-events: none; overflow: hidden; z-index: 0;
         }
         
-        @media (max-width: 700px) {
+        @media (max-width: 1024px) and (orientation: portrait) {
             .cover-wave-scatter {
                 display: none !important;
             }
@@ -117,8 +117,8 @@
             pointer-events: none; overflow: visible; z-index: 2;
         }
         
-        /* Hide wave-anchor on mobile */
-        @media (max-width: 700px) {
+        /* Hide wave-anchor on mobile/tablet portrait */
+        @media (max-width: 1024px) and (orientation: portrait) {
             .wave-anchor {
                 display: none !important;
             }
@@ -363,18 +363,8 @@
         .maze-side-deco img:nth-child(3) { animation: float 3.6s ease-in-out 1.2s infinite; }
         .maze-side-deco img:nth-child(4) { animation: float 4.4s ease-in-out 1.8s infinite; }
 
+        @media (max-width: 1024px) and (orientation: portrait) { .maze-side-deco { display: none; } }
         @media (max-width: 700px) { .maze-side-deco { display: none; } }
-
-        /* Tablet portrait (701-900px): tighter controls, smaller side decos */
-        @media (min-width: 701px) and (max-width: 900px) and (orientation: portrait) {
-            .maze-side-deco { width: 40px; }
-            .maze-side-deco img { width: 34px; height: 34px; }
-            .controls-panel { width: 150px; }
-            .dpad-section { padding: 6px; }
-            .dpad-btn { height: 40px; min-width: 40px; font-size: 18px; }
-            .dpad-spacer { height: 40px; }
-            .action-btn { font-size: 11px !important; padding: 0 4px !important; }
-        }
 
         .maze-wrapper {
             flex: 1; display: flex; align-items: center; justify-content: center;
@@ -386,7 +376,7 @@
         }
         
         /* Mobile scrollable maze viewport */
-        @media (max-width: 700px) and (orientation: portrait) {
+        @media (max-width: 1024px) and (orientation: portrait) {
             .maze-wrapper {
                 overflow: auto;
                 -webkit-overflow-scrolling: touch;
@@ -862,29 +852,31 @@
         }
 
         /* ===== MOBILE PORTRAIT (<=700px) ===== */
-        @media (max-width: 700px) and (orientation: portrait) {
+        @media (max-width: 1024px) and (orientation: portrait) {
             /* --- GAME PAGE: strict viewport-height flex layout --- */
+            /* Applies to phones AND iPads in portrait */
             .game-page {
                 height: 100dvh;
                 overflow: hidden;
                 padding-bottom: env(safe-area-inset-bottom, 0px);
             }
 
-            /* --- MAZE GRID: fixed 28px cells for mobile --- */
+            /* --- MAZE GRID: responsive cells for phones (28px) to iPads (36px) --- */
             .maze-grid {
                 display: grid;
-                grid-template-columns: repeat(20, 28px);
-                grid-template-rows: repeat(16, 28px);
+                --cell: clamp(28px, 4.6vw, 36px);
+                grid-template-columns: repeat(20, var(--cell));
+                grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
-                width: calc(20 * 28px);
-                height: calc(16 * 28px);
+                width: calc(20 * var(--cell));
+                height: calc(16 * var(--cell));
             }
 
             .maze-cell {
-                width: 28px;
-                height: 28px;
-                min-width: 28px;
-                min-height: 28px;
+                width: var(--cell);
+                height: var(--cell);
+                min-width: var(--cell);
+                min-height: var(--cell);
             }
 
             /* --- HUD: compact single row --- */
@@ -929,10 +921,11 @@
                 display: block;
             }
 
-            /* --- MAZE CONTAINER: fixed 28px cells for mobile readability --- */
+            /* --- MAZE CONTAINER: responsive cells for phone/tablet --- */
             .maze-container {
-                width: calc(20 * 28px);
-                height: calc(16 * 28px);
+                --cell: clamp(28px, 4.6vw, 36px);
+                width: calc(20 * var(--cell));
+                height: calc(16 * var(--cell));
                 position: relative;
                 min-width: 100%;
             }
@@ -964,8 +957,9 @@
             .mobile-finish-label {
                 display: flex !important;
                 flex-shrink: 0;
-                padding: 2px 0;
-                width: calc(20 * 28px); /* match maze width */
+                padding: 3px 0;
+                --cell: clamp(28px, 4.6vw, 36px);
+                width: calc(20 * var(--cell)); /* match maze width */
             }
             .mobile-start-label {
                 justify-content: flex-start;
@@ -1235,8 +1229,8 @@
             display: none;
         }
 
-        /* Cover title: prevent emoji wrapping on small portrait phones */
-        @media (max-width: 700px) and (orientation: portrait) {
+        /* Cover title: prevent emoji wrapping on small portrait phones/tablets */
+        @media (max-width: 1024px) and (orientation: portrait) {
             .cover-title {
                 font-size: clamp(26px, 8vw, 40px);
                 white-space: nowrap;
@@ -1286,7 +1280,7 @@
             margin-top: 10px; min-height: 20px;
         }
         .access-footer { font-size: 11px; opacity: 0.55; margin-top: 16px; }
-        @media (max-width: 700px) {
+        @media (max-width: 1024px) and (orientation: portrait) {
             .access-gate-title { font-size: clamp(20px, 6vw, 28px); }
             .access-box { padding: 18px 20px; }
         }
@@ -2226,7 +2220,8 @@
 
             const wRect = wrapper.getBoundingClientRect();
             const cRect = container.getBoundingClientRect();
-            const isMobile = window.innerWidth <= 700;
+            const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+            const isMobile = window.innerWidth <= 1024 && isPortrait || window.innerWidth <= 700;
 
             // START label → to the LEFT of the start cell (row 0)
             const startCell = document.querySelector('.maze-cell[data-x="0"][data-y="0"]');
@@ -2538,7 +2533,8 @@
         // ========== FLASH MESSAGE ==========
         function showFlashMessage(msg, type) {
             const d = document.createElement('div');
-            const isMobile = window.innerWidth <= 700;
+            const isPort = window.matchMedia('(orientation: portrait)').matches;
+            const isMobile = (window.innerWidth <= 1024 && isPort) || window.innerWidth <= 700;
             d.style.cssText = `
                 position:fixed; top:50%; left:50%;
                 transform:translate(-50%,-50%);
