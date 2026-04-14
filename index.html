@@ -945,18 +945,20 @@
                 height: 100% !important;
             }
 
-            /* --- MOBILE START/FINISH LABELS: flush with maze edges --- */
+            /* --- MOBILE START/FINISH LABELS: inside maze wrapper, scroll with content --- */
             .mobile-start-label,
             .mobile-finish-label {
                 display: flex !important;
                 flex-shrink: 0;
-                padding: 1px 0;
+                padding: 2px 0;
+                width: calc(20 * 28px); /* match maze width */
             }
             .mobile-start-label {
                 justify-content: flex-start;
             }
             .mobile-finish-label {
                 justify-content: flex-end;
+                padding-bottom: 14px; /* extra space above scrollbar */
             }
             .mobile-start-label span,
             .mobile-finish-label span {
@@ -1253,21 +1255,19 @@
                 <img src="assets/images/orange lobster.png" alt="Lobster">
             </div>
 
-            <!-- Mobile-only START label above maze -->
-            <div class="mobile-start-label"><span>▶ START</span></div>
-
             <div class="maze-wrapper" id="mazeWrapper">
                 <!-- Outer labels positioned by JS (desktop only) -->
                 <div class="outer-start-label" id="outerStartLabel">▶ START</div>
                 <div class="outer-finish-label" id="outerFinishLabel">FINISH ◀</div>
+                <!-- Mobile-only START label — INSIDE wrapper so it scrolls with maze -->
+                <div class="mobile-start-label"><span>▶ START</span></div>
                 <div class="maze-container" id="mazeContainer">
                     <div class="maze-grid" id="mazeGrid"></div>
                     <img id="mosesSprite" src="assets/images/moses in basket.png" alt="Moses">
                 </div>
+                <!-- Mobile-only FINISH label — INSIDE wrapper so it scrolls with maze -->
+                <div class="mobile-finish-label"><span>FINISH ◀</span></div>
             </div>
-
-            <!-- Mobile-only FINISH label below maze -->
-            <div class="mobile-finish-label"><span>FINISH ◀</span></div>
 
             <!-- Right side decoration -->
             <div class="maze-side-deco" id="rightDeco">
@@ -1434,9 +1434,13 @@
         let dpadRepeatInterval = null;
         
         function startDpadRepeat(direction) {
+            stopDpadRepeat(); // Always clear previous interval first
             if (gameBlocked) return;
             movePlayerByButton(direction);
-            dpadRepeatInterval = setInterval(() => movePlayerByButton(direction), 150);
+            dpadRepeatInterval = setInterval(() => {
+                if (gameBlocked) { stopDpadRepeat(); return; }
+                movePlayerByButton(direction);
+            }, 150);
         }
         
         function stopDpadRepeat() {
@@ -1599,16 +1603,36 @@
         }
 
         // ========== AUDIO UNLOCK (iOS/Android — first interaction) ==========
-        document.addEventListener('touchstart', unlockAudio, { once: true });
-        document.addEventListener('click', unlockAudio, { once: true });
-
+        // Use multiple events and retry to ensure audio starts on mobile
         function unlockAudio() {
             if (audioUnlocked) return;
             audioUnlocked = true;
-            coverMusic.play().catch(() => {});
+            // Remove all unlock listeners
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('touchend', unlockAudio);
+            document.removeEventListener('click', unlockAudio);
+
+            // On iOS, we need to "warm up" audio elements by playing them briefly
+            const allAudio = [coverMusic, bgMusic, moveSound, checkpointSound, successChime,
+                             successSound, wrongSound, splashSound, dangerSound, gameOverSound,
+                             winSound, bigWinSound, btnClickSound];
+            allAudio.forEach(a => {
+                if (a) { a.play().then(() => { if (a !== coverMusic) a.pause(); a.currentTime = 0; }).catch(() => {}); }
+            });
+
+            // Start cover music with a small retry
+            coverMusic.play().catch(() => {
+                // Retry after a brief delay (helps on some mobile browsers)
+                setTimeout(() => coverMusic.play().catch(() => {}), 100);
+            });
+
             const hint = document.getElementById('musicHint');
             if (hint) hint.classList.add('hidden');
         }
+
+        document.addEventListener('touchstart', unlockAudio);
+        document.addEventListener('touchend', unlockAudio);
+        document.addEventListener('click', unlockAudio);
 
         function startCoverMusic() {
             if (!audioUnlocked) return;
@@ -2173,6 +2197,7 @@
 
         // ========== PUZZLE MODAL ==========
         function showPuzzleModal(cpIdx) {
+            stopDpadRepeat(); // CRITICAL: stop D-pad interval to prevent auto-move
             gameBlocked = true;
             currentPuzzleCheckpointIndex = cpIdx;
             const q = sessionQuestions[cpIdx];
@@ -2243,14 +2268,17 @@
         // ========== FLASH MESSAGE ==========
         function showFlashMessage(msg, type) {
             const d = document.createElement('div');
+            const isMobile = window.innerWidth <= 700;
             d.style.cssText = `
                 position:fixed; top:50%; left:50%;
                 transform:translate(-50%,-50%);
-                z-index:2000; padding:24px 40px;
-                border-radius:16px;
+                z-index:2000;
+                padding:${isMobile ? '12px 20px' : '24px 40px'};
+                border-radius:${isMobile ? '10px' : '16px'};
                 font-family:'Comic Neue',cursive;
-                font-size:26px; font-weight:700;
+                font-size:${isMobile ? '16px' : '26px'}; font-weight:700;
                 text-align:center; color:white;
+                max-width:${isMobile ? '80vw' : 'none'};
                 animation:flashIn 0.22s ease-out;
             `;
             if (type === 'success') {
@@ -2273,6 +2301,7 @@
 
         // ========== DANGER MODAL ==========
         function showDangerModal(imgSrc, msg) {
+            stopDpadRepeat(); // CRITICAL: stop D-pad interval to prevent auto-move
             // Water splash → uh oh → game over
             playSound(splashSound);
             setTimeout(() => {
@@ -2288,22 +2317,28 @@
 
         function closeDangerModal() {
             playSound(btnClickSound);
+            stopDpadRepeat(); // CRITICAL: stop any held D-pad interval
             document.getElementById('dangerModal').classList.remove('active');
             completedCheckpoints.clear();
             resetCheckpointVisuals();
+            // Reset score and clues to 0 on Try Again
+            gameScore = 0;
+            cluesUsed = 0;
             // Restore start cell appearance when Moses resets there
             document.querySelectorAll('.maze-cell.start-vacated').forEach(c => c.classList.remove('start-vacated'));
             updateHudDots();
-            gameBlocked = false;
             playerX = 0; playerY = 0;
             resetPlayerPosition();
             updateHUD();
+            // Brief delay before unblocking to prevent accidental immediate moves
+            setTimeout(() => { gameBlocked = false; }, 200);
             bgMusic.currentTime = 0;
             startBgMusic();
         }
 
         // ========== WIN MODAL ==========
         function showWinModal() {
+            stopDpadRepeat(); // CRITICAL: stop D-pad interval
             stopAllMusic();
             playSound(successSound);
             setTimeout(() => {
@@ -2343,6 +2378,7 @@
 
         // ========== INCOMPLETE MODAL ==========
         function showIncompleteModal() {
+            stopDpadRepeat(); // CRITICAL: stop D-pad interval
             playSound(btnClickSound);
             document.getElementById('completedCount').textContent = completedCheckpoints.size;
             document.getElementById('incompleteModal').classList.add('active');
@@ -2389,6 +2425,7 @@
         }
 
         function exitToMainMenu() {
+            stopDpadRepeat();
             playSound(btnClickSound);
             document.getElementById('puzzleModal').classList.remove('active');
             gameBlocked = false;
@@ -2396,6 +2433,7 @@
         }
 
         function restartGame() {
+            stopDpadRepeat();
             playSound(btnClickSound);
             ['puzzleModal','dangerModal','winModal','incompleteModal','instructionsModal'].forEach(id => {
                 document.getElementById(id).classList.remove('active');
@@ -2405,6 +2443,7 @@
         }
 
         function showInstructions() {
+            stopDpadRepeat(); // Stop D-pad interval
             playSound(btnClickSound);
             document.getElementById('instructionsModal').classList.add('active');
         }
