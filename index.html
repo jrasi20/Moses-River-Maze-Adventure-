@@ -1050,8 +1050,71 @@
             .score-row { font-size: 13px; }
         }
 
-        /* ===== MOBILE LANDSCAPE (<=900px wide + landscape) ===== */
-        @media (max-width: 900px) and (orientation: landscape) {
+        /* ===== iPAD PORTRAIT OVERRIDES (600px–1024px) ===== */
+        @media (min-width: 600px) and (max-width: 1024px) and (orientation: portrait) {
+            /* Bigger cells: fill iPad width (768px → ~37px cells) */
+            .maze-grid {
+                --cell: clamp(34px, calc((100vw - 16px) / 20), 42px);
+                grid-template-columns: repeat(20, var(--cell));
+                grid-template-rows: repeat(16, var(--cell));
+                width: calc(20 * var(--cell));
+                height: calc(16 * var(--cell));
+            }
+            .maze-cell {
+                width: var(--cell); height: var(--cell);
+                min-width: var(--cell); min-height: var(--cell);
+            }
+            .maze-container {
+                --cell: clamp(34px, calc((100vw - 16px) / 20), 42px);
+                width: calc(20 * var(--cell));
+                height: calc(16 * var(--cell));
+            }
+            .mobile-start-label,
+            .mobile-finish-label {
+                --cell: clamp(34px, calc((100vw - 16px) / 20), 42px);
+                width: calc(20 * var(--cell));
+            }
+            .mobile-start-label span,
+            .mobile-finish-label span {
+                font-size: 14px;
+                padding: 4px 14px;
+            }
+            /* Center maze vertically in the wrapper */
+            .maze-wrapper {
+                display: flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            /* Bigger D-pad for iPad */
+            .dpad-section { padding: 6px 10px; }
+            .dpad-label { font-size: 11px; margin-bottom: 4px; }
+            .dpad-btn {
+                height: 44px !important; min-width: 44px !important;
+                font-size: 20px !important; border-radius: 8px;
+            }
+            .dpad-spacer { height: 44px !important; }
+            /* Buttons: not full-width on iPad, capped width */
+            .buttons-section {
+                align-items: center !important;
+            }
+            .action-btn {
+                height: 40px !important;
+                max-width: 340px !important;
+                font-size: 14px !important;
+                border-radius: 8px;
+            }
+            /* Bigger HUD for iPad */
+            .game-title { font-size: 14px !important; max-width: 200px !important; }
+            .hud-value { font-size: 18px !important; }
+            .hud-label { font-size: 10px !important; }
+            .hud-dot { width: 9px !important; height: 9px !important; }
+            .cp-num { font-size: 11px; }
+            .controls-panel { max-height: 160px; }
+        }
+
+        /* ===== MOBILE LANDSCAPE (<=1024px wide + landscape) ===== */
+        @media (max-width: 1024px) and (orientation: landscape) {
             .game-page {
                 height: 100dvh; overflow: hidden;
                 padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -2249,7 +2312,7 @@
             // FINISH label → to the RIGHT of the finish cell (row 15)
             const finishCell = document.querySelector('.maze-cell.finish');
             const outerFinish = document.getElementById('outerFinishLabel');
-            const isLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
+            const isLandscape = window.matchMedia('(max-width: 1024px) and (orientation: landscape)').matches;
 
             if (finishCell && outerFinish && isLandscape) {
                 // Landscape mobile: use offset-based positioning (scroll-independent)
@@ -2304,7 +2367,7 @@
 
             // Auto-scroll maze viewport on mobile (portrait AND landscape)
             const wrapper = document.getElementById('mazeWrapper');
-            const isMobileView = window.innerWidth <= 900;
+            const isMobileView = window.innerWidth <= 1024;
             if (wrapper && isMobileView) {
                 const wrapperRect = wrapper.getBoundingClientRect();
                 const spriteRect = sprite.getBoundingClientRect();
