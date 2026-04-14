@@ -296,6 +296,8 @@
             height: 100dvh; overflow: hidden;
             background: #e0e4ec;
             touch-action: manipulation;
+            /* iOS safe area: prevent content from being hidden behind home indicator */
+            padding-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         /* ===== HUD ===== */
@@ -362,6 +364,17 @@
         .maze-side-deco img:nth-child(4) { animation: float 4.4s ease-in-out 1.8s infinite; }
 
         @media (max-width: 700px) { .maze-side-deco { display: none; } }
+
+        /* Tablet portrait (701-900px): tighter controls, smaller side decos */
+        @media (min-width: 701px) and (max-width: 900px) and (orientation: portrait) {
+            .maze-side-deco { width: 40px; }
+            .maze-side-deco img { width: 34px; height: 34px; }
+            .controls-panel { width: 150px; }
+            .dpad-section { padding: 6px; }
+            .dpad-btn { height: 40px; min-width: 40px; font-size: 18px; }
+            .dpad-spacer { height: 40px; }
+            .action-btn { font-size: 11px !important; padding: 0 4px !important; }
+        }
 
         .maze-wrapper {
             flex: 1; display: flex; align-items: center; justify-content: center;
@@ -854,6 +867,7 @@
             .game-page {
                 height: 100dvh;
                 overflow: hidden;
+                padding-bottom: env(safe-area-inset-bottom, 0px);
             }
 
             /* --- MAZE GRID: fixed 28px cells for mobile --- */
@@ -1044,7 +1058,12 @@
 
         /* ===== MOBILE LANDSCAPE (<=900px wide + landscape) ===== */
         @media (max-width: 900px) and (orientation: landscape) {
-            .game-page { height: 100dvh; overflow: hidden; }
+            .game-page {
+                height: 100dvh; overflow: hidden;
+                padding-bottom: env(safe-area-inset-bottom, 0px);
+                padding-left: env(safe-area-inset-left, 0px);
+                padding-right: env(safe-area-inset-right, 0px);
+            }
 
             /* --- HUD: ultra-compact --- */
             .game-header {
@@ -1172,7 +1191,7 @@
                 max-height: 94vh; width: 60%;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                padding: 10px 14px;
+                padding: 8px 12px;
                 margin: 0 auto;
             }
             .puzzle-modal .modal-content { overflow-y: auto; max-height: 94vh; }
@@ -1843,12 +1862,18 @@
             // Play cover music SYNCHRONOUSLY inside this gesture handler (iOS requirement)
             coverMusic.play().catch(() => {});
 
-            // Warm up other audio elements after a tiny delay (non-blocking)
+            // Warm up other audio elements SILENTLY after a tiny delay (non-blocking)
+            // Must mute before play to prevent audible blips on real iOS devices
             setTimeout(() => {
                 [bgMusic, moveSound, checkpointSound, successChime, successSound,
                  wrongSound, splashSound, dangerSound, gameOverSound, winSound,
                  bigWinSound, btnClickSound].forEach(a => {
-                    if (a) { const p = a.play(); if (p) p.then(() => { a.pause(); a.currentTime = 0; }).catch(() => {}); }
+                    if (a) {
+                        const origVol = a.volume;
+                        a.volume = 0;
+                        const p = a.play();
+                        if (p) p.then(() => { a.pause(); a.currentTime = 0; a.volume = origVol; }).catch(() => { a.volume = origVol; });
+                    }
                 });
             }, 50);
 
