@@ -1117,14 +1117,9 @@
                 padding: 1px 0;
                 justify-content: flex-start;
             }
-            /* --- FINISH LABEL: normal flow below maze, scrolls with content --- */
+            /* --- FINISH LABEL: hidden in landscape, outer-finish-label used instead --- */
             .mobile-finish-label {
-                display: flex !important;
-                position: static !important;
-                width: calc(20 * 24px);
-                justify-content: flex-end;
-                padding: 2px 0 8px 0;
-                flex-shrink: 0;
+                display: none !important;
             }
             .mobile-start-label span,
             .mobile-finish-label span {
@@ -1140,10 +1135,14 @@
                 border: 2px solid #FFD700;
             }
 
-            /* Hide desktop-positioned labels */
-            .outer-start-label,
-            .outer-finish-label {
+            /* Hide desktop-positioned start label only; finish label positioned by JS */
+            .outer-start-label {
                 display: none !important;
+            }
+            .outer-finish-label {
+                /* JS will position and show this next to the finish cell */
+                font-size: 10px !important;
+                padding: 2px 8px !important;
             }
 
             /* --- CONTROLS PANEL: compact right column --- */
@@ -2219,13 +2218,25 @@
             // FINISH label → to the RIGHT of the finish cell (row 15)
             const finishCell = document.querySelector('.maze-cell.finish');
             const outerFinish = document.getElementById('outerFinishLabel');
-            if (finishCell && outerFinish) {
+            const isLandscape = window.matchMedia('(max-width: 900px) and (orientation: landscape)').matches;
+
+            if (finishCell && outerFinish && isLandscape) {
+                // Landscape mobile: use offset-based positioning (scroll-independent)
+                // Position absolute within maze-wrapper, next to the finish cell
+                const topPos = container.offsetTop + finishCell.offsetTop + finishCell.offsetHeight / 2 - 11;
+                const leftPos = container.offsetLeft + finishCell.offsetLeft + finishCell.offsetWidth + 4;
+                outerFinish.style.position = 'absolute';
+                outerFinish.style.top = topPos + 'px';
+                outerFinish.style.left = leftPos + 'px';
+                outerFinish.style.right = 'auto';
+                outerFinish.style.display = 'block';
+            } else if (finishCell && outerFinish) {
                 const fRect = finishCell.getBoundingClientRect();
                 const labelH = isMobile ? 22 : 30;
                 const topPos = fRect.top - wRect.top + fRect.height / 2 - labelH / 2;
                 const rightSpace = wRect.right - cRect.right;
                 if (isMobile) {
-                    // On mobile: overlay on the maze right edge
+                    // On mobile portrait: overlay on the maze right edge
                     outerFinish.style.top = topPos + 'px';
                     outerFinish.style.left = 'auto';
                     outerFinish.style.right = (wRect.right - cRect.right) + 'px';
