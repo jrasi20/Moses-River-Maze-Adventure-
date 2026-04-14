@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="copyright" content="© 2025 Bible Explorer Kids. All rights reserved.">
+    <meta name="copyright" content="© 2026 Bible Explorer Kids. All rights reserved.">
     <meta name="author" content="Bible Explorer Kids">
     <title>Baby Moses River Adventure</title>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
@@ -1124,8 +1124,16 @@
             }
             .mobile-start-label span,
             .mobile-finish-label span {
+                display: inline-block;
                 font-size: 10px;
+                font-weight: 700;
                 padding: 1px 8px;
+                border-radius: 5px;
+                letter-spacing: 0.5px;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+                background: linear-gradient(135deg, #cc0000, #ff2222);
+                color: white;
+                border: 2px solid #FFD700;
             }
 
             /* Hide desktop-positioned labels */
@@ -1193,15 +1201,91 @@
         .mobile-finish-label {
             display: none;
         }
+
+        /* Cover title: prevent emoji wrapping on small portrait phones */
+        @media (max-width: 700px) and (orientation: portrait) {
+            .cover-title {
+                font-size: clamp(26px, 8vw, 40px);
+                white-space: nowrap;
+            }
+        }
+
+        /* ===== ACCESS GATE PAGE ===== */
+        .access-gate {
+            display: flex; flex-direction: column;
+            height: 100dvh; overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background: linear-gradient(180deg, #000d2e 0%, #003a99 45%, #0066cc 75%, #1a8ccc 100%);
+            padding: 30px 20px 40px;
+            text-align: center; align-items: center;
+            justify-content: center; color: white;
+            position: relative;
+        }
+        .access-gate .cover-waves { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        .access-gate > *:not(.cover-waves) { position: relative; z-index: 1; }
+        .access-gate-logo { width: 100px; height: auto; margin-bottom: 10px; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
+        .access-gate-brand { font-size: 20px; font-weight: 700; color: #FFD700; text-shadow: 2px 2px 4px rgba(0,0,0,0.7); margin-bottom: 6px; }
+        .access-gate-title { font-size: 28px; font-weight: 700; color: #FFE680; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 20px; line-height: 1.2; }
+        .access-box {
+            background: rgba(255,255,255,0.12); border: 2px solid rgba(255,215,0,0.4);
+            border-radius: 16px; padding: 24px 28px; max-width: 380px; width: 90%;
+            backdrop-filter: blur(5px);
+        }
+        .access-box h3 { color: #FFD700; margin-bottom: 14px; font-size: 18px; }
+        .access-box p { font-size: 14px; line-height: 1.5; margin-bottom: 14px; opacity: 0.9; }
+        .access-input {
+            width: 100%; padding: 12px; font-size: 20px; font-weight: 700;
+            text-align: center; letter-spacing: 6px;
+            border: 2px solid rgba(255,215,0,0.6); border-radius: 8px;
+            background: rgba(255,255,255,0.95); color: #333;
+            font-family: 'Comic Neue', cursive; margin-bottom: 12px;
+        }
+        .access-btn {
+            width: 100%; padding: 14px; font-size: 18px; font-weight: 700;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #001a4d; border: none; border-radius: 10px;
+            cursor: pointer; transition: all 0.3s; font-family: 'Comic Neue', cursive;
+        }
+        .access-btn:hover { transform: scale(1.03); }
+        .access-btn:active { transform: scale(0.97); }
+        .access-error {
+            color: #FF6B6B; font-size: 14px; font-weight: 700;
+            margin-top: 10px; min-height: 20px;
+        }
+        .access-footer { font-size: 11px; opacity: 0.55; margin-top: 16px; }
+        @media (max-width: 700px) {
+            .access-gate-title { font-size: clamp(20px, 6vw, 28px); }
+            .access-box { padding: 18px 20px; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- ========== ACCESS GATE ========== -->
+    <div id="accessGate" class="access-gate">
+        <div class="cover-waves" aria-hidden="true">
+            <div class="wave-layer"></div>
+            <div class="wave-layer"></div>
+            <div class="wave-layer"></div>
+        </div>
+        <img src="assets/images/logo%201.png" alt="Bible Explorer Kids" class="access-gate-logo">
+        <div class="access-gate-brand">✝️ Bible Explorer Kids ✝️</div>
+        <div class="access-gate-title">Baby Moses River Adventure</div>
+        <div class="access-box">
+            <h3>🔑 Enter Access Code</h3>
+            <p>Enter the access code from your Etsy purchase to play this game.</p>
+            <input type="text" class="access-input" id="accessCodeInput" placeholder="- - - - -" maxlength="10" autocomplete="off">
+            <button class="access-btn" onclick="checkAccessCode()">▶ Play Game</button>
+            <div class="access-error" id="accessError"></div>
+        </div>
+        <div class="access-footer">© 2026 Bible Explorer Kids · For personal use only</div>
+    </div>
+
     <!-- Music hint -->
-    <div class="music-hint" id="musicHint">🎵 Tap anywhere to start music!</div>
+    <div class="music-hint" id="musicHint" style="display:none;">🎵 Tap anywhere to start music!</div>
 
     <!-- ========== COVER PAGE ========== -->
-    <div id="coverPage" class="cover-page">
+    <div id="coverPage" class="cover-page" style="display:none;">
         <div class="cover-waves" aria-hidden="true">
             <div class="wave-layer"></div>
             <div class="wave-layer"></div>
@@ -1294,7 +1378,7 @@
         <div id="difficultyHint" style="display:none;color:#FFD700;font-size:15px;font-weight:700;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">⚠️ Please choose a difficulty level first!</div>
 
         <button class="start-btn" onclick="startGame()">🚀 Start Adventure!</button>
-        <div class="cover-footer">© 2025 Bible Explorer Kids · For personal use only</div>
+        <div class="cover-footer">© 2026 Bible Explorer Kids · For personal use only</div>
     </div>
 
     <!-- ========== GAME PAGE ========== -->
@@ -1500,6 +1584,53 @@
     <audio id="btnClickSound"></audio>
 
     <script>
+        // ========== ACCESS CODE GATE ==========
+        // Change this code for each Etsy listing or periodically
+        const VALID_ACCESS_CODES = ['MOSES2026', 'BIBLE4KIDS', 'EXODUS12'];
+
+        function checkAccessCode() {
+            const input = document.getElementById('accessCodeInput');
+            const error = document.getElementById('accessError');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                error.textContent = 'Please enter your access code.';
+                return;
+            }
+
+            if (VALID_ACCESS_CODES.includes(code)) {
+                // Success — hide gate, show cover page
+                document.getElementById('accessGate').style.display = 'none';
+                document.getElementById('coverPage').style.display = 'flex';
+                document.getElementById('musicHint').style.display = '';
+                error.textContent = '';
+                // Store in sessionStorage so refreshing doesn't re-ask
+                try { sessionStorage.setItem('bek_access', 'granted'); } catch(e) {}
+            } else {
+                error.textContent = 'Invalid code. Check your Etsy purchase for the correct code.';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Enter key on access input
+        document.addEventListener('DOMContentLoaded', () => {
+            const accessInput = document.getElementById('accessCodeInput');
+            if (accessInput) {
+                accessInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') { e.preventDefault(); checkAccessCode(); }
+                });
+            }
+            // Check if already unlocked this session
+            try {
+                if (sessionStorage.getItem('bek_access') === 'granted') {
+                    document.getElementById('accessGate').style.display = 'none';
+                    document.getElementById('coverPage').style.display = 'flex';
+                    document.getElementById('musicHint').style.display = '';
+                }
+            } catch(e) {}
+        });
+
                 // ========== D-PAD MOVEMENT ==========
         let dpadRepeatInterval = null;
         let isTouchDevice = false; // Track if touch events are being used
@@ -1534,7 +1665,7 @@
         }
 
         /*
-         * © 2025 Bible Explorer Kids. All rights reserved.
+         * © 2026 Bible Explorer Kids. All rights reserved.
          * Unauthorized copying, distribution, or reproduction prohibited.
          * Licensed for personal, non-commercial use only.
          */
