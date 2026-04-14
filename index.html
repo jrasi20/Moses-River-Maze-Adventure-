@@ -92,6 +92,12 @@
             position: absolute !important; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; overflow: hidden; z-index: 0;
         }
+        
+        @media (max-width: 700px) {
+            .cover-wave-scatter {
+                display: none !important;
+            }
+        }
         .cover-wave-scatter img {
             position: absolute; object-fit: contain; pointer-events: none;
             animation: wavePulse ease-in-out infinite;
@@ -109,6 +115,13 @@
         .wave-anchor {
             position: relative; height: 0; width: 100%;
             pointer-events: none; overflow: visible; z-index: 2;
+        }
+        
+        /* Hide wave-anchor on mobile */
+        @media (max-width: 700px) {
+            .wave-anchor {
+                display: none !important;
+            }
         }
         .wave-anchor img {
             position: absolute; object-fit: contain;
@@ -282,6 +295,7 @@
             display: none; flex-direction: column;
             height: 100dvh; overflow: hidden;
             background: #e0e4ec;
+            touch-action: manipulation;
         }
 
         /* ===== HUD ===== */
@@ -357,6 +371,18 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             overflow: visible;
         }
+        
+        /* Mobile scrollable maze viewport */
+        @media (max-width: 700px) and (orientation: portrait) {
+            .maze-wrapper {
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-x pan-y;
+                display: block;
+                align-items: stretch;
+                justify-content: flex-start;
+            }
+        }
 
         /* Outer START / FINISH labels — positioned by JS */
         .outer-start-label, .outer-finish-label {
@@ -430,6 +456,12 @@
         .maze-cell.checkpoint {
             background: linear-gradient(135deg, #FFD700, #FF8C00);
             border-color: #cc7700;
+            position: relative;
+        }
+        .maze-cell.checkpoint img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
         }
 
         .maze-cell.checkpoint-done {
@@ -440,13 +472,12 @@
 
         /* Checkpoint number badge — prominent */
         .cp-num {
-            position: absolute; bottom: 0; right: 0;
-            background: #111; color: #FFD700;
-            font-size: 11px; font-weight: 700;
-            padding: 1px 4px; border-radius: 3px 0 0 0;
-            line-height: 1.5; z-index: 5; pointer-events: none;
-            border-top: 1px solid rgba(255,215,0,0.6);
-            border-left: 1px solid rgba(255,215,0,0.6);
+            position: absolute; top: 1px; left: 1px;
+            background: rgba(0,0,0,0.85); color: #FFD700;
+            font-size: 9px; font-weight: 700;
+            padding: 1px 4px; border-radius: 3px;
+            line-height: 1.2; z-index: 10; pointer-events: none;
+            border: 1px solid rgba(255,215,0,0.5);
         }
 
         /* FINISH cell — RED */
@@ -825,6 +856,23 @@
                 overflow: hidden;
             }
 
+            /* --- MAZE GRID: fixed 28px cells for mobile --- */
+            .maze-grid {
+                display: grid;
+                grid-template-columns: repeat(20, 28px);
+                grid-template-rows: repeat(16, 28px);
+                gap: 0;
+                width: calc(20 * 28px);
+                height: calc(16 * 28px);
+            }
+
+            .maze-cell {
+                width: 28px;
+                height: 28px;
+                min-width: 28px;
+                min-height: 28px;
+            }
+
             /* --- HUD: compact single row --- */
             .game-header {
                 height: auto;
@@ -856,18 +904,23 @@
                 overflow: hidden;
             }
 
-            /* --- MAZE WRAPPER: takes remaining space --- */
+            /* --- MAZE WRAPPER: scrollable viewport for mobile --- */
             .maze-wrapper {
                 flex: 1;
                 min-height: 0;
-                overflow: visible;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-x pan-y;
                 position: relative;
+                display: block;
             }
 
-            /* --- MAZE CONTAINER: fit within available height --- */
+            /* --- MAZE CONTAINER: fixed 28px cells for mobile readability --- */
             .maze-container {
-                width: min(calc(100vw - 8px), calc((100dvh - 250px) * 1.25));
-                max-height: 100%;
+                width: calc(20 * 28px);
+                height: calc(16 * 28px);
+                position: relative;
+                min-width: 100%;
             }
 
             /* --- CHECKPOINT STARS: force visible on small cells --- */
@@ -1231,13 +1284,13 @@
                     <div class="dpad-label">🕹️ MOVE MOSES</div>
                     <div class="dpad">
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onclick="movePlayerByButton('up')">▲</button>
+                        <button class="dpad-btn" onmousedown="startDpadRepeat('up')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('up')" ontouchend="stopDpadRepeat()">▲</button>
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onclick="movePlayerByButton('left')">◄</button>
+                        <button class="dpad-btn" onmousedown="startDpadRepeat('left')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('left')" ontouchend="stopDpadRepeat()">◄</button>
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onclick="movePlayerByButton('right')">►</button>
+                        <button class="dpad-btn" onmousedown="startDpadRepeat('right')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('right')" ontouchend="stopDpadRepeat()">►</button>
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onclick="movePlayerByButton('down')">▼</button>
+                        <button class="dpad-btn" onmousedown="startDpadRepeat('down')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('down')" ontouchend="stopDpadRepeat()">▼</button>
                         <div class="dpad-spacer"></div>
                     </div>
                 </div>
@@ -1377,6 +1430,22 @@
     <audio id="btnClickSound"></audio>
 
     <script>
+                // ========== D-PAD REPEAT MOVEMENT ==========
+        let dpadRepeatInterval = null;
+        
+        function startDpadRepeat(direction) {
+            if (gameBlocked) return;
+            movePlayerByButton(direction);
+            dpadRepeatInterval = setInterval(() => movePlayerByButton(direction), 150);
+        }
+        
+        function stopDpadRepeat() {
+            if (dpadRepeatInterval) {
+                clearInterval(dpadRepeatInterval);
+                dpadRepeatInterval = null;
+            }
+        }
+
         /*
          * © 2025 Bible Explorer Kids. All rights reserved.
          * Unauthorized copying, distribution, or reproduction prohibited.
@@ -1718,6 +1787,13 @@
         function initializeGame() {
             document.removeEventListener('keydown', handleKeyPress);
             document.addEventListener('keydown', handleKeyPress);
+            
+            // Add Enter key listener for puzzle answer
+            const answerInput = document.getElementById('answerInput');
+            if (answerInput) {
+                answerInput.removeEventListener('keydown', handleAnswerKeyPress);
+                answerInput.addEventListener('keydown', handleAnswerKeyPress);
+            }
 
             gameScore = 0;
             cluesUsed = 0;
@@ -1740,6 +1816,13 @@
             });
 
             startBgMusic();
+        }
+        
+        function handleAnswerKeyPress(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
+            }
         }
 
         // ========== MAZE LAYOUTS ==========
@@ -1936,6 +2019,24 @@
             sprite.style.width   = (cRect.width  * (1 - pad * 2)) + 'px';
             sprite.style.height  = (cRect.height * (1 - pad * 2)) + 'px';
             sprite.style.display = 'block';
+
+            // Auto-scroll maze viewport on mobile to keep Moses centered
+            const wrapper = document.getElementById('mazeWrapper');
+            if (wrapper && window.innerWidth <= 700 && window.innerHeight > window.innerWidth) {
+                // Portrait mode - scroll to center Moses in viewport
+                const wrapperRect = wrapper.getBoundingClientRect();
+                const spriteRect = sprite.getBoundingClientRect();
+                const cellSize = cRect.width;
+
+                if (spriteRect.top < wrapperRect.top + 20 || spriteRect.bottom > wrapperRect.bottom - 20) {
+                    const targetY = playerY * cellSize - wrapper.clientHeight / 2 + cellSize / 2;
+                    wrapper.scrollTo({ top: Math.max(0, Math.min(targetY, grid.offsetHeight - wrapper.clientHeight)), behavior: 'smooth' });
+                }
+                if (spriteRect.left < wrapperRect.left + 20 || spriteRect.right > wrapperRect.right - 20) {
+                    const targetX = playerX * cellSize - wrapper.clientWidth / 2 + cellSize / 2;
+                    wrapper.scrollTo({ left: Math.max(0, Math.min(targetX, grid.offsetWidth - wrapper.clientWidth)), behavior: 'smooth' });
+                }
+            }
         }
 
         function resetPlayerPosition() {
@@ -2261,12 +2362,24 @@
 
         // ========== PAGE NAVIGATION ==========
         function showGamePage() {
+            // Disable pinch-zoom on game page
+            const viewportMeta = document.querySelector('meta[name="viewport"]');
+            if (viewportMeta) {
+                viewportMeta.setAttribute('content',
+                    'width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no');
+            }
             document.getElementById('coverPage').style.display = 'none';
             document.getElementById('gamePage').style.display = 'flex';
         }
 
         function showCoverPage() {
             playSound(btnClickSound);
+            // Restore viewport zoom on cover page
+            const viewportMeta = document.querySelector('meta[name="viewport"]');
+            if (viewportMeta) {
+                viewportMeta.setAttribute('content',
+                    'width=device-width, initial-scale=1.0, viewport-fit=cover');
+            }
             ['puzzleModal','dangerModal','winModal','incompleteModal','instructionsModal'].forEach(id => {
                 document.getElementById(id).classList.remove('active');
             });
