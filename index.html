@@ -1042,66 +1042,136 @@
             .score-row { font-size: 13px; }
         }
 
-        /* ===== MOBILE LANDSCAPE (<=700px height, wide) ===== */
+        /* ===== MOBILE LANDSCAPE (<=900px wide + landscape) ===== */
         @media (max-width: 900px) and (orientation: landscape) {
             .game-page { height: 100dvh; overflow: hidden; }
 
+            /* --- HUD: ultra-compact --- */
             .game-header {
-                height: auto; min-height: 32px;
+                height: auto; min-height: 28px;
                 padding: 2px 8px;
             }
-            .game-title { font-size: 11px; max-width: 140px; }
-            .hud-value { font-size: 14px; }
-            .hud-label { font-size: 8px; }
+            .game-title { font-size: 10px; max-width: 120px; }
+            .hud-value { font-size: 13px; }
+            .hud-label { font-size: 7px; }
+            .hud-card { padding: 1px 4px; min-width: 38px; }
+            .hud-dots { max-width: 80px; gap: 1px; }
+            .hud-dot { width: 6px; height: 6px; }
 
+            /* --- GAME CONTENT: row layout with scrollable maze --- */
             .game-content {
                 flex-direction: row;
                 gap: 4px; padding: 2px 4px;
                 flex: 1; overflow: hidden;
             }
 
-            /* Hide side decorations in landscape too */
+            /* Hide side decorations in landscape */
             .maze-side-deco { display: none; }
 
+            /* --- MAZE WRAPPER: scrollable in landscape too --- */
             .maze-wrapper {
                 flex: 1; min-height: 0;
-                overflow: visible;
-            }
-            .maze-container {
-                width: min(calc(100vw - 200px), calc((100dvh - 50px) * 1.25));
-                max-height: calc(100dvh - 50px);
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+                touch-action: pan-x pan-y;
+                display: block;
             }
 
-            /* Checkpoint stars visible in landscape */
+            /* --- MAZE: fixed 24px cells for landscape readability --- */
+            .maze-grid {
+                display: grid;
+                grid-template-columns: repeat(20, 24px);
+                grid-template-rows: repeat(16, 24px);
+                gap: 0;
+                width: calc(20 * 24px);
+                height: calc(16 * 24px);
+            }
+            .maze-cell {
+                width: 24px; height: 24px;
+                min-width: 24px; min-height: 24px;
+            }
+            .maze-container {
+                width: calc(20 * 24px);
+                height: calc(16 * 24px);
+                position: relative;
+            }
+
+            /* --- CHECKPOINT STARS: force visible in landscape --- */
             .maze-cell.checkpoint img {
                 width: 100% !important; height: 100% !important;
+                object-fit: contain;
             }
             .maze-cell.finish img {
                 width: 100% !important; height: 100% !important;
             }
+            .cp-num {
+                font-size: 8px;
+                padding: 0px 2px;
+            }
 
-            /* Mobile labels hidden in landscape — use desktop-style outer labels */
+            /* --- START/FINISH LABELS: show inside scrollable wrapper --- */
             .mobile-start-label,
             .mobile-finish-label {
+                display: flex !important;
+                flex-shrink: 0;
+                width: calc(20 * 24px);
+                padding: 1px 0;
+            }
+            .mobile-start-label { justify-content: flex-start; }
+            .mobile-finish-label {
+                justify-content: flex-end;
+                padding-bottom: 10px;
+            }
+            .mobile-start-label span,
+            .mobile-finish-label span {
+                font-size: 10px;
+                padding: 1px 8px;
+            }
+
+            /* Hide desktop-positioned labels */
+            .outer-start-label,
+            .outer-finish-label {
                 display: none !important;
             }
 
+            /* --- CONTROLS PANEL: compact right column --- */
             .controls-panel {
-                width: 170px; flex-shrink: 0;
+                width: 130px; flex-shrink: 0;
                 flex-direction: column;
                 height: 100%; overflow: hidden;
             }
-            .dpad-section { padding: 4px; }
-            .dpad-btn { height: 36px; min-width: 36px; font-size: 16px; }
-            .dpad-spacer { height: 36px; }
+            .dpad-section { padding: 3px; }
+            .dpad-label { font-size: 8px; margin-bottom: 1px; }
+            .dpad { gap: 2px; }
+            .dpad-btn { height: 30px; min-width: 30px; font-size: 14px; border-radius: 5px; }
+            .dpad-spacer { height: 30px; }
             .buttons-section {
                 flex-direction: column; flex: 1;
-                justify-content: space-evenly; gap: 4px;
+                justify-content: space-evenly; gap: 2px;
+                padding: 2px 0;
             }
-            .action-btn { height: 34px; font-size: 12px; }
+            .action-btn { height: 28px; font-size: 11px; padding: 0 4px; border-radius: 5px; }
 
-            /* Modals in landscape */
-            .modal-content { max-height: 90vh; width: 80%; }
+            /* --- MODALS: scrollable, properly sized for landscape --- */
+            .modal-content {
+                max-height: 92vh; width: 70%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 14px;
+            }
+            .puzzle-modal .modal-content { overflow-y: auto; max-height: 92vh; }
+            .danger-img-box { width: 80px; height: 80px; margin-bottom: 6px; }
+            .danger-title { font-size: 18px; }
+            .danger-message { font-size: 13px; padding: 6px 8px; }
+            .danger-better-luck { font-size: 14px; margin: 3px 0 8px; }
+            .win-title { font-size: 20px; }
+            .princess-img-box { width: 80px; height: 80px; margin-bottom: 6px; }
+            .score-table { padding: 6px; margin-bottom: 8px; }
+            .score-row { font-size: 12px; }
+            .modal-button { padding: 7px 10px; font-size: 12px; }
+            .puzzle-title { font-size: 14px; }
+            .puzzle-question { font-size: 13px; padding: 6px 8px; margin-bottom: 6px; }
+            .answer-input { padding: 6px; font-size: 15px; margin-bottom: 6px; }
         }
 
         /* Extra small phones portrait (<=380px) */
@@ -1284,13 +1354,13 @@
                     <div class="dpad-label">🕹️ MOVE MOSES</div>
                     <div class="dpad">
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onmousedown="startDpadRepeat('up')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('up')" ontouchend="stopDpadRepeat()">▲</button>
+                        <button class="dpad-btn" onmousedown="dpadMouseDown('up')" onmouseup="stopDpadRepeat()" ontouchstart="dpadTouchStart('up',event)" ontouchend="stopDpadRepeat()">▲</button>
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onmousedown="startDpadRepeat('left')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('left')" ontouchend="stopDpadRepeat()">◄</button>
+                        <button class="dpad-btn" onmousedown="dpadMouseDown('left')" onmouseup="stopDpadRepeat()" ontouchstart="dpadTouchStart('left',event)" ontouchend="stopDpadRepeat()">◄</button>
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onmousedown="startDpadRepeat('right')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('right')" ontouchend="stopDpadRepeat()">►</button>
+                        <button class="dpad-btn" onmousedown="dpadMouseDown('right')" onmouseup="stopDpadRepeat()" ontouchstart="dpadTouchStart('right',event)" ontouchend="stopDpadRepeat()">►</button>
                         <div class="dpad-spacer"></div>
-                        <button class="dpad-btn" onmousedown="startDpadRepeat('down')" onmouseup="stopDpadRepeat()" ontouchstart="startDpadRepeat('down')" ontouchend="stopDpadRepeat()">▼</button>
+                        <button class="dpad-btn" onmousedown="dpadMouseDown('down')" onmouseup="stopDpadRepeat()" ontouchstart="dpadTouchStart('down',event)" ontouchend="stopDpadRepeat()">▼</button>
                         <div class="dpad-spacer"></div>
                     </div>
                 </div>
@@ -1430,11 +1500,24 @@
     <audio id="btnClickSound"></audio>
 
     <script>
-                // ========== D-PAD REPEAT MOVEMENT ==========
+                // ========== D-PAD MOVEMENT ==========
         let dpadRepeatInterval = null;
-        
-        function startDpadRepeat(direction) {
-            stopDpadRepeat(); // Always clear previous interval first
+        let isTouchDevice = false; // Track if touch events are being used
+
+        // TOUCH: single tap = single move (no repeat)
+        function dpadTouchStart(direction, e) {
+            if (e) e.preventDefault(); // prevent ghost click
+            isTouchDevice = true;
+            stopDpadRepeat();
+            if (gameBlocked) return;
+            movePlayerByButton(direction);
+            // No setInterval — one tap = one move on touch
+        }
+
+        // MOUSE (desktop only): hold = repeat moves
+        function dpadMouseDown(direction) {
+            if (isTouchDevice) return; // ignore mouse events on touch devices
+            stopDpadRepeat();
             if (gameBlocked) return;
             movePlayerByButton(direction);
             dpadRepeatInterval = setInterval(() => {
@@ -1442,7 +1525,7 @@
                 movePlayerByButton(direction);
             }, 150);
         }
-        
+
         function stopDpadRepeat() {
             if (dpadRepeatInterval) {
                 clearInterval(dpadRepeatInterval);
@@ -1603,36 +1686,34 @@
         }
 
         // ========== AUDIO UNLOCK (iOS/Android — first interaction) ==========
-        // Use multiple events and retry to ensure audio starts on mobile
-        function unlockAudio() {
+        // iOS requires play() to be called synchronously inside the user gesture handler.
+        // We attach to BOTH touchend and click. On mobile, touchend fires first.
+        // The key is: do NOT batch-play all audio — just play coverMusic directly.
+        function unlockAudio(e) {
             if (audioUnlocked) return;
             audioUnlocked = true;
-            // Remove all unlock listeners
-            document.removeEventListener('touchstart', unlockAudio);
-            document.removeEventListener('touchend', unlockAudio);
-            document.removeEventListener('click', unlockAudio);
+            document.removeEventListener('touchend', unlockAudio, true);
+            document.removeEventListener('click', unlockAudio, true);
 
-            // On iOS, we need to "warm up" audio elements by playing them briefly
-            const allAudio = [coverMusic, bgMusic, moveSound, checkpointSound, successChime,
-                             successSound, wrongSound, splashSound, dangerSound, gameOverSound,
-                             winSound, bigWinSound, btnClickSound];
-            allAudio.forEach(a => {
-                if (a) { a.play().then(() => { if (a !== coverMusic) a.pause(); a.currentTime = 0; }).catch(() => {}); }
-            });
+            // Play cover music SYNCHRONOUSLY inside this gesture handler (iOS requirement)
+            coverMusic.play().catch(() => {});
 
-            // Start cover music with a small retry
-            coverMusic.play().catch(() => {
-                // Retry after a brief delay (helps on some mobile browsers)
-                setTimeout(() => coverMusic.play().catch(() => {}), 100);
-            });
+            // Warm up other audio elements after a tiny delay (non-blocking)
+            setTimeout(() => {
+                [bgMusic, moveSound, checkpointSound, successChime, successSound,
+                 wrongSound, splashSound, dangerSound, gameOverSound, winSound,
+                 bigWinSound, btnClickSound].forEach(a => {
+                    if (a) { const p = a.play(); if (p) p.then(() => { a.pause(); a.currentTime = 0; }).catch(() => {}); }
+                });
+            }, 50);
 
             const hint = document.getElementById('musicHint');
             if (hint) hint.classList.add('hidden');
         }
 
-        document.addEventListener('touchstart', unlockAudio);
-        document.addEventListener('touchend', unlockAudio);
-        document.addEventListener('click', unlockAudio);
+        // Use capturing phase to fire before any other handlers
+        document.addEventListener('touchend', unlockAudio, true);
+        document.addEventListener('click', unlockAudio, true);
 
         function startCoverMusic() {
             if (!audioUnlocked) return;
@@ -2044,10 +2125,10 @@
             sprite.style.height  = (cRect.height * (1 - pad * 2)) + 'px';
             sprite.style.display = 'block';
 
-            // Auto-scroll maze viewport on mobile to keep Moses centered
+            // Auto-scroll maze viewport on mobile (portrait AND landscape)
             const wrapper = document.getElementById('mazeWrapper');
-            if (wrapper && window.innerWidth <= 700 && window.innerHeight > window.innerWidth) {
-                // Portrait mode - scroll to center Moses in viewport
+            const isMobileView = window.innerWidth <= 900;
+            if (wrapper && isMobileView) {
                 const wrapperRect = wrapper.getBoundingClientRect();
                 const spriteRect = sprite.getBoundingClientRect();
                 const cellSize = cRect.width;
