@@ -1164,22 +1164,32 @@
             .action-btn { height: 28px; font-size: 11px; padding: 0 4px; border-radius: 5px; }
 
             /* --- MODALS: scrollable, properly sized for landscape --- */
+            .modal {
+                align-items: flex-start !important;
+                padding: 4px 0;
+            }
             .modal-content {
-                max-height: 92vh; width: 70%;
+                max-height: 94vh; width: 60%;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                padding: 14px;
+                padding: 10px 14px;
+                margin: 0 auto;
             }
-            .puzzle-modal .modal-content { overflow-y: auto; max-height: 92vh; }
-            .danger-img-box { width: 80px; height: 80px; margin-bottom: 6px; }
-            .danger-title { font-size: 18px; }
-            .danger-message { font-size: 13px; padding: 6px 8px; }
-            .danger-better-luck { font-size: 14px; margin: 3px 0 8px; }
-            .win-title { font-size: 20px; }
-            .princess-img-box { width: 80px; height: 80px; margin-bottom: 6px; }
-            .score-table { padding: 6px; margin-bottom: 8px; }
-            .score-row { font-size: 12px; }
-            .modal-button { padding: 7px 10px; font-size: 12px; }
+            .puzzle-modal .modal-content { overflow-y: auto; max-height: 94vh; }
+            .danger-img-box { width: 60px; height: 60px; margin-bottom: 4px; }
+            .danger-title { font-size: 16px; }
+            .danger-message { font-size: 12px; padding: 4px 8px; }
+            .danger-better-luck { font-size: 13px; margin: 2px 0 6px; }
+            /* Win modal: compact for landscape */
+            .win-title { font-size: 16px; margin-bottom: 2px; }
+            .win-sub { font-size: 11px; margin-bottom: 4px; }
+            .princess-img-box { width: 55px; height: 55px; margin-bottom: 4px; }
+            .achieve-badge { font-size: 14px !important; padding: 4px 16px !important; margin-bottom: 2px; }
+            .achieve-msg { font-size: 11px; margin-bottom: 4px; }
+            .score-table { padding: 4px 6px; margin-bottom: 6px; }
+            .score-row { font-size: 11px; padding: 2px 0; }
+            .win-btns { gap: 6px; margin-top: 4px; }
+            .modal-button { padding: 6px 10px; font-size: 11px; }
             .puzzle-title { font-size: 14px; }
             .puzzle-question { font-size: 13px; padding: 6px 8px; margin-bottom: 6px; }
             .answer-input { padding: 6px; font-size: 15px; margin-bottom: 6px; }
