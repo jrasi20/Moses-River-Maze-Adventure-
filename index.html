@@ -1120,7 +1120,10 @@
             .mobile-start-label { justify-content: flex-start; }
             .mobile-finish-label {
                 justify-content: flex-end;
-                padding-bottom: 10px;
+                position: sticky;
+                bottom: 0;
+                padding: 3px 0;
+                z-index: 15;
             }
             .mobile-start-label span,
             .mobile-finish-label span {
@@ -2456,15 +2459,22 @@
             if (isAnswerCorrect(userAnswer, q.answer)) {
                 gameScore += 10;
                 playSound(successChime);
-                showFlashMessage('✅ Correct!', 'success');
+                showFlashMessage('Correct!', 'success');
                 completedCheckpoints.add(currentPuzzleCheckpointIndex);
                 markCheckpointCellDone(currentPuzzleCheckpointIndex);
                 updateHudDots();
-                document.getElementById('puzzleStatus').textContent = 'Great job! Well done! 🎉';
+                // Show correct answer so kids learn the proper spelling
+                const statusEl = document.getElementById('puzzleStatus');
+                statusEl.innerHTML = '<div style="margin-top:6px;padding:8px 14px;background:linear-gradient(135deg,#1a5e1a,#2e7d32);border:2px solid #FFD700;border-radius:10px;text-align:center;">' +
+                    '<div style="font-size:11px;color:#FFE680;margin-bottom:3px;">The answer is:</div>' +
+                    '<div style="font-size:22px;font-weight:700;color:#FFD700;letter-spacing:2px;text-shadow:0 2px 4px rgba(0,0,0,0.5);">' + q.answer + '</div>' +
+                    '<div style="font-size:11px;color:#90EE90;margin-top:3px;">Great job! Well done!</div>' +
+                    '</div>';
                 setTimeout(() => {
                     document.getElementById('puzzleModal').classList.remove('active');
+                    statusEl.innerHTML = '';
                     gameBlocked = false;
-                }, 1500);
+                }, 2800);
             } else {
                 playSound(wrongSound);
                 showFlashMessage('❌ Not quite right!', 'error');
