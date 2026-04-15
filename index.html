@@ -1086,23 +1086,29 @@
                 align-items: center;
                 justify-content: center;
             }
-            /* Bigger D-pad for iPad */
-            .dpad-section { padding: 6px 10px; }
-            .dpad-label { font-size: 11px; margin-bottom: 4px; }
-            .dpad-btn {
-                height: 44px !important; min-width: 44px !important;
-                font-size: 20px !important; border-radius: 8px;
+            /* Bigger D-pad for iPad — contained inside blue box */
+            .dpad-section {
+                padding: 8px 12px;
+                overflow: hidden;
+                border-radius: 12px;
             }
-            .dpad-spacer { height: 44px !important; }
-            /* Buttons: not full-width on iPad, capped width */
+            .dpad-label { font-size: 11px; margin-bottom: 4px; }
+            .dpad { gap: 3px !important; }
+            .dpad-btn {
+                height: 40px !important; min-width: 40px !important;
+                font-size: 18px !important; border-radius: 8px;
+            }
+            .dpad-spacer { height: 40px !important; }
+            /* Buttons: wider and taller on iPad, not full-width */
             .buttons-section {
                 align-items: center !important;
             }
             .action-btn {
-                height: 40px !important;
-                max-width: 340px !important;
-                font-size: 14px !important;
-                border-radius: 8px;
+                height: 46px !important;
+                max-width: 420px !important;
+                min-width: 280px !important;
+                font-size: 15px !important;
+                border-radius: 10px;
             }
             /* Bigger HUD for iPad */
             .game-title { font-size: 14px !important; max-width: 200px !important; }
@@ -1113,8 +1119,8 @@
             .controls-panel { max-height: 160px; }
         }
 
-        /* ===== MOBILE LANDSCAPE (<=1024px wide + landscape) ===== */
-        @media (max-width: 1024px) and (orientation: landscape) {
+        /* ===== MOBILE LANDSCAPE (<=1200px wide + landscape — covers all iPads) ===== */
+        @media (max-width: 1200px) and (orientation: landscape) {
             .game-page {
                 height: 100dvh; overflow: hidden;
                 padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -1225,19 +1231,20 @@
             .controls-panel {
                 width: 130px; flex-shrink: 0;
                 flex-direction: column;
-                height: 100%; overflow: hidden;
+                height: 100%; overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .dpad-section { padding: 3px; }
             .dpad-label { font-size: 8px; margin-bottom: 1px; }
             .dpad { gap: 2px; }
-            .dpad-btn { height: 30px; min-width: 30px; font-size: 14px; border-radius: 5px; }
-            .dpad-spacer { height: 30px; }
+            .dpad-btn { height: 28px; min-width: 28px; font-size: 13px; border-radius: 5px; }
+            .dpad-spacer { height: 28px; }
             .buttons-section {
                 flex-direction: column; flex: 1;
                 justify-content: space-evenly; gap: 2px;
                 padding: 2px 0;
             }
-            .action-btn { height: 28px; font-size: 11px; padding: 0 4px; border-radius: 5px; }
+            .action-btn { height: 26px; font-size: 10px; padding: 0 4px; border-radius: 5px; }
 
             /* --- MODALS: scrollable, properly sized for landscape --- */
             .modal {
@@ -1270,6 +1277,33 @@
             .puzzle-title { font-size: 14px; }
             .puzzle-question { font-size: 13px; padding: 6px 8px; margin-bottom: 6px; }
             .answer-input { padding: 6px; font-size: 15px; margin-bottom: 6px; }
+        }
+
+        /* ===== iPAD LANDSCAPE OVERRIDES (600px+ height = iPad, not phone) ===== */
+        @media (min-width: 600px) and (max-width: 1200px) and (orientation: landscape) {
+            /* Bigger cells for iPad landscape (more screen than phone) */
+            .maze-grid {
+                grid-template-columns: repeat(20, 32px);
+                grid-template-rows: repeat(16, 32px);
+                width: calc(20 * 32px);
+                height: calc(16 * 32px);
+            }
+            .maze-cell {
+                width: 32px; height: 32px;
+                min-width: 32px; min-height: 32px;
+            }
+            .maze-container {
+                width: calc(20 * 32px);
+                height: calc(16 * 32px);
+            }
+            .mobile-start-label {
+                width: calc(20 * 32px);
+            }
+            /* Wider controls column */
+            .controls-panel { width: 160px; }
+            .dpad-btn { height: 36px !important; min-width: 36px !important; font-size: 16px; }
+            .dpad-spacer { height: 36px; }
+            .action-btn { height: 34px; font-size: 12px; }
         }
 
         /* Extra small phones portrait (<=380px) */
@@ -2284,7 +2318,7 @@
             const wRect = wrapper.getBoundingClientRect();
             const cRect = container.getBoundingClientRect();
             const isPortrait = window.matchMedia('(orientation: portrait)').matches;
-            const isMobile = window.innerWidth <= 1024 && isPortrait || window.innerWidth <= 700;
+            const isMobile = (window.innerWidth <= 1024 && isPortrait) || (window.innerWidth <= 1200 && !isPortrait) || window.innerWidth <= 700;
 
             // START label → to the LEFT of the start cell (row 0)
             const startCell = document.querySelector('.maze-cell[data-x="0"][data-y="0"]');
@@ -2312,7 +2346,7 @@
             // FINISH label → to the RIGHT of the finish cell (row 15)
             const finishCell = document.querySelector('.maze-cell.finish');
             const outerFinish = document.getElementById('outerFinishLabel');
-            const isLandscape = window.matchMedia('(max-width: 1024px) and (orientation: landscape)').matches;
+            const isLandscape = window.matchMedia('(max-width: 1200px) and (orientation: landscape)').matches;
 
             if (finishCell && outerFinish && isLandscape) {
                 // Landscape mobile: use offset-based positioning (scroll-independent)
@@ -2367,7 +2401,7 @@
 
             // Auto-scroll maze viewport on mobile (portrait AND landscape)
             const wrapper = document.getElementById('mazeWrapper');
-            const isMobileView = window.innerWidth <= 1024;
+            const isMobileView = window.innerWidth <= 1200;
             if (wrapper && isMobileView) {
                 const wrapperRect = wrapper.getBoundingClientRect();
                 const spriteRect = sprite.getBoundingClientRect();
@@ -2597,7 +2631,7 @@
         function showFlashMessage(msg, type) {
             const d = document.createElement('div');
             const isPort = window.matchMedia('(orientation: portrait)').matches;
-            const isMobile = (window.innerWidth <= 1024 && isPort) || window.innerWidth <= 700;
+            const isMobile = (window.innerWidth <= 1024 && isPort) || (window.innerWidth <= 1200 && !isPort) || window.innerWidth <= 700;
             d.style.cssText = `
                 position:fixed; top:50%; left:50%;
                 transform:translate(-50%,-50%);
