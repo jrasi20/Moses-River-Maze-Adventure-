@@ -209,27 +209,6 @@
             color: #FFE680; font-weight: 700; font-style: italic;
         }
 
-        .how-to-play-box {
-            background: rgba(255,255,255,0.12);
-            padding: 14px 18px; border-radius: 14px;
-            margin-bottom: 12px; max-width: 580px;
-            text-align: left;
-            border: 2px solid rgba(255,255,255,0.25);
-        }
-
-        .how-to-play-box h3 {
-            color: #FFD700; margin-bottom: 10px;
-            text-align: center; font-size: 19px;
-        }
-
-        .instr-item {
-            display: flex; align-items: flex-start;
-            gap: 10px; margin-bottom: 10px;
-            font-size: 15px; line-height: 1.55;
-        }
-
-        .instr-item .ei { font-size: 16px; flex-shrink: 0; width: 26px; text-align: right; font-weight: 700; color: #FFD700; padding-right: 2px; }
-
         .danger-box {
             background: rgba(255,80,0,0.22);
             padding: 12px 16px; border-radius: 14px;
@@ -277,64 +256,6 @@
             0%, 100% { box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
             50% { box-shadow: 0 12px 28px rgba(255,215,0,0.5); }
         }
-
-        .score-info-box {
-            background: rgba(255,255,255,0.12);
-            padding: 12px 20px; border-radius: 12px;
-            margin-bottom: 12px; max-width: 580px;
-            font-size: 15px; line-height: 1.6;
-            border: 1px solid rgba(255,215,0,0.4);
-            text-align: center; font-weight: 600;
-            color: #fff;
-        }
-        .score-info-box .scoring-row {
-            display: flex; justify-content: center; align-items: center;
-            flex-wrap: wrap; gap: 0 6px;
-        }
-        .score-info-box .score-sep { color: rgba(255,215,0,0.6); margin: 0 4px; }
-
-        /* Tips for Success */
-        .tips-box {
-            background: rgba(255,255,255,0.1);
-            padding: 14px 20px; border-radius: 14px;
-            margin-bottom: 12px; max-width: 580px;
-            text-align: left;
-            border: 2px solid rgba(255,255,255,0.22);
-        }
-        .tips-box h3 {
-            color: #fff; font-size: 18px; font-weight: 700;
-            text-decoration: underline;
-            margin-bottom: 12px;
-        }
-        .tips-box ul {
-            list-style: disc; padding-left: 20px;
-        }
-        .tips-box ul li {
-            font-size: 15px; line-height: 1.6;
-            margin-bottom: 12px;   /* ← generous spacing between tips */
-            color: #fff;
-        }
-        .tips-box ul li:last-child { margin-bottom: 0; }
-
-        /* Supported & Recommended Devices */
-        .devices-box {
-            background: rgba(255,255,255,0.1);
-            padding: 12px 18px; border-radius: 12px;
-            margin-bottom: 12px; max-width: 580px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .devices-box h4 {
-            font-size: 15px; font-weight: 700;
-            color: #FFD700; text-align: center;
-            margin-bottom: 10px;
-        }
-        .devices-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 4px 16px;
-        }
-        .devices-col { font-size: 13.5px; line-height: 1.7; color: #fff; }
-        .devices-col .dev-star { color: #FFD700; font-weight: 700; }
-        .devices-col .dev-item::before { content: "• "; }
 
         .cover-footer { font-size: 12px; opacity: 0.65; margin-bottom: 8px; }
 
@@ -1515,82 +1436,6 @@
             Long ago in Egypt, baby Moses was placed in a basket to float on the river Nile
             in order to protect his life from Pharaoh's cruel law.
             <span class="mission">🎯 Your mission is to guide him safely through the treacherous waters so he can reach Pharaoh's daughter safely!</span>
-        </div>
-
-        <!-- Waves: after story -->
-        <div class="wave-anchor" aria-hidden="true">
-            <img src="assets/images/wave%201.png" alt="" style="width:92px;left:1%;top:-10px;animation-duration:3.4s;animation-delay:-0.3s;">
-            <img src="assets/images/wave%202.png" alt="" style="width:82px;right:1%;top:-16px;animation-duration:2.8s;animation-delay:-1.1s;">
-        </div>
-
-        <div class="how-to-play-box">
-            <h3>🎮 How to Play</h3>
-            <div class="instr-item"><span class="ei">1.</span><span>Scan the QR code above with your phone or tablet camera.</span></div>
-            <div class="instr-item"><span class="ei">2.</span><span>Enter the access code <strong>MOSES2026</strong> when prompted.</span></div>
-            <div class="instr-item"><span class="ei">3.</span><span><strong>Choose a difficulty level:</strong> Easy, Medium, or Hard.</span></div>
-            <div class="instr-item"><span class="ei">4.</span><span>Use the on-screen arrow buttons to guide Baby Moses through the river.</span></div>
-            <div class="instr-item"><span class="ei">5.</span><span>Visit all 10 golden star checkpoints and answer Bible questions.</span></div>
-            <div class="instr-item"><span class="ei">6.</span><span><strong>Avoid river creatures</strong> (crocodiles, sharks, octopus) and bombs!</span></div>
-            <div class="instr-item"><span class="ei">7.</span><span>Reach Pharaoh's daughter at the FINISH to complete your adventure!</span></div>
-        </div>
-
-        <!-- Waves: after how-to-play -->
-        <div class="wave-anchor" aria-hidden="true">
-            <img src="assets/images/wave%202.png" alt="" style="width:86px;left:2%;top:-12px;animation-duration:3.1s;animation-delay:-2s;">
-            <img src="assets/images/wave%201.png" alt="" style="width:96px;right:2%;top:-8px;animation-duration:2.5s;animation-delay:-0.6s;">
-        </div>
-
-        <div class="score-info-box">
-            <div class="scoring-row">
-                <strong>⭐ Scoring:</strong>
-                <span><strong>+10 pts</strong> per correct answer</span>
-                <span class="score-sep">|</span>
-                <span><strong>-5 pts</strong> per clue used</span>
-                <span class="score-sep">|</span>
-                <span>Max score: <strong>100 pts!</strong></span>
-            </div>
-        </div>
-
-        <!-- Waves: after scoring -->
-        <div class="wave-anchor" aria-hidden="true">
-            <img src="assets/images/wave%201.png" alt="" style="width:80px;left:1%;top:-10px;animation-duration:2.8s;animation-delay:-1.4s;">
-            <img src="assets/images/wave%202.png" alt="" style="width:90px;right:2%;top:-14px;animation-duration:3.3s;animation-delay:-0.4s;">
-        </div>
-
-        <!-- Tips for Success -->
-        <div class="tips-box">
-            <h3>Tips for Success</h3>
-            <ul>
-                <li>Don't know the answer? Tap "Show Clue" — each clue guides you closer to the answer!</li>
-                <li>Learning is part of the adventure — it's okay to use clues to discover new Bible facts.</li>
-                <li>Watch out for river creatures! They pop up as obstacles along the maze path.</li>
-                <li>Try all three difficulty levels — Easy has fewer questions, Hard is the ultimate challenge!</li>
-            </ul>
-        </div>
-
-        <!-- Supported & Recommended Devices -->
-        <div class="devices-box">
-            <h4>Supported &amp; Recommended Devices</h4>
-            <div class="devices-grid">
-                <div class="devices-col">
-                    <div class="dev-star">★ iPhone (Safari) — Recommended</div>
-                    <div class="dev-item">Android phones (Chrome, Firefox)</div>
-                    <div class="dev-item">iPad / Android tablets</div>
-                    <div class="dev-item">Best experience: Portrait mode</div>
-                </div>
-                <div class="devices-col">
-                    <div class="dev-item">Windows desktop (Chrome, Edge, Firefox)</div>
-                    <div class="dev-item">Mac desktop (Safari, Chrome, Firefox)</div>
-                    <div class="dev-item">Landscape mode also supported</div>
-                    <div class="dev-item">No app download required</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Waves: above difficulty -->
-        <div class="wave-anchor" aria-hidden="true">
-            <img src="assets/images/wave%202.png" alt="" style="width:84px;left:2%;top:-8px;animation-duration:3.6s;animation-delay:-2.2s;">
-            <img src="assets/images/wave%201.png" alt="" style="width:76px;right:1%;top:-12px;animation-duration:2.6s;animation-delay:-0.8s;">
         </div>
 
         <div class="difficulty-selector">
