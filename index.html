@@ -224,11 +224,11 @@
 
         .instr-item {
             display: flex; align-items: flex-start;
-            gap: 10px; margin-bottom: 7px;
-            font-size: 16px; line-height: 1.5;
+            gap: 10px; margin-bottom: 10px;
+            font-size: 15px; line-height: 1.55;
         }
 
-        .instr-item .ei { font-size: 19px; flex-shrink: 0; width: 26px; text-align: center; }
+        .instr-item .ei { font-size: 16px; flex-shrink: 0; width: 26px; text-align: right; font-weight: 700; color: #FFD700; padding-right: 2px; }
 
         .danger-box {
             background: rgba(255,80,0,0.22);
@@ -279,15 +279,63 @@
         }
 
         .score-info-box {
-            background: rgba(255,255,255,0.1);
-            padding: 10px 16px; border-radius: 12px;
+            background: rgba(255,255,255,0.12);
+            padding: 12px 20px; border-radius: 12px;
             margin-bottom: 12px; max-width: 580px;
-            font-size: 15px; line-height: 1.5;
-            border: 1px solid rgba(255,215,0,0.3);
-            text-align: center;
+            font-size: 15px; line-height: 1.6;
+            border: 1px solid rgba(255,215,0,0.4);
+            text-align: center; font-weight: 600;
+            color: #fff;
         }
+        .score-info-box .scoring-row {
+            display: flex; justify-content: center; align-items: center;
+            flex-wrap: wrap; gap: 0 6px;
+        }
+        .score-info-box .score-sep { color: rgba(255,215,0,0.6); margin: 0 4px; }
 
-        .score-info-box strong { color: #FFD700; }
+        /* Tips for Success */
+        .tips-box {
+            background: rgba(255,255,255,0.1);
+            padding: 14px 20px; border-radius: 14px;
+            margin-bottom: 12px; max-width: 580px;
+            text-align: left;
+            border: 2px solid rgba(255,255,255,0.22);
+        }
+        .tips-box h3 {
+            color: #fff; font-size: 18px; font-weight: 700;
+            text-decoration: underline;
+            margin-bottom: 12px;
+        }
+        .tips-box ul {
+            list-style: disc; padding-left: 20px;
+        }
+        .tips-box ul li {
+            font-size: 15px; line-height: 1.6;
+            margin-bottom: 12px;   /* ← generous spacing between tips */
+            color: #fff;
+        }
+        .tips-box ul li:last-child { margin-bottom: 0; }
+
+        /* Supported & Recommended Devices */
+        .devices-box {
+            background: rgba(255,255,255,0.1);
+            padding: 12px 18px; border-radius: 12px;
+            margin-bottom: 12px; max-width: 580px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .devices-box h4 {
+            font-size: 15px; font-weight: 700;
+            color: #FFD700; text-align: center;
+            margin-bottom: 10px;
+        }
+        .devices-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 4px 16px;
+        }
+        .devices-col { font-size: 13.5px; line-height: 1.7; color: #fff; }
+        .devices-col .dev-star { color: #FFD700; font-weight: 700; }
+        .devices-col .dev-item::before { content: "• "; }
+
         .cover-footer { font-size: 12px; opacity: 0.65; margin-bottom: 8px; }
 
         /* ===== GAME PAGE ===== */
@@ -1384,6 +1432,23 @@
     </style>
 </head>
 <body>
+<noscript>
+    <div style="font-family:Arial,sans-serif;text-align:center;padding:40px 20px;background:#0d1b6e;color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="font-size:48px;margin-bottom:16px;">🌊</div>
+        <h2 style="color:#FFD700;font-size:24px;margin-bottom:12px;">Baby Moses River Adventure</h2>
+        <p style="font-size:17px;max-width:420px;line-height:1.6;margin-bottom:20px;">
+            This interactive game requires <strong>JavaScript</strong> to run.<br>
+            Please enable JavaScript in your browser settings and reload the page.
+        </p>
+        <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:16px 24px;font-size:14px;max-width:380px;line-height:1.7;">
+            <strong style="color:#FFD700;">How to enable JavaScript:</strong><br>
+            <strong>iPhone/iPad Safari:</strong> Settings → Safari → Advanced → JavaScript → On<br>
+            <strong>Android Chrome:</strong> Settings → Site Settings → JavaScript → Allowed<br>
+            <strong>Desktop Chrome:</strong> Settings → Privacy → Site Settings → JavaScript → Allowed
+        </div>
+        <p style="margin-top:20px;font-size:13px;color:rgba(255,255,255,0.6);">© 2025 Bible Explorer Kids</p>
+    </div>
+</noscript>
 
     <!-- ========== ACCESS GATE ========== -->
     <div id="accessGate" class="access-gate">
@@ -1460,11 +1525,13 @@
 
         <div class="how-to-play-box">
             <h3>🎮 How to Play</h3>
-            <div class="instr-item"><span class="ei">⌨️</span><span><strong>Use arrow buttons</strong> (or keyboard arrows) to move baby Moses from START to FINISH.</span></div>
-            <div class="instr-item"><span class="ei">🌊</span><span><strong>Follow the blue water path</strong> — it's the only safe route for Moses!</span></div>
-            <div class="instr-item"><span class="ei">⭐</span><span><strong>Visit all 10 checkpoints in order</strong> and answer Bible questions correctly.</span></div>
-            <div class="instr-item"><span class="ei">💡</span><span><strong>Use clue buttons</strong> if you need help — each clue costs 5 points.</span></div>
-            <div class="instr-item"><span class="ei">🚫</span><span><strong>You must answer each question</strong> to continue — no skipping!</span></div>
+            <div class="instr-item"><span class="ei">1.</span><span>Scan the QR code above with your phone or tablet camera.</span></div>
+            <div class="instr-item"><span class="ei">2.</span><span>Enter the access code <strong>MOSES2026</strong> when prompted.</span></div>
+            <div class="instr-item"><span class="ei">3.</span><span><strong>Choose a difficulty level:</strong> Easy, Medium, or Hard.</span></div>
+            <div class="instr-item"><span class="ei">4.</span><span>Use the on-screen arrow buttons to guide Baby Moses through the river.</span></div>
+            <div class="instr-item"><span class="ei">5.</span><span>Visit all 10 golden star checkpoints and answer Bible questions.</span></div>
+            <div class="instr-item"><span class="ei">6.</span><span><strong>Avoid river creatures</strong> (crocodiles, sharks, octopus) and bombs!</span></div>
+            <div class="instr-item"><span class="ei">7.</span><span>Reach Pharaoh's daughter at the FINISH to complete your adventure!</span></div>
         </div>
 
         <!-- Waves: after how-to-play -->
@@ -1473,19 +1540,51 @@
             <img src="assets/images/wave%201.png" alt="" style="width:96px;right:2%;top:-8px;animation-duration:2.5s;animation-delay:-0.6s;">
         </div>
 
-        <div class="danger-box">
-            <h4>⚠️ What Happens If You Go Off the Safe Path?</h4>
-            <p>If Moses moves into a danger zone, he'll be engulfed by scary river creatures like crocodiles 🐊, sharks 🦈, or bombs 💣! Don't worry though - you'll restart from the beginning to try again! 💪</p>
+        <div class="score-info-box">
+            <div class="scoring-row">
+                <strong>⭐ Scoring:</strong>
+                <span><strong>+10 pts</strong> per correct answer</span>
+                <span class="score-sep">|</span>
+                <span><strong>-5 pts</strong> per clue used</span>
+                <span class="score-sep">|</span>
+                <span>Max score: <strong>100 pts!</strong></span>
+            </div>
         </div>
 
-        <!-- Waves: after danger box -->
+        <!-- Waves: after scoring -->
         <div class="wave-anchor" aria-hidden="true">
             <img src="assets/images/wave%201.png" alt="" style="width:80px;left:1%;top:-10px;animation-duration:2.8s;animation-delay:-1.4s;">
             <img src="assets/images/wave%202.png" alt="" style="width:90px;right:2%;top:-14px;animation-duration:3.3s;animation-delay:-0.4s;">
         </div>
 
-        <div class="score-info-box">
-            <strong>⭐ Scoring:</strong> Earn <strong>+10 pts</strong> for each correct answer. Spend <strong>-5 pts</strong> per clue. Max score: <strong>100 pts!</strong>
+        <!-- Tips for Success -->
+        <div class="tips-box">
+            <h3>Tips for Success</h3>
+            <ul>
+                <li>Don't know the answer? Tap "Show Clue" — each clue guides you closer to the answer!</li>
+                <li>Learning is part of the adventure — it's okay to use clues to discover new Bible facts.</li>
+                <li>Watch out for river creatures! They pop up as obstacles along the maze path.</li>
+                <li>Try all three difficulty levels — Easy has fewer questions, Hard is the ultimate challenge!</li>
+            </ul>
+        </div>
+
+        <!-- Supported & Recommended Devices -->
+        <div class="devices-box">
+            <h4>Supported &amp; Recommended Devices</h4>
+            <div class="devices-grid">
+                <div class="devices-col">
+                    <div class="dev-star">★ iPhone (Safari) — Recommended</div>
+                    <div class="dev-item">Android phones (Chrome, Firefox)</div>
+                    <div class="dev-item">iPad / Android tablets</div>
+                    <div class="dev-item">Best experience: Portrait mode</div>
+                </div>
+                <div class="devices-col">
+                    <div class="dev-item">Windows desktop (Chrome, Edge, Firefox)</div>
+                    <div class="dev-item">Mac desktop (Safari, Chrome, Firefox)</div>
+                    <div class="dev-item">Landscape mode also supported</div>
+                    <div class="dev-item">No app download required</div>
+                </div>
+            </div>
         </div>
 
         <!-- Waves: above difficulty -->
@@ -1502,7 +1601,7 @@
         <div id="difficultyHint" style="display:none;color:#FFD700;font-size:15px;font-weight:700;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">⚠️ Please choose a difficulty level first!</div>
 
         <button class="start-btn" onclick="startGame()">🚀 Start Adventure!</button>
-        <div class="cover-footer">© 2026 Bible Explorer Kids · For personal use only</div>
+        <div class="cover-footer">© 2026 Bible Explorer Kids · For ages 7–13 · Best on tablets &amp; larger phones · For personal use only</div>
     </div>
 
     <!-- ========== GAME PAGE ========== -->
@@ -2331,15 +2430,14 @@
                 outerStart.style.display = 'block';
                 const labelW = outerStart.offsetWidth || 70;
                 if (isMobile) {
-                    // On mobile: overlay on the maze left edge
-                    outerStart.style.top = topPos + 'px';
-                    outerStart.style.left = (cRect.left - wRect.left) + 'px';
+                    // Mobile: hide outer label — mobile-start-label inside maze covers it
+                    outerStart.style.display = 'none';
                 } else if (leftSpace >= 50) {
                     outerStart.style.top  = topPos + 'px';
                     outerStart.style.left = (cRect.left - wRect.left - labelW - 6) + 'px';
                 } else {
-                    outerStart.style.top  = topPos + 'px';
-                    outerStart.style.left = '4px';
+                    // No room outside maze (e.g. Safari fullscreen) — hide to avoid overlapping cell
+                    outerStart.style.display = 'none';
                 }
             }
 
@@ -2364,20 +2462,15 @@
                 const topPos = fRect.top - wRect.top + fRect.height / 2 - labelH / 2;
                 const rightSpace = wRect.right - cRect.right;
                 if (isMobile) {
-                    // On mobile portrait: overlay on the maze right edge
-                    outerFinish.style.top = topPos + 'px';
-                    outerFinish.style.left = 'auto';
-                    outerFinish.style.right = (wRect.right - cRect.right) + 'px';
-                    outerFinish.style.display = 'block';
+                    // Mobile: hide outer label — FINISH is visible on the princess cell itself
+                    outerFinish.style.display = 'none';
                 } else if (rightSpace >= 50) {
                     outerFinish.style.top  = topPos + 'px';
                     outerFinish.style.left = (cRect.right - wRect.left + 6) + 'px';
                     outerFinish.style.display = 'block';
                 } else {
-                    outerFinish.style.top  = topPos + 'px';
-                    outerFinish.style.right = '4px';
-                    outerFinish.style.left = 'auto';
-                    outerFinish.style.display = 'block';
+                    // No room outside maze (e.g. Safari fullscreen) — hide to avoid overlapping cell
+                    outerFinish.style.display = 'none';
                 }
             }
         }
@@ -2820,15 +2913,19 @@
             if (e.target === document.getElementById('instructionsModal')) closeInstructionsModal();
         };
 
-        // Reposition on resize
-        window.addEventListener('resize', () => {
+        // Reposition on resize AND fullscreen change (Safari fullscreen shifts layout)
+        const _reposition = () => {
             if (document.getElementById('gamePage').style.display !== 'none') {
                 requestAnimationFrame(() => {
                     positionMosesSprite();
                     positionOuterLabels();
                 });
             }
-        });
+        };
+        window.addEventListener('resize', _reposition);
+        document.addEventListener('fullscreenchange', _reposition);
+        document.addEventListener('webkitfullscreenchange', _reposition); // Safari
+        document.addEventListener('mozfullscreenchange', _reposition);
     </script>
 </body>
 </html>
