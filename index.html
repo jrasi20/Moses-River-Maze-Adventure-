@@ -209,6 +209,27 @@
             color: #FFE680; font-weight: 700; font-style: italic;
         }
 
+        .how-to-play-box {
+            background: rgba(255,255,255,0.12);
+            padding: 14px 18px; border-radius: 14px;
+            margin-bottom: 12px; max-width: 580px;
+            text-align: left;
+            border: 2px solid rgba(255,255,255,0.25);
+        }
+
+        .how-to-play-box h3 {
+            color: #FFD700; margin-bottom: 10px;
+            text-align: center; font-size: 19px;
+        }
+
+        .instr-item {
+            display: flex; align-items: flex-start;
+            gap: 10px; margin-bottom: 7px;
+            font-size: 16px; line-height: 1.5;
+        }
+
+        .instr-item .ei { font-size: 19px; flex-shrink: 0; width: 26px; text-align: center; }
+
         .danger-box {
             background: rgba(255,80,0,0.22);
             padding: 12px 16px; border-radius: 14px;
@@ -257,6 +278,16 @@
             50% { box-shadow: 0 12px 28px rgba(255,215,0,0.5); }
         }
 
+        .score-info-box {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 16px; border-radius: 12px;
+            margin-bottom: 12px; max-width: 580px;
+            font-size: 15px; line-height: 1.5;
+            border: 1px solid rgba(255,215,0,0.3);
+            text-align: center;
+        }
+
+        .score-info-box strong { color: #FFD700; }
         .cover-footer { font-size: 12px; opacity: 0.65; margin-bottom: 8px; }
 
         /* ===== GAME PAGE ===== */
@@ -1353,23 +1384,6 @@
     </style>
 </head>
 <body>
-<noscript>
-    <div style="font-family:Arial,sans-serif;text-align:center;padding:40px 20px;background:#0d1b6e;color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="font-size:48px;margin-bottom:16px;">🌊</div>
-        <h2 style="color:#FFD700;font-size:24px;margin-bottom:12px;">Baby Moses River Adventure</h2>
-        <p style="font-size:17px;max-width:420px;line-height:1.6;margin-bottom:20px;">
-            This interactive game requires <strong>JavaScript</strong> to run.<br>
-            Please enable JavaScript in your browser settings and reload the page.
-        </p>
-        <div style="background:rgba(255,255,255,0.12);border-radius:12px;padding:16px 24px;font-size:14px;max-width:380px;line-height:1.7;">
-            <strong style="color:#FFD700;">How to enable JavaScript:</strong><br>
-            <strong>iPhone/iPad Safari:</strong> Settings → Safari → Advanced → JavaScript → On<br>
-            <strong>Android Chrome:</strong> Settings → Site Settings → JavaScript → Allowed<br>
-            <strong>Desktop Chrome:</strong> Settings → Privacy → Site Settings → JavaScript → Allowed
-        </div>
-        <p style="margin-top:20px;font-size:13px;color:rgba(255,255,255,0.6);">© 2025 Bible Explorer Kids</p>
-    </div>
-</noscript>
 
     <!-- ========== ACCESS GATE ========== -->
     <div id="accessGate" class="access-gate">
@@ -1438,6 +1452,48 @@
             <span class="mission">🎯 Your mission is to guide him safely through the treacherous waters so he can reach Pharaoh's daughter safely!</span>
         </div>
 
+        <!-- Waves: after story -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%201.png" alt="" style="width:92px;left:1%;top:-10px;animation-duration:3.4s;animation-delay:-0.3s;">
+            <img src="assets/images/wave%202.png" alt="" style="width:82px;right:1%;top:-16px;animation-duration:2.8s;animation-delay:-1.1s;">
+        </div>
+
+        <div class="how-to-play-box">
+            <h3>🎮 How to Play</h3>
+            <div class="instr-item"><span class="ei">⌨️</span><span><strong>Use arrow buttons</strong> (or keyboard arrows) to move baby Moses from START to FINISH.</span></div>
+            <div class="instr-item"><span class="ei">🌊</span><span><strong>Follow the blue water path</strong> — it's the only safe route for Moses!</span></div>
+            <div class="instr-item"><span class="ei">⭐</span><span><strong>Visit all 10 checkpoints in order</strong> and answer Bible questions correctly.</span></div>
+            <div class="instr-item"><span class="ei">💡</span><span><strong>Use clue buttons</strong> if you need help — each clue costs 5 points.</span></div>
+            <div class="instr-item"><span class="ei">🚫</span><span><strong>You must answer each question</strong> to continue — no skipping!</span></div>
+        </div>
+
+        <!-- Waves: after how-to-play -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%202.png" alt="" style="width:86px;left:2%;top:-12px;animation-duration:3.1s;animation-delay:-2s;">
+            <img src="assets/images/wave%201.png" alt="" style="width:96px;right:2%;top:-8px;animation-duration:2.5s;animation-delay:-0.6s;">
+        </div>
+
+        <div class="danger-box">
+            <h4>⚠️ What Happens If You Go Off the Safe Path?</h4>
+            <p>If Moses moves into a danger zone, he'll be engulfed by scary river creatures like crocodiles 🐊, sharks 🦈, or bombs 💣! Don't worry though - you'll restart from the beginning to try again! 💪</p>
+        </div>
+
+        <!-- Waves: after danger box -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%201.png" alt="" style="width:80px;left:1%;top:-10px;animation-duration:2.8s;animation-delay:-1.4s;">
+            <img src="assets/images/wave%202.png" alt="" style="width:90px;right:2%;top:-14px;animation-duration:3.3s;animation-delay:-0.4s;">
+        </div>
+
+        <div class="score-info-box">
+            <strong>⭐ Scoring:</strong> Earn <strong>+10 pts</strong> for each correct answer. Spend <strong>-5 pts</strong> per clue. Max score: <strong>100 pts!</strong>
+        </div>
+
+        <!-- Waves: above difficulty -->
+        <div class="wave-anchor" aria-hidden="true">
+            <img src="assets/images/wave%202.png" alt="" style="width:84px;left:2%;top:-8px;animation-duration:3.6s;animation-delay:-2.2s;">
+            <img src="assets/images/wave%201.png" alt="" style="width:76px;right:1%;top:-12px;animation-duration:2.6s;animation-delay:-0.8s;">
+        </div>
+
         <div class="difficulty-selector">
             <button class="difficulty-btn" onclick="selectDifficulty('easy')">🟢 Easy</button>
             <button class="difficulty-btn" onclick="selectDifficulty('medium')">🟡 Medium</button>
@@ -1446,7 +1502,7 @@
         <div id="difficultyHint" style="display:none;color:#FFD700;font-size:15px;font-weight:700;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">⚠️ Please choose a difficulty level first!</div>
 
         <button class="start-btn" onclick="startGame()">🚀 Start Adventure!</button>
-        <div class="cover-footer">© 2026 Bible Explorer Kids · For ages 7–13 · Best on tablets &amp; larger phones · For personal use only</div>
+        <div class="cover-footer">© 2026 Bible Explorer Kids · For personal use only</div>
     </div>
 
     <!-- ========== GAME PAGE ========== -->
@@ -2275,14 +2331,15 @@
                 outerStart.style.display = 'block';
                 const labelW = outerStart.offsetWidth || 70;
                 if (isMobile) {
-                    // Mobile: hide outer label — mobile-start-label inside maze covers it
-                    outerStart.style.display = 'none';
+                    // On mobile: overlay on the maze left edge
+                    outerStart.style.top = topPos + 'px';
+                    outerStart.style.left = (cRect.left - wRect.left) + 'px';
                 } else if (leftSpace >= 50) {
                     outerStart.style.top  = topPos + 'px';
                     outerStart.style.left = (cRect.left - wRect.left - labelW - 6) + 'px';
                 } else {
-                    // No room outside maze (e.g. Safari fullscreen) — hide to avoid overlapping cell
-                    outerStart.style.display = 'none';
+                    outerStart.style.top  = topPos + 'px';
+                    outerStart.style.left = '4px';
                 }
             }
 
@@ -2307,15 +2364,20 @@
                 const topPos = fRect.top - wRect.top + fRect.height / 2 - labelH / 2;
                 const rightSpace = wRect.right - cRect.right;
                 if (isMobile) {
-                    // Mobile: hide outer label — FINISH is visible on the princess cell itself
-                    outerFinish.style.display = 'none';
+                    // On mobile portrait: overlay on the maze right edge
+                    outerFinish.style.top = topPos + 'px';
+                    outerFinish.style.left = 'auto';
+                    outerFinish.style.right = (wRect.right - cRect.right) + 'px';
+                    outerFinish.style.display = 'block';
                 } else if (rightSpace >= 50) {
                     outerFinish.style.top  = topPos + 'px';
                     outerFinish.style.left = (cRect.right - wRect.left + 6) + 'px';
                     outerFinish.style.display = 'block';
                 } else {
-                    // No room outside maze (e.g. Safari fullscreen) — hide to avoid overlapping cell
-                    outerFinish.style.display = 'none';
+                    outerFinish.style.top  = topPos + 'px';
+                    outerFinish.style.right = '4px';
+                    outerFinish.style.left = 'auto';
+                    outerFinish.style.display = 'block';
                 }
             }
         }
@@ -2758,19 +2820,15 @@
             if (e.target === document.getElementById('instructionsModal')) closeInstructionsModal();
         };
 
-        // Reposition on resize AND fullscreen change (Safari fullscreen shifts layout)
-        const _reposition = () => {
+        // Reposition on resize
+        window.addEventListener('resize', () => {
             if (document.getElementById('gamePage').style.display !== 'none') {
                 requestAnimationFrame(() => {
                     positionMosesSprite();
                     positionOuterLabels();
                 });
             }
-        };
-        window.addEventListener('resize', _reposition);
-        document.addEventListener('fullscreenchange', _reposition);
-        document.addEventListener('webkitfullscreenchange', _reposition); // Safari
-        document.addEventListener('mozfullscreenchange', _reposition);
+        });
     </script>
 </body>
 </html>
