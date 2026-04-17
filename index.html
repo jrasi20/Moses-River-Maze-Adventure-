@@ -2830,32 +2830,37 @@
             }
         });
 
-        // ===== macOS Safari fullscreen fix (START/FINISH label overlap) =====
-        // Safari on macOS does not fire resize when entering/leaving fullscreen,
-        // so outer labels keep their pre-fullscreen coordinates and end up
-        // overlapping the start/finish cells. Reposition them on fullscreenchange.
-        // Scope: macOS Safari ONLY — no other browsers, no other platforms.
+        // ===== START/FINISH label repositioning fix =====
+        // Two bugs this addresses, both causing labels to overlap start/finish cells:
+        //   (a) Chrome/Safari fullscreen (esp. macOS native fullscreen): fullscreenchange
+        //       fires but resize may not — stale label coordinates overlap cells.
+        //   (b) Safari initial load: custom fonts load async, so labels are first
+        //       measured with fallback font (wrong offsetWidth), placing them too far
+        //       right and overlapping the start cell. Fix: reposition once fonts load.
+        // Both triggers just re-run the existing positionOuterLabels() — no math changes.
         (function () {
-            var ua = navigator.userAgent;
-            var isSafari = /^((?!chrome|android|crios|fxios|edg|opr).)*safari/i.test(ua);
-            var isMac = /Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad|iPod/i.test(ua);
-            if (!isSafari || !isMac) return;
             function rerun() {
                 if (typeof positionOuterLabels !== 'function') return;
                 var gp = document.getElementById('gamePage');
                 if (!gp || gp.style.display === 'none') return;
-                // Safari's fullscreen layout settles over several frames.
+                // Layout can settle over several frames (Safari fullscreen especially).
                 [0, 120, 320, 600].forEach(function (d) {
                     setTimeout(function () {
                         requestAnimationFrame(function () {
-                            positionMosesSprite();
+                            if (typeof positionMosesSprite === 'function') positionMosesSprite();
                             positionOuterLabels();
                         });
                     }, d);
                 });
             }
+            // Fullscreen (all browsers: Chrome, Safari, Firefox)
             document.addEventListener('fullscreenchange', rerun);
             document.addEventListener('webkitfullscreenchange', rerun);
+            document.addEventListener('mozfullscreenchange', rerun);
+            // Fonts finished loading (fixes Safari initial-load label overlap)
+            if (document.fonts && document.fonts.ready && typeof document.fonts.ready.then === 'function') {
+                document.fonts.ready.then(rerun);
+            }
         })();
     </script>
 </body>
