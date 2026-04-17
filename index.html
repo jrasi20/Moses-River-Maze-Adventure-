@@ -2829,6 +2829,34 @@
                 });
             }
         });
+
+        // ===== macOS Safari fullscreen fix (START/FINISH label overlap) =====
+        // Safari on macOS does not fire resize when entering/leaving fullscreen,
+        // so outer labels keep their pre-fullscreen coordinates and end up
+        // overlapping the start/finish cells. Reposition them on fullscreenchange.
+        // Scope: macOS Safari ONLY — no other browsers, no other platforms.
+        (function () {
+            var ua = navigator.userAgent;
+            var isSafari = /^((?!chrome|android|crios|fxios|edg|opr).)*safari/i.test(ua);
+            var isMac = /Macintosh|Mac OS X/i.test(ua) && !/iPhone|iPad|iPod/i.test(ua);
+            if (!isSafari || !isMac) return;
+            function rerun() {
+                if (typeof positionOuterLabels !== 'function') return;
+                var gp = document.getElementById('gamePage');
+                if (!gp || gp.style.display === 'none') return;
+                // Safari's fullscreen layout settles over several frames.
+                [0, 120, 320, 600].forEach(function (d) {
+                    setTimeout(function () {
+                        requestAnimationFrame(function () {
+                            positionMosesSprite();
+                            positionOuterLabels();
+                        });
+                    }, d);
+                });
+            }
+            document.addEventListener('fullscreenchange', rerun);
+            document.addEventListener('webkitfullscreenchange', rerun);
+        })();
     </script>
 </body>
 </html>
