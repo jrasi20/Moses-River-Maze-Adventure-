@@ -387,6 +387,16 @@
             }
         }
 
+        /* Desktop-only: guarantee horizontal room for outer START/FINISH labels.
+           Fixes macOS Chrome fullscreen + Safari normal where computed leftSpace
+           fell below 50px and JS fell back to the overlapping "left: 4px" branch.
+           Scoped to >=1201px so mobile/tablet layouts are untouched. */
+        @media (min-width: 1201px) {
+            .maze-wrapper {
+                padding: 0 90px;
+            }
+        }
+
         /* Outer START / FINISH labels — positioned by JS */
         .outer-start-label, .outer-finish-label {
             position: absolute; z-index: 40;
