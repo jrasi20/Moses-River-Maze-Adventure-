@@ -1336,11 +1336,16 @@
             display: none;
         }
 
-        /* Cover title: prevent emoji wrapping on small portrait phones/tablets */
+        /* Cover title on portrait phones/tablets: allow it to wrap so the long
+           title + emojis never get clipped at the screen edges (was nowrap, which
+           overflowed ~47px each side on 360–500px phones). */
         @media (max-width: 1024px) and (orientation: portrait) {
             .cover-title {
-                font-size: clamp(26px, 8vw, 40px);
-                white-space: nowrap;
+                font-size: clamp(24px, 7vw, 40px);
+                white-space: normal;
+                overflow-wrap: break-word;
+                max-width: 100%;
+                padding: 0 6px;
             }
         }
 
@@ -1485,7 +1490,7 @@
 
         <div class="danger-box">
             <h4>⚠️ What Happens If You Go Off the Safe Path?</h4>
-            <p>If Moses moves into a danger zone, he'll be engulfed by scary river creatures like crocodiles 🐊, sharks 🦈, or bombs 💣! Don't worry though - you'll restart from the beginning to try again! 💪</p>
+            <p>If Moses bumps into scary river creatures like crocodiles 🐊, sharks 🦈, or bombs 💣, he loses a life ❤️ and goes back to START — but you keep your checkpoints and score, so just keep going! You have <strong>3 lives</strong>. Lose all three and the adventure starts over. 💪</p>
         </div>
 
         <!-- Waves: after danger box -->
@@ -1505,9 +1510,9 @@
         </div>
 
         <div class="difficulty-selector">
-            <button class="difficulty-btn" onclick="selectDifficulty('easy')">🟢 Easy</button>
-            <button class="difficulty-btn" onclick="selectDifficulty('medium')">🟡 Medium</button>
-            <button class="difficulty-btn" onclick="selectDifficulty('hard')">🔴 Hard</button>
+            <button class="difficulty-btn" onclick="selectDifficulty('easy', this)">🟢 Easy</button>
+            <button class="difficulty-btn" onclick="selectDifficulty('medium', this)">🟡 Medium</button>
+            <button class="difficulty-btn" onclick="selectDifficulty('hard', this)">🔴 Hard</button>
         </div>
         <div id="difficultyHint" style="display:none;color:#FFD700;font-size:15px;font-weight:700;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.6);">⚠️ Please choose a difficulty level first!</div>
 
@@ -1520,6 +1525,10 @@
         <div class="game-header">
             <div class="game-title">🌊 Baby Moses River Adventure</div>
             <div class="hud-stats">
+                <div class="hud-card">
+                    <div class="hud-label">❤️ Lives</div>
+                    <div class="hud-value" id="livesDisplay" style="font-size:15px;">❤️❤️❤️</div>
+                </div>
                 <div class="hud-card">
                     <div class="hud-label">Score</div>
                     <div class="hud-value" id="gameScore">0</div>
@@ -1599,7 +1608,7 @@
             <div class="ii"><span class="ik">🎯</span><span><strong>Mission:</strong> Guide baby Moses through the Nile River to reach Pharaoh's daughter at FINISH!</span></div>
             <div class="ii"><span class="ik">⌨️</span><span><strong>Controls:</strong> Arrow buttons or keyboard keys (↑ ↓ ← →) move Moses one step at a time.</span></div>
             <div class="ii"><span class="ik">🌊</span><span><strong>Safe Path:</strong> Stay on blue water cells — the only safe route!</span></div>
-            <div class="ii"><span class="ik">⚠️</span><span><strong>Dangers:</strong> Brown cells with creatures and 💣 bombs send Moses ALL the way back to START — and reset checkpoints!</span></div>
+            <div class="ii"><span class="ik">⚠️</span><span><strong>Dangers:</strong> Brown cells with creatures and 💣 bombs cost Moses a life ❤️ and send him back to START — but you keep your checkpoints and score. You have <strong>3 lives</strong>!</span></div>
             <div class="ii"><span class="ik">⭐</span><span><strong>Checkpoints:</strong> Visit all 10 gold stars IN ORDER and answer Bible questions correctly.</span></div>
             <div class="ii"><span class="ik">❓</span><span><strong>Questions:</strong> Try as many times as needed. Answer correctly to unlock each checkpoint!</span></div>
             <div class="ii"><span class="ik">💡</span><span><strong>Clues:</strong> Each clue costs 5 points — use them wisely!</span></div>
@@ -1620,7 +1629,7 @@
                 <span class="dp">😱</span>
                 <span class="dp">🔥</span>
             </div>
-            <div class="danger-title">💥 Moses Hit an Obstacle! 💥</div>
+            <div class="danger-title" id="dangerTitle">💥 Moses Hit an Obstacle! 💥</div>
             <div class="danger-message" id="dangerMessage"></div>
             <div class="danger-img-box" style="position:relative;">
                 <!-- Pulsing rings behind image -->
@@ -1628,8 +1637,8 @@
                 <div class="danger-ring"></div>
                 <img id="dangerImage" src="" alt="Danger">
             </div>
-            <div class="danger-better-luck">Better Luck Next Time!</div>
-            <button class="modal-button" onclick="closeDangerModal()">↩️ Try Again from Start</button>
+            <div class="danger-better-luck" id="dangerBetterLuck">Better Luck Next Time!</div>
+            <button class="modal-button" id="dangerBtn" onclick="closeDangerModal()">↩️ Try Again</button>
         </div>
     </div>
 
@@ -1719,10 +1728,33 @@
 
     <script>
         // ========== ACCESS CODE GATE ==========
-        // Change this code for each Etsy listing or periodically
-        const VALID_ACCESS_CODES = ['MOSES2026', 'BIBLE4KIDS', 'EXODUS12'];
+        // Codes are stored as SHA-256 hashes so the plaintext is NOT visible in the
+        // page source. To add a code: SHA-256(uppercase, trimmed) -> add the hex below.
+        // The plaintext fallback only runs on older browsers lacking crypto.subtle
+        // (rare; crypto.subtle needs a secure context — https or localhost).
+        const VALID_CODE_HASHES = new Set([
+            '0a7b35a935e29ce3474b7bb5f0073503f6cdec843c4e2368254f4c97a79a1cf8', // MOSES2026
+            '59a8a126e302eb46a85e12d5354bd8ddcd503c31d6757fb3232532c5b18db136', // BIBLE4KIDS
+            '8c752f2181e7d41997a738e459b62a7042937031dd5d0b6f92be7460aa5deb0c'  // EXODUS12
+        ]);
+        const VALID_CODE_PLAINTEXTS = new Set(['MOSES2026', 'BIBLE4KIDS', 'EXODUS12']);
 
-        function checkAccessCode() {
+        async function _sha256Hex(str) {
+            if (!window.crypto || !window.crypto.subtle) return null;
+            const bytes = new TextEncoder().encode(str);
+            const buf = await window.crypto.subtle.digest('SHA-256', bytes);
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function grantAccess() {
+            document.getElementById('accessGate').style.display = 'none';
+            document.getElementById('coverPage').style.display = 'flex';
+            document.getElementById('musicHint').style.display = '';
+            // Persist so returning buyers don't re-enter the code on later visits
+            try { localStorage.setItem('bek.moses_river.unlocked', '1'); } catch(e) {}
+        }
+
+        async function checkAccessCode() {
             const input = document.getElementById('accessCodeInput');
             const error = document.getElementById('accessError');
             const code = input.value.trim().toUpperCase();
@@ -1732,14 +1764,16 @@
                 return;
             }
 
-            if (VALID_ACCESS_CODES.includes(code)) {
-                // Success — hide gate, show cover page
-                document.getElementById('accessGate').style.display = 'none';
-                document.getElementById('coverPage').style.display = 'flex';
-                document.getElementById('musicHint').style.display = '';
+            let ok = false;
+            try {
+                const hex = await _sha256Hex(code);
+                if (hex) ok = VALID_CODE_HASHES.has(hex);
+                else ok = VALID_CODE_PLAINTEXTS.has(code);
+            } catch(e) { ok = VALID_CODE_PLAINTEXTS.has(code); }
+
+            if (ok) {
                 error.textContent = '';
-                // Store in sessionStorage so refreshing doesn't re-ask
-                try { sessionStorage.setItem('bek_access', 'granted'); } catch(e) {}
+                grantAccess();
             } else {
                 error.textContent = 'Invalid code. Check your Etsy purchase for the correct code.';
                 input.value = '';
@@ -1747,7 +1781,7 @@
             }
         }
 
-        // Enter key on access input
+        // Enter key on access input + auto-unlock for returning buyers
         document.addEventListener('DOMContentLoaded', () => {
             const accessInput = document.getElementById('accessCodeInput');
             if (accessInput) {
@@ -1755,13 +1789,9 @@
                     if (e.key === 'Enter') { e.preventDefault(); checkAccessCode(); }
                 });
             }
-            // Check if already unlocked this session
+            // Already unlocked on a previous visit? Skip straight to the cover page.
             try {
-                if (sessionStorage.getItem('bek_access') === 'granted') {
-                    document.getElementById('accessGate').style.display = 'none';
-                    document.getElementById('coverPage').style.display = 'flex';
-                    document.getElementById('musicHint').style.display = '';
-                }
+                if (localStorage.getItem('bek.moses_river.unlocked') === '1') grantAccess();
             } catch(e) {}
         });
 
@@ -1923,6 +1953,8 @@
         bigWinSound.volume     = 0.8;
 
         // ========== GAME STATE ==========
+        const MAX_LIVES = 3;
+        let lives = MAX_LIVES;
         let currentDifficulty = 'easy';
         let gameScore = 0;
         let cluesUsed = 0;
@@ -2125,11 +2157,13 @@
         }
 
         // ========== SELECT DIFFICULTY ==========
-        function selectDifficulty(difficulty) {
+        function selectDifficulty(difficulty, btnEl) {
             currentDifficulty = difficulty;
             playSound(btnClickSound);
             document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
+            // Prefer the passed element (robust across browsers); fall back to window.event
+            const target = btnEl || (typeof event !== 'undefined' && event ? event.target : null);
+            if (target) target.classList.add('selected');
         }
 
         // ========== SELECT SESSION QUESTIONS (random pool each game) ==========
@@ -2173,6 +2207,7 @@
 
             gameScore = 0;
             cluesUsed = 0;
+            lives = MAX_LIVES;
             completedCheckpoints.clear();
             currentClueIndex = 0;
             currentPuzzleCheckpointIndex = 0;
@@ -2484,6 +2519,7 @@
             // Creature obstacle
             if (ct === 0) {
                 gameBlocked = true;
+                lives--;
                 playSound(splashSound);
                 showDangerModal(newCell.dataset.dangerSrc, newCell.dataset.dangerMsg);
                 return;
@@ -2491,6 +2527,7 @@
             // Bomb
             if (ct === 14) {
                 gameBlocked = true;
+                lives--;
                 playSound(splashSound);
                 showDangerModal('assets/images/black bomb.png', 'A bomb exploded right next to Moses!');
                 return;
@@ -2672,19 +2709,45 @@
             }, 1050);
         }
 
+        // ========== LIVES DISPLAY ==========
+        function updateLivesDisplay() {
+            const el = document.getElementById('livesDisplay');
+            if (el) el.textContent = lives > 0 ? '❤️'.repeat(lives) : '💔';
+        }
+
         // ========== DANGER MODAL ==========
+        // 3-lives system: a danger costs ONE life. While lives remain, Moses goes
+        // back to START but KEEPS all earned checkpoints + score (no re-answering).
+        // Only when the 3rd life is lost does the adventure fully restart.
         function showDangerModal(imgSrc, msg) {
             stopDpadRepeat(); // CRITICAL: stop D-pad interval to prevent auto-move
-            // Water splash → uh oh → game over
+            const outOfLives = lives <= 0;
+
+            // Water splash → uh oh (→ game over only when the last life is lost)
             playSound(splashSound);
             setTimeout(() => {
                 stopAllMusic();
                 playSound(dangerSound);
             }, 250);
-            setTimeout(() => playSound(gameOverSound), 750);
+            if (outOfLives) setTimeout(() => playSound(gameOverSound), 750);
 
             document.getElementById('dangerMessage').textContent = msg + ' Remember to follow the blue water path to keep Moses safe!';
             document.getElementById('dangerImage').src = imgSrc || 'assets/images/color croc 5.png';
+
+            const titleEl = document.getElementById('dangerTitle');
+            const blEl    = document.getElementById('dangerBetterLuck');
+            const btnEl   = document.getElementById('dangerBtn');
+            if (outOfLives) {
+                if (titleEl) titleEl.textContent = '💔 Out of Lives! 💔';
+                if (blEl)  blEl.textContent = 'No lives left — let\'s start the adventure over!';
+                if (btnEl) btnEl.textContent = '🔄 Start Over';
+            } else {
+                if (titleEl) titleEl.textContent = '💥 Moses Hit an Obstacle! 💥';
+                if (blEl)  blEl.innerHTML = '❤️'.repeat(lives) +
+                    '<br>' + lives + (lives === 1 ? ' life left — keep going!' : ' lives left — keep going!');
+                if (btnEl) btnEl.textContent = '↩️ Try Again';
+            }
+            updateLivesDisplay();
             document.getElementById('dangerModal').classList.add('active');
         }
 
@@ -2692,17 +2755,24 @@
             playSound(btnClickSound);
             stopDpadRepeat(); // CRITICAL: stop any held D-pad interval
             document.getElementById('dangerModal').classList.remove('active');
-            completedCheckpoints.clear();
-            resetCheckpointVisuals();
-            // Reset score and clues to 0 on Try Again
-            gameScore = 0;
-            cluesUsed = 0;
+
+            if (lives <= 0) {
+                // Out of lives — full restart: clear checkpoints, score, clues, refill lives
+                completedCheckpoints.clear();
+                resetCheckpointVisuals();
+                gameScore = 0;
+                cluesUsed = 0;
+                lives = MAX_LIVES;
+                updateHudDots();
+            }
+            // else: keep checkpoints + score — Moses just returns to START with one fewer life
+
             // Restore start cell appearance when Moses resets there
             document.querySelectorAll('.maze-cell.start-vacated').forEach(c => c.classList.remove('start-vacated'));
-            updateHudDots();
             playerX = 0; playerY = 0;
             resetPlayerPosition();
             updateHUD();
+            updateLivesDisplay();
             // Brief delay before unblocking to prevent accidental immediate moves
             setTimeout(() => { gameBlocked = false; }, 200);
             bgMusic.currentTime = 0;
@@ -2716,9 +2786,13 @@
             playSound(successSound);
             setTimeout(() => {
                 playSound(bigWinSound);
-                // After the trumpet finishes, start cover page music until modal is dismissed
+                // After the trumpet finishes, resume cover music — but ONLY if we're
+                // still on the win modal / cover page. If the player already tapped
+                // "Play Again" (game page showing), don't hijack the new game's music.
                 bigWinSound.addEventListener('ended', () => {
-                    startCoverMusic();
+                    const winActive = document.getElementById('winModal').classList.contains('active');
+                    const coverShown = getComputedStyle(document.getElementById('coverPage')).display !== 'none';
+                    if (winActive || coverShown) startCoverMusic();
                 }, { once: true });
             }, 300);
             setTimeout(() => launchGlitter(), 400);
@@ -2752,6 +2826,7 @@
         // ========== INCOMPLETE MODAL ==========
         function showIncompleteModal() {
             stopDpadRepeat(); // CRITICAL: stop D-pad interval
+            gameBlocked = true; // lock movement so arrows can't move Moses behind the modal
             playSound(btnClickSound);
             document.getElementById('completedCount').textContent = completedCheckpoints.size;
             document.getElementById('incompleteModal').classList.add('active');
@@ -2767,6 +2842,7 @@
         function updateHUD() {
             document.getElementById('gameScore').textContent = gameScore;
             document.getElementById('checkpointCount').textContent = completedCheckpoints.size + '/10';
+            updateLivesDisplay();
         }
 
         // ========== PAGE NAVIGATION ==========
