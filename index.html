@@ -1551,19 +1551,27 @@
         /* Once Moses leaves START it becomes a normal water cell again */
         .maze-cell.start.start-vacated { transform: none !important; z-index: auto; }
 
-        /* ===== WATER SHIMMER / RIPPLE over the maze (single element = cheap) ===== */
-        .water-shimmer {
-            position: absolute; inset: 0; pointer-events: none; z-index: 6;
-            mix-blend-mode: overlay;   /* brightens the light water, near-invisible on dark walls */
-            background-image:
-                repeating-linear-gradient(118deg, rgba(255,255,255,0.55) 0 3px, rgba(255,255,255,0) 3px 22px),
-                repeating-linear-gradient(64deg,  rgba(170,225,255,0.45) 0 3px, rgba(255,255,255,0) 3px 28px);
-            background-size: 200% 200%, 230% 230%;
-            animation: waterShimmer 8s linear infinite;
+        /* ===== WATER RIPPLE — ONLY on the water (path) cells =====
+           A soft light band sweeps across the cell (clipped by the cell's
+           overflow:hidden). Applied to a scattered SUBSET of water cells, each
+           with a randomised delay/duration set in JS, so the surface shimmers
+           naturally instead of in lockstep — and far fewer animated layers, so
+           it stays smooth on iPad/Android. Nothing renders over walls/obstacles. */
+        .maze-cell.path.shimmer::after {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; pointer-events: none;
+            background: linear-gradient(115deg,
+                rgba(255,255,255,0) 38%,
+                rgba(255,255,255,0.28) 50%,
+                rgba(255,255,255,0) 62%);
+            transform: translateX(-110%);
+            animation: waterRipple var(--ripple-dur, 5s) ease-in-out var(--ripple-delay, 0s) infinite;
+            will-change: transform;
         }
-        @keyframes waterShimmer {
-            0%   { background-position: 0% 0%,   100% 0%; }
-            100% { background-position: 200% 65%, -200% 45%; }
+        @keyframes waterRipple {
+            0%   { transform: translateX(-110%); }
+            60%  { transform: translateX(110%); }
+            100% { transform: translateX(110%); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -1571,10 +1579,11 @@
             .side-wave-img, .ctrl-wave-img, .hero-section img, .maze-side-deco img,
             .start-btn, .win-title, .princess-img-box, .princess-img-box img,
             .danger-img-box img, .dp, .ws, .win-sparkle, .danger-ring,
-            .water-shimmer, .maze-cell.start, .maze-cell.finish,
+            .maze-cell.path.shimmer::after, .maze-cell.start, .maze-cell.finish,
             #preloader img, .puzzle-modal .modal-content::before {
                 animation: none !important;
             }
+            .maze-cell.path.shimmer::after { display: none !important; }
             #mosesSprite { transition: none !important; }
             html { scroll-behavior: auto !important; }
         }
@@ -1756,7 +1765,6 @@
                 <div class="mobile-start-label"><span>▶ START</span></div>
                 <div class="maze-container" id="mazeContainer">
                     <div class="maze-grid" id="mazeGrid"></div>
-                    <div class="water-shimmer" aria-hidden="true"></div>
                     <img id="mosesSprite" src="assets/images/moses in basket.png" alt="Moses">
                 </div>
                 <!-- Mobile-only FINISH label — INSIDE wrapper so it scrolls with maze -->
@@ -2542,6 +2550,14 @@
 
                     if (ct === 1) {
                         cell.classList.add('path');
+                        // Scatter the water ripple over ~40% of water cells, each with a
+                        // randomised delay/speed so the surface shimmers naturally and
+                        // only a fraction of cells animate (smooth on iPad/Android).
+                        if (Math.random() < 0.4) {
+                            cell.classList.add('shimmer');
+                            cell.style.setProperty('--ripple-delay', (-Math.random() * 6).toFixed(2) + 's');
+                            cell.style.setProperty('--ripple-dur', (4 + Math.random() * 3).toFixed(2) + 's');
+                        }
                     }
                     else if (ct === 2) {
                         // START — RED cell, Moses sprite overlaid, no in-cell text
