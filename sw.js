@@ -5,7 +5,7 @@
    - Static assets (images, audio, icons, fonts): CACHE-FIRST (instant,
      and works fully offline once played).
    Bump CACHE_VERSION whenever assets change to retire old caches. */
-const CACHE_VERSION = 'moses-river-v1';
+const CACHE_VERSION = 'moses-river-v2';
 
 // Core shell + ALL images and audio (~13MB total) precached on install, so after
 // the first online load the game is fully playable OFFLINE — including sound —
@@ -79,9 +79,10 @@ self.addEventListener('fetch', (event) => {
                  url.pathname.endsWith('index.html');
 
   if (isHTML) {
-    // Network-first: always try fresh HTML, fall back to cache offline.
+    // Network-first, bypassing the HTTP cache ({cache:'reload'}) so a freshly
+    // deployed game ALWAYS wins for online players; fall back to cache offline.
     event.respondWith(
-      fetch(req).then((res) => {
+      fetch(req, { cache: 'reload' }).then((res) => {
         const copy = res.clone();
         caches.open(CACHE_VERSION).then((c) => c.put(req, copy)).catch(() => {});
         return res;

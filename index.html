@@ -1533,6 +1533,12 @@
             pointer-events: none; transition: opacity 0.4s ease; box-shadow: 0 4px 14px rgba(0,0,0,0.4);
         }
         .tour-banner.fade { opacity: 0; }
+        /* Travelling intro marker — glides START -> FINISH, above Moses (z20) */
+        .tour-marker {
+            position: absolute; z-index: 22; pointer-events: none;
+            font-size: 30px; line-height: 1; transform: translate(-50%, -50%);
+            filter: drop-shadow(0 0 10px rgba(255,215,0,1)) drop-shadow(0 0 20px rgba(255,160,0,0.85));
+        }
 
         /* ===== PERFORMANCE / REDUCED MOTION =====
            Honour the OS "reduce motion" setting AND give low-power devices a
@@ -3268,52 +3274,94 @@
             setTimeout(() => { if (wrap.parentNode) wrap.remove(); }, 2600);
         }
 
-        // ---------- Intro camera tour: pan START -> FINISH so kids see the goal ----------
+        // ---------- Intro camera tour: a glowing marker sweeps START -> FINISH so
+        // kids see where to go. Works on EVERY device: a travelling ⭐ glides along
+        // the maze (visible even on desktop where the maze already fits), and on
+        // scrollable phones/tablets the viewport pans to follow it. ----------
         let __tourActive = false;
         function introTour() {
-            const wrapper = document.getElementById('mazeWrapper');
-            if (!wrapper) return;
+            // Clear any orphaned tour (e.g. left mid-tour via Main Menu) so a new
+            // game always gets a fresh, visible pan and never silently skips.
+            document.querySelectorAll('.tour-marker, .tour-banner').forEach(e => e.remove());
+            document.querySelectorAll('.tour-highlight').forEach(e => e.classList.remove('tour-highlight'));
+            __tourActive = false;
+            const container = document.getElementById('mazeContainer');
+            const wrapper   = document.getElementById('mazeWrapper');
             const startCell  = document.querySelector('.maze-cell.start');
             const finishCell = document.querySelector('.maze-cell.finish');
+            if (!container || !wrapper || !startCell || !finishCell) return;
             const reduce = prefersReducedMotion();
             __tourActive = true;
             gameBlocked = true;
 
             const banner = document.createElement('div');
             banner.className = 'tour-banner';
-            banner.textContent = '🌊 Guide Moses from START ▶ to the Princess ◀';
+            banner.textContent = '🌊 Watch the path — START ▶ to the Princess 👑';
             document.body.appendChild(banner);
-            if (startCell)  startCell.classList.add('tour-highlight');
-            if (finishCell) finishCell.classList.add('tour-highlight');
+            startCell.classList.add('tour-highlight');
+            finishCell.classList.add('tour-highlight');
 
-            const canScroll = (wrapper.scrollHeight > wrapper.clientHeight + 4) ||
-                              (wrapper.scrollWidth  > wrapper.clientWidth + 4);
+            // Travelling glow marker (positioned in maze-container coords, above Moses)
+            const sx = startCell.offsetLeft + startCell.offsetWidth / 2;
+            const sy = startCell.offsetTop  + startCell.offsetHeight / 2;
+            const fx = finishCell.offsetLeft + finishCell.offsetWidth / 2;
+            const fy = finishCell.offsetTop  + finishCell.offsetHeight / 2;
+            const marker = document.createElement('div');
+            marker.className = 'tour-marker';
+            marker.textContent = '⭐';
+            marker.style.left = sx + 'px';
+            marker.style.top  = sy + 'px';
+            container.appendChild(marker);
+
+            const canScroll = (wrapper.scrollWidth  > wrapper.clientWidth  + 4) ||
+                              (wrapper.scrollHeight > wrapper.clientHeight + 4);
+            const DUR = 2600;
+
+            let markerAnim = null;
+            if (!reduce && marker.animate) {
+                markerAnim = marker.animate([
+                    { left: sx + 'px', top: sy + 'px', transform: 'translate(-50%,-50%) scale(0.8)', opacity: 0.25, offset: 0 },
+                    { opacity: 1, transform: 'translate(-50%,-50%) scale(1.5)', offset: 0.15 },
+                    { transform: 'translate(-50%,-50%) scale(1.5)', offset: 0.5 },
+                    { left: fx + 'px', top: fy + 'px', transform: 'translate(-50%,-50%) scale(1.2)', opacity: 1, offset: 1 }
+                ], { duration: DUR, easing: 'ease-in-out', fill: 'forwards' });
+            }
+
+            // On scrollable phones/tablets, pan the viewport to follow the route
+            if (canScroll && !reduce) {
+                wrapper.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+                setTimeout(() => {
+                    if (!__tourActive) return;
+                    wrapper.scrollTo({
+                        left: Math.max(0, fx - wrapper.clientWidth / 2),
+                        top:  Math.max(0, fy - wrapper.clientHeight / 2),
+                        behavior: 'smooth'
+                    });
+                }, DUR * 0.3);
+            }
 
             function endTour() {
                 if (!__tourActive) return;
                 __tourActive = false;
-                if (startCell)  startCell.classList.remove('tour-highlight');
-                if (finishCell) finishCell.classList.remove('tour-highlight');
+                if (markerAnim) { try { markerAnim.cancel(); } catch (e) {} }
+                if (marker.parentNode) marker.remove();
+                startCell.classList.remove('tour-highlight');
+                finishCell.classList.remove('tour-highlight');
                 banner.classList.add('fade');
                 setTimeout(() => { if (banner.parentNode) banner.remove(); }, 400);
                 if (canScroll) wrapper.scrollTo({ left: 0, top: 0, behavior: reduce ? 'auto' : 'smooth' });
                 document.removeEventListener('pointerdown', skip, true);
                 document.removeEventListener('keydown', skip, true);
-                // small delay so the skip tap doesn't also move Moses
-                setTimeout(() => { gameBlocked = false; }, 140);
+                setTimeout(() => { gameBlocked = false; }, 150); // skip-tap shouldn't also move Moses
             }
-            function skip() { clearTimeout(t2); endTour(); }
-
-            let t2;
-            if (reduce || !canScroll) {
-                // Desktop full-view (no scroll) or reduced-motion: just hold the highlight
-                t2 = setTimeout(endTour, reduce ? 700 : 1500);
-            } else {
-                wrapper.scrollTo({ left: wrapper.scrollWidth, top: wrapper.scrollHeight, behavior: 'smooth' });
-                t2 = setTimeout(endTour, 1900);
-            }
-            document.addEventListener('pointerdown', skip, true);
-            document.addEventListener('keydown', skip, true);
+            function skip() { clearTimeout(timer); endTour(); }
+            const timer = setTimeout(endTour, reduce ? 700 : DUR + 400);
+            // allow skipping, but not from the very tap that started the game
+            setTimeout(() => {
+                if (!__tourActive) return;
+                document.addEventListener('pointerdown', skip, true);
+                document.addEventListener('keydown', skip, true);
+            }, 250);
         }
 
         // ---------- Image preloader (no maze pop-in on first scan) ----------
