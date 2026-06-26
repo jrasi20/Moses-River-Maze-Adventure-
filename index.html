@@ -1611,16 +1611,24 @@
             filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 9px rgba(120,220,255,1)) drop-shadow(0 1px 2px rgba(0,0,0,0.6));
             animation: dropFloat 2.6s ease-in-out infinite;
         }
+        /* Storm cloud — the BAD drop kids should dodge (catching it loses points) */
+        .bad-drop {
+            position: absolute; z-index: 9; pointer-events: none;
+            left: 50%; top: 50%; font-size: 84%; line-height: 1;
+            transform: translate(-50%,-50%);
+            filter: drop-shadow(0 0 5px rgba(60,70,110,0.95)) drop-shadow(0 1px 2px rgba(0,0,0,0.65));
+            animation: dropFloat 2.4s ease-in-out infinite;
+        }
         @keyframes dropFloat { 0%,100% { transform: translate(-50%,-56%) scale(1); } 50% { transform: translate(-50%,-44%) scale(1.13); } }
-        /* Drop-in: gem/shield falls from above into place, then settles into the float */
-        .gem.drop-in, .shield-bubble.drop-in { animation: dropIn 0.55s cubic-bezier(.3,1.5,.5,1), dropFloat 2.2s ease-in-out 0.55s infinite; }
+        /* Drop-in: a gem/shield/cloud falls from above into place, then settles into the float */
+        .gem.drop-in, .shield-bubble.drop-in, .bad-drop.drop-in { animation: dropIn 0.55s cubic-bezier(.3,1.5,.5,1), dropFloat 2.2s ease-in-out 0.55s infinite; }
         @keyframes dropIn {
             0%   { transform: translate(-50%,-320%) scale(0.5); opacity: 0; }
             55%  { opacity: 1; }
             80%  { transform: translate(-50%,-44%) scale(1.16); }
             100% { transform: translate(-50%,-56%) scale(1); }
         }
-        .gem.fade-out, .shield-bubble.fade-out { animation: dropFade 0.4s ease forwards !important; }
+        .gem.fade-out, .shield-bubble.fade-out, .bad-drop.fade-out { animation: dropFade 0.4s ease forwards !important; }
         @keyframes dropFade { to { transform: translate(-50%,-72%) scale(0.4); opacity: 0; } }
 
         /* Wake ripple left behind as Moses moves */
@@ -1694,7 +1702,7 @@
             .start-btn, .win-title, .princess-img-box, .princess-img-box img,
             .danger-img-box img, .dp, .ws, .win-sparkle, .danger-ring,
             .maze-cell.path.shimmer::after, .maze-cell.start, .maze-cell.finish,
-            #mosesSprite, .gem, .shield-bubble, .maze-cell img.lurk, .new-best,
+            #mosesSprite, .gem, .shield-bubble, .bad-drop, .maze-cell img.lurk, .new-best,
             #preloader img, .puzzle-modal .modal-content::before {
                 animation: none !important;
             }
@@ -1795,6 +1803,9 @@
             <div class="instr-item"><span class="ei">⭐</span><span><strong>Visit all 10 checkpoints in order</strong> and answer Bible questions correctly.</span></div>
             <div class="instr-item"><span class="ei">💡</span><span><strong>Use clue buttons</strong> if you need help — each clue costs 5 points.</span></div>
             <div class="instr-item"><span class="ei">🚫</span><span><strong>You must answer each question</strong> to continue — no skipping!</span></div>
+            <div class="instr-item"><span class="ei">💎</span><span><strong>Catch the pink gems!</strong> They drop in near Moses — grab each for <strong>+5 bonus points</strong> to boost your score, earn more ⭐ stars, and beat your best!</span></div>
+            <div class="instr-item"><span class="ei">🛡️</span><span><strong>Grab a shield bubble</strong> to save Moses from one creature bump — no life lost!</span></div>
+            <div class="instr-item"><span class="ei">⛈️</span><span><strong>Dodge the storm clouds!</strong> If Moses catches one, it washes away <strong>5 points</strong> — so move around them.</span></div>
         </div>
 
         <!-- Waves: after how-to-play -->
@@ -1815,7 +1826,7 @@
         </div>
 
         <div class="score-info-box">
-            <strong>⭐ Scoring:</strong> Earn <strong>+10 pts</strong> for each correct answer. Spend <strong>-5 pts</strong> per clue. Max score: <strong>100 pts!</strong>
+            <strong>⭐ Scoring:</strong> <strong>+10 pts</strong> per correct answer, <strong>+5 pts</strong> per pink gem 💎, <strong>-5 pts</strong> per clue, and <strong>-5 pts</strong> if you catch a storm cloud ⛈️. More points = more stars!
         </div>
 
         <!-- Waves: above difficulty -->
@@ -1933,8 +1944,11 @@
             <div class="ii"><span class="ik">⭐</span><span><strong>Checkpoints:</strong> Visit all 10 gold stars IN ORDER and answer Bible questions correctly.</span></div>
             <div class="ii"><span class="ik">❓</span><span><strong>Questions:</strong> Try as many times as needed. Answer correctly to unlock each checkpoint!</span></div>
             <div class="ii"><span class="ik">💡</span><span><strong>Clues:</strong> Each clue costs 5 points — use them wisely!</span></div>
+            <div class="ii"><span class="ik">💎</span><span><strong>Gems:</strong> Pink gems drop in near Moses — catch them for <strong>+5 points</strong> each! More points means more ⭐ stars and a higher best score.</span></div>
+            <div class="ii"><span class="ik">🛡️</span><span><strong>Shields:</strong> Grab a shield bubble to block one creature/bomb hit — Moses keeps his life!</span></div>
+            <div class="ii"><span class="ik">⛈️</span><span><strong>Storm clouds:</strong> Dodge these! Catching one washes away <strong>5 points</strong>.</span></div>
             <div class="ii"><span class="ik">🏆</span><span><strong>Winning:</strong> Reach FINISH after ALL 10 checkpoints are done!</span></div>
-            <div class="ii"><span class="ik">⭐</span><span><strong>Score:</strong> +10 pts per correct answer, -5 pts per clue. Max score: 100!</span></div>
+            <div class="ii"><span class="ik">⭐</span><span><strong>Score:</strong> +10 per answer, +5 per gem, -5 per clue, -5 per storm cloud.</span></div>
             <button class="modal-button" onclick="closeInstructionsModal()" style="background:#FFD700;color:#0d47a1;border-color:#FFD700;margin-top:12px;">✅ Got It!</button>
         </div>
     </div>
@@ -3411,9 +3425,10 @@
             document.body.appendChild(b);
             setTimeout(() => b.remove(), 900);
         }
-        function scorePop(text) {
+        function scorePop(text, color) {
             const s = document.createElement('div');
             s.className = 'score-pop'; s.textContent = text;
+            if (color) s.style.color = color;
             document.body.appendChild(s);
             setTimeout(() => s.remove(), 1100);
         }
@@ -3671,8 +3686,8 @@
         function clearDrops() {
             activeDrops.forEach(d => { if (d.expireId) clearTimeout(d.expireId); });
             activeDrops = [];
-            // sweep any stray gem/shield elements (e.g. one mid fade-out) so none linger
-            document.querySelectorAll('.gem, .shield-bubble').forEach(el => el.remove());
+            // sweep any stray drop elements (e.g. one mid fade-out) so none linger
+            document.querySelectorAll('.gem, .shield-bubble, .bad-drop').forEach(el => el.remove());
         }
         function maybeSpawnDrop() {
             if (gameBlocked || __tourActive) return;
@@ -3705,12 +3720,17 @@
             const pick = cands[Math.floor(Math.random() * Math.min(4, cands.length))];
             const cell = cellByXY(pick.x, pick.y);
             if (!cell) return;
-            const isShield = !hasShield && Math.random() < 0.18; // occasional shield bubble
+            // Decide what drops: ~30% storm cloud (avoid!), some shields, rest gems
+            let type = 'gem';
+            if (Math.random() < 0.30) type = 'bad';
+            else if (!hasShield && Math.random() < 0.18) type = 'shield';
+            const cls = type === 'gem' ? 'gem' : (type === 'shield' ? 'shield-bubble' : 'bad-drop');
             const el = document.createElement('div');
-            el.className = (isShield ? 'shield-bubble' : 'gem') + ' drop-in';
-            if (isShield) el.textContent = '🛡️';
+            el.className = cls + ' drop-in';
+            if (type === 'shield') el.textContent = '🛡️';
+            else if (type === 'bad') el.textContent = '⛈️';
             cell.appendChild(el);
-            const drop = { key: pick.x + ',' + pick.y, x: pick.x, y: pick.y, el, type: isShield ? 'shield' : 'gem', expireId: null };
+            const drop = { key: pick.x + ',' + pick.y, x: pick.x, y: pick.y, el, type: type, expireId: null };
             drop.expireId = setTimeout(() => {
                 el.classList.add('fade-out');
                 setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
@@ -3730,6 +3750,13 @@
                 playSound(successChime); haptic([15, 30, 15]);
                 sparkleAt(cell, '🫧', 6);
                 showFlashMessage('🛡️ Shield ready — it blocks one hit!', 'success');
+            } else if (d.type === 'bad') {
+                // storm cloud — caught it, lose points (never below 0)
+                gameScore = Math.max(0, gameScore - 5);
+                playSound(wrongSound); haptic(90);
+                scorePop('-5', '#ff5b5b'); sparkleAt(cell, '💦', 6);
+                showFlashMessage('⛈️ A storm cloud washed away 5 points!', 'error');
+                updateHUD();
             } else {
                 gameScore += 5; bonusPoints += 5;
                 playSound(checkpointSound); haptic(12);
