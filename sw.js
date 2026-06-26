@@ -5,7 +5,7 @@
    - Static assets (images, audio, icons, fonts): CACHE-FIRST (instant,
      and works fully offline once played).
    Bump CACHE_VERSION whenever assets change to retire old caches. */
-const CACHE_VERSION = 'moses-river-v2';
+const CACHE_VERSION = 'moses-river-v3';
 
 // Core shell + ALL images and audio (~13MB total) precached on install, so after
 // the first online load the game is fully playable OFFLINE — including sound —
@@ -15,9 +15,9 @@ const PRECACHE = [
   './',
   'index.html',
   'manifest.json',
-  'icon-192.png',
-  'icon-512.png',
-  'apple-touch-icon.png',
+  'river-icon-192.png',
+  'river-icon-512.png',
+  'river-apple-touch.png',
   'assets/images/big%20snake.png',
   'assets/images/black%20bomb.png',
   'assets/images/color%20croc%205.png',
