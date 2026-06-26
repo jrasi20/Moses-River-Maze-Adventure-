@@ -1592,17 +1592,36 @@
             filter: drop-shadow(0 0 5px #4fc3f7) drop-shadow(0 0 11px #29b6f6) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        /* Treasure gem + shield bubble sitting on the water */
-        .gem, .shield-bubble {
+        /* PINK treasure gem — a CSS diamond (crisp + high-contrast on the blue water) */
+        .gem {
             position: absolute; z-index: 9; pointer-events: none;
-            font-size: 78%; line-height: 1;
-            left: 50%; top: 50%; transform: translate(-50%,-50%);
-            /* bright halo so the treasure pops against the blue water */
-            filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px #FFD700) drop-shadow(0 1px 2px rgba(0,0,0,0.6));
-            animation: gemFloat 2.2s ease-in-out infinite;
+            left: 50%; top: 50%; width: 56%; height: 56%;
+            transform: translate(-50%,-50%);
+            background: linear-gradient(135deg, #ffd6f0 0%, #ff5ec2 45%, #d6118a 100%);
+            clip-path: polygon(50% 1%, 87% 37%, 50% 99%, 13% 37%);
+            /* drop-shadow (not box-shadow) so the glow hugs the diamond, not a square */
+            filter: drop-shadow(0 0 4px rgba(255,90,200,0.98)) drop-shadow(0 0 9px rgba(255,150,225,0.85)) drop-shadow(0 1px 2px rgba(0,0,0,0.55));
+            animation: dropFloat 2.2s ease-in-out infinite;
         }
-        .shield-bubble { animation: gemFloat 2.6s ease-in-out infinite; filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 9px rgba(120,220,255,1)) drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
-        @keyframes gemFloat { 0%,100% { transform: translate(-50%,-58%) scale(1); } 50% { transform: translate(-50%,-42%) scale(1.12); } }
+        /* Shield bubble */
+        .shield-bubble {
+            position: absolute; z-index: 9; pointer-events: none;
+            left: 50%; top: 50%; font-size: 80%; line-height: 1;
+            transform: translate(-50%,-50%);
+            filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 9px rgba(120,220,255,1)) drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+            animation: dropFloat 2.6s ease-in-out infinite;
+        }
+        @keyframes dropFloat { 0%,100% { transform: translate(-50%,-56%) scale(1); } 50% { transform: translate(-50%,-44%) scale(1.13); } }
+        /* Drop-in: gem/shield falls from above into place, then settles into the float */
+        .gem.drop-in, .shield-bubble.drop-in { animation: dropIn 0.55s cubic-bezier(.3,1.5,.5,1), dropFloat 2.2s ease-in-out 0.55s infinite; }
+        @keyframes dropIn {
+            0%   { transform: translate(-50%,-320%) scale(0.5); opacity: 0; }
+            55%  { opacity: 1; }
+            80%  { transform: translate(-50%,-44%) scale(1.16); }
+            100% { transform: translate(-50%,-56%) scale(1); }
+        }
+        .gem.fade-out, .shield-bubble.fade-out { animation: dropFade 0.4s ease forwards !important; }
+        @keyframes dropFade { to { transform: translate(-50%,-72%) scale(0.4); opacity: 0; } }
 
         /* Wake ripple left behind as Moses moves */
         .wake-ripple {
@@ -2159,7 +2178,11 @@
                 { question: "What tall plants along the riverbank hid Moses' basket?", answer: "REEDS", clues: ["Tall water plants like long grass", "Also called bulrushes", "5 letters: R-E-E-D-S"] },
                 { question: "Moses' basket was coated with tar and what other substance?", answer: "PITCH", clues: ["Similar to tar — also sticky and dark", "Keeps water out", "5 letters: P-I-T-C-H"] },
                 { question: "What river plant material was Moses' basket woven from?", answer: "PAPYRUS", clues: ["Used to make ancient paper in Egypt", "Grows in tall bundles by rivers", "7 letters: P-A-P-Y-R-U-S"] },
-                { question: "What did Moses' mother do to protect him from Pharaoh?", answer: "HID", clues: ["She kept him secret for three months", "Past tense of hide", "3 letters: H-I-D"] }
+                { question: "What did Moses' mother do to protect him from Pharaoh?", answer: "HID", clues: ["She kept him secret for three months", "Past tense of hide", "3 letters: H-I-D"] },
+                { question: "🧩 Riddle: Woven from reeds and sealed up with tar, I float baby Moses both near and far. What am I?", answer: "BASKET", clues: ["Moses floated inside me", "A woven container", "6 letters: B-A-S-K-E-T"] },
+                { question: "🧩 Riddle: I'm Egypt's longest river where a wee baby sailed — no oars and no sail, yet his trip never failed. What am I?", answer: "NILE", clues: ["Egypt's great river", "Starts with N", "4 letters: N-I-L-E"] },
+                { question: "🧩 Riddle: Tall, green and swishy by the riverbank wide, I hid little Moses safe on my side. What are we?", answer: "REEDS", clues: ["Tall water plants", "Also called bulrushes", "5 letters: R-E-E-D-S"] },
+                { question: "🧩 Riddle: A brave big sister, by the water I'd peep, watching my brother float by — who am I?", answer: "MIRIAM", clues: ["Moses' older sister", "Starts with M", "M-I-R-I-A-M"] }
             ],
             medium: [
                 { question: "What river plant was Moses' basket carefully woven from?", answer: "PAPYRUS", clues: ["Used to make ancient Egyptian paper", "Grows in tall bundles by rivers", "P-A-P-Y-R-U-S"] },
@@ -2179,7 +2202,11 @@
                 { question: "What did Pharaoh's daughter name the baby she found floating?", answer: "MOSES", clues: ["Means drawn out of water", "He became Israel's greatest leader", "M-O-S-E-S"] },
                 { question: "Miriam asked: shall I find a ___ from the Hebrew women to care for him?", answer: "NURSE", clues: ["Someone who feeds and cares for babies", "A caregiver for infants", "N-U-R-S-E"] },
                 { question: "Pharaoh ordered all Hebrew baby ___ to be thrown into the Nile river.", answer: "BOYS", clues: ["Male babies only, not the girls", "B-O-Y-S"] },
-                { question: "Where did Jochebed place Moses' basket? Among the ___ along the bank.", answer: "REEDS", clues: ["Tall water grass", "Also called bulrushes", "R-E-E-D-S"] }
+                { question: "Where did Jochebed place Moses' basket? Among the ___ along the bank.", answer: "REEDS", clues: ["Tall water grass", "Also called bulrushes", "R-E-E-D-S"] },
+                { question: "🧩 Riddle: A royal young lady came down for a bathe, found a crying wee baby and chose to be brave. Who am I?", answer: "PRINCESS", clues: ["Pharaoh's daughter", "An Egyptian royal lady", "P-R-I-N-C-E-S-S"] },
+                { question: "🧩 Riddle: I'm Moses's own mother who hid him away, then nursed my own son for the princess's pay. Who am I?", answer: "JOCHEBED", clues: ["Moses' birth mother", "Mother of Moses, Aaron and Miriam", "J-O-C-H-E-B-E-D"] },
+                { question: "🧩 Riddle: We feared God far more than the king's cruel decree, so we let the baby boys live — who are we?", answer: "MIDWIVES", clues: ["They helped deliver babies", "Shiphrah and Puah", "M-I-D-W-I-V-E-S"] },
+                { question: "🧩 Riddle: Dark, black and gooey, I sealed up each seam so no Nile water leaked into Moses's beam. What am I?", answer: "PITCH", clues: ["Sticky like tar", "Waterproofed the basket", "P-I-T-C-H"] }
             ],
             hard: [
                 { question: "What was Moses' mother's name? (Exodus 6:20)", answer: "JOCHEBED", clues: ["A Hebrew woman of great faith", "Mother of Moses, Aaron, and Miriam", "J-O-C-H-E-B-E-D"] },
@@ -2202,7 +2229,11 @@
                 { question: "Name one Hebrew midwife who bravely defied Pharaoh's command.", answer: "SHIPHRAH", clues: ["Her name starts with Sh", "One of two brave midwives", "S-H-I-P-H-R-A-H"] },
                 { question: "What emotion moved Pharaoh's daughter when she heard Moses cry?", answer: "COMPASSION", clues: ["A deep feeling of care and mercy", "What she felt seeing a helpless baby", "C-O-M-P-A-S-S-I-O-N"] },
                 { question: "What future role of Moses is hinted at in his miraculous rescue from water?", answer: "DELIVERER", clues: ["He would rescue Israel from Egypt", "A title meaning rescuer or savior", "D-E-L-I-V-E-R-E-R"] },
-                { question: "Moses' mother saw he was a fine child — in Hebrew this means he was ___.", answer: "GOOD", clues: ["A positive quality", "Opposite of bad", "G-O-O-D"] }
+                { question: "Moses' mother saw he was a fine child — in Hebrew this means he was ___.", answer: "GOOD", clues: ["A positive quality", "Opposite of bad", "G-O-O-D"] },
+                { question: "🧩 Riddle: I'm the priestly tribe of Israel, the family of Moses by birth. Which tribe am I?", answer: "LEVI", clues: ["One of Jacob's twelve sons", "The priestly tribe of Israel", "L-E-V-I"] },
+                { question: "🧩 Riddle: Big brother to Moses and a wonderful speaker, I became Israel's first priest — who am I?", answer: "AARON", clues: ["Moses' older brother", "Israel's first high priest", "A-A-R-O-N"] },
+                { question: "🧩 Riddle: Second book of the Bible, my name means 'the way out' — what book am I?", answer: "EXODUS", clues: ["Comes right after Genesis", "Means departure or exit", "E-X-O-D-U-S"] },
+                { question: "🧩 Riddle: Drawn from the water as a sign of his call, Moses would grow up to rescue them all. What title did he earn? A ___.", answer: "DELIVERER", clues: ["One who rescues or frees", "A savior or liberator", "D-E-L-I-V-E-R-E-R"] }
             ]
         };
 
@@ -2281,8 +2312,8 @@
         let clueUsedThisCp = false;  // was a clue used on the current checkpoint?
         let bonusPoints = 0;         // points earned from treasure gems (for the badge)
         let hasShield = false;       // does Moses currently have a shield bubble?
-        let gemCells = new Set();    // "x,y" of remaining treasure gems
-        let shieldCells = new Set(); // "x,y" of remaining shield bubbles
+        let activeDrops = [];        // gems/shields currently dropped on the maze
+        let gemSpawnTimer = null;    // interval that drops gems near Moses
         let wrongThisRun = 0;        // wrong answers this run (for Perfect Run badge)
 
         // ========== PLAY SOUND HELPERS ==========
@@ -2566,14 +2597,14 @@
             // reset thrills
             streak = 0; clueUsedThisCp = false; bonusPoints = 0;
             hasShield = false; wrongThisRun = 0;
-            gemCells.clear(); shieldCells.clear();
+            clearDrops();
 
             generateMaze();
             renderMaze();
-            placeCollectibles();   // scatter treasure gems + shield bubbles on the water
             buildHudDots();
             updateHUD();
             updateShieldHud();
+            startGemSpawner();     // gems drop in near Moses while he plays
 
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
@@ -2930,10 +2961,8 @@
             resetPlayerPosition();
             spawnWake(prevX, prevY);
 
-            // Collect a treasure gem / shield bubble if Moses landed on one
-            const collKey = newX + ',' + newY;
-            if (gemCells.has(collKey)) collectGem(newCell, newX, newY);
-            if (shieldCells.has(collKey)) collectShield(newCell, newX, newY);
+            // Collect a dropped treasure gem / shield bubble if Moses landed on one
+            collectDroppedAt(newX, newY, newCell);
 
             // Checkpoint
             if (ct >= 3 && ct <= 12) {
@@ -3151,6 +3180,7 @@
         function closeDangerModal() {
             playSound(btnClickSound);
             stopDpadRepeat(); // CRITICAL: stop any held D-pad interval
+            clearDrops(); // Moses resets to START — clear any gems left mid-maze
             document.getElementById('dangerModal').classList.remove('active');
 
             if (lives <= 0) {
@@ -3179,6 +3209,7 @@
         // ========== WIN MODAL ==========
         function showWinModal() {
             stopDpadRepeat(); // CRITICAL: stop D-pad interval
+            stopGemSpawner(); clearDrops();
             stopAllMusic();
             haptic([40, 60, 40, 60, 120]);
             playSound(successSound);
@@ -3258,6 +3289,7 @@
 
         function showCoverPage() {
             playSound(btnClickSound);
+            stopGemSpawner(); clearDrops(); // stop dropping gems once we leave the game
             // Restore viewport zoom on cover page
             const viewportMeta = document.querySelector('meta[name="viewport"]');
             if (viewportMeta) {
@@ -3623,39 +3655,87 @@
         }
 
         // ---- Treasure gems + shield bubbles ----
-        function placeCollectibles() {
-            const path = [...document.querySelectorAll('.maze-cell.path')]
-                .filter(c => !(c.dataset.x === '0' && c.dataset.y === '0'));
-            shuffleInPlace(path);
-            let i = 0;
-            for (let g = 0; g < 6 && i < path.length; g++, i++) {
-                const c = path[i];
-                gemCells.add(c.dataset.x + ',' + c.dataset.y);
-                const el = document.createElement('div'); el.className = 'gem'; el.textContent = '💎';
-                c.appendChild(el);
-            }
-            for (let s = 0; s < 2 && i < path.length; s++, i++) {
-                const c = path[i];
-                shieldCells.add(c.dataset.x + ',' + c.dataset.y);
-                const el = document.createElement('div'); el.className = 'shield-bubble'; el.textContent = '🛡️';
-                c.appendChild(el);
-            }
+        // Treasure gems & shield bubbles DROP IN near Moses; he moves (often left/right)
+        // to grab them before they fade. Spawned on plain water cells within reach.
+        const DROP_INTERVAL = 4500;   // try to drop something roughly every 4.5s
+        const DROP_LIFETIME = 9000;   // a drop waits ~9s, then fades away
+        const MAX_DROPS = 2;
+
+        function startGemSpawner() {
+            stopGemSpawner();
+            gemSpawnTimer = setInterval(maybeSpawnDrop, DROP_INTERVAL);
         }
-        function collectGem(cell, x, y) {
-            gemCells.delete(x + ',' + y);
-            const g = cell.querySelector('.gem'); if (g) g.remove();
-            gameScore += 5; bonusPoints += 5;
-            playSound(checkpointSound); haptic(12);
-            scorePop('+5'); sparkleAt(cell, '💎', 6);
-            updateHUD();
+        function stopGemSpawner() {
+            if (gemSpawnTimer) { clearInterval(gemSpawnTimer); gemSpawnTimer = null; }
         }
-        function collectShield(cell, x, y) {
-            shieldCells.delete(x + ',' + y);
-            const s = cell.querySelector('.shield-bubble'); if (s) s.remove();
-            hasShield = true; updateShieldHud();
-            playSound(successChime); haptic([15, 30, 15]);
-            sparkleAt(cell, '🫧', 6);
-            showFlashMessage('🛡️ Shield ready — it blocks one hit!', 'success');
+        function clearDrops() {
+            activeDrops.forEach(d => { if (d.expireId) clearTimeout(d.expireId); });
+            activeDrops = [];
+            // sweep any stray gem/shield elements (e.g. one mid fade-out) so none linger
+            document.querySelectorAll('.gem, .shield-bubble').forEach(el => el.remove());
+        }
+        function maybeSpawnDrop() {
+            if (gameBlocked || __tourActive) return;
+            const gp = document.getElementById('gamePage');
+            if (!gp || gp.style.display === 'none') return;
+            if (activeDrops.length >= MAX_DROPS) return;
+            spawnNearbyDrop();
+        }
+        function spawnNearbyDrop() {
+            // BFS over plain water cells out from Moses; prefer same-row (left/right) cells
+            const R = 4;
+            const occupied = new Set(activeDrops.map(d => d.key));
+            const seen = new Set([playerX + ',' + playerY]);
+            let frontier = [[playerX, playerY, 0]];
+            const cands = [];
+            while (frontier.length) {
+                const [x, y, dist] = frontier.shift();
+                if (dist >= R) continue;
+                for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+                    const nx = x + dx, ny = y + dy, k = nx + ',' + ny;
+                    if (nx < 0 || nx > 19 || ny < 0 || ny > 15 || seen.has(k)) continue;
+                    if (mazeData[ny][nx] !== 1) continue; // plain water only — always reachable
+                    seen.add(k);
+                    if (!occupied.has(k)) cands.push({ x: nx, y: ny, dist: dist + 1, sameRow: ny === playerY });
+                    frontier.push([nx, ny, dist + 1]);
+                }
+            }
+            if (!cands.length) return;
+            cands.sort((a, b) => (b.sameRow - a.sameRow) || (a.dist - b.dist) || (Math.random() - 0.5));
+            const pick = cands[Math.floor(Math.random() * Math.min(4, cands.length))];
+            const cell = cellByXY(pick.x, pick.y);
+            if (!cell) return;
+            const isShield = !hasShield && Math.random() < 0.18; // occasional shield bubble
+            const el = document.createElement('div');
+            el.className = (isShield ? 'shield-bubble' : 'gem') + ' drop-in';
+            if (isShield) el.textContent = '🛡️';
+            cell.appendChild(el);
+            const drop = { key: pick.x + ',' + pick.y, x: pick.x, y: pick.y, el, type: isShield ? 'shield' : 'gem', expireId: null };
+            drop.expireId = setTimeout(() => {
+                el.classList.add('fade-out');
+                setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
+                activeDrops = activeDrops.filter(d => d !== drop);
+            }, DROP_LIFETIME);
+            activeDrops.push(drop);
+        }
+        function collectDroppedAt(x, y, cell) {
+            const i = activeDrops.findIndex(d => d.x === x && d.y === y);
+            if (i < 0) return;
+            const d = activeDrops[i];
+            if (d.expireId) clearTimeout(d.expireId);
+            if (d.el && d.el.parentNode) d.el.remove();
+            activeDrops.splice(i, 1);
+            if (d.type === 'shield') {
+                hasShield = true; updateShieldHud();
+                playSound(successChime); haptic([15, 30, 15]);
+                sparkleAt(cell, '🫧', 6);
+                showFlashMessage('🛡️ Shield ready — it blocks one hit!', 'success');
+            } else {
+                gameScore += 5; bonusPoints += 5;
+                playSound(checkpointSound); haptic(12);
+                scorePop('+5'); sparkleAt(cell, '✨', 6);
+                updateHUD();
+            }
         }
         function popShield(cell) {
             playSound(splashSound); haptic([30, 40, 60]);
