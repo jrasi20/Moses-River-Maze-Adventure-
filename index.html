@@ -1580,16 +1580,107 @@
             100% { transform: translateX(110%); }
         }
 
+        /* ===== THRILLS (2026-06-25) ===== */
+        /* Moses comes alive: gentle bob + rock while floating */
+        @keyframes mosesBob {
+            0%,100% { transform: translateY(0) rotate(-2.5deg); }
+            50%     { transform: translateY(-7%) rotate(2.5deg); }
+        }
+        #mosesSprite { animation: mosesBob 2.6s ease-in-out infinite; }
+        /* Shield: blue bubble glow around Moses */
+        #mosesSprite.shielded {
+            filter: drop-shadow(0 0 5px #4fc3f7) drop-shadow(0 0 11px #29b6f6) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        /* Treasure gem + shield bubble sitting on the water */
+        .gem, .shield-bubble {
+            position: absolute; z-index: 9; pointer-events: none;
+            font-size: 78%; line-height: 1;
+            left: 50%; top: 50%; transform: translate(-50%,-50%);
+            /* bright halo so the treasure pops against the blue water */
+            filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px #FFD700) drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+            animation: gemFloat 2.2s ease-in-out infinite;
+        }
+        .shield-bubble { animation: gemFloat 2.6s ease-in-out infinite; filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 9px rgba(120,220,255,1)) drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
+        @keyframes gemFloat { 0%,100% { transform: translate(-50%,-58%) scale(1); } 50% { transform: translate(-50%,-42%) scale(1.12); } }
+
+        /* Wake ripple left behind as Moses moves */
+        .wake-ripple {
+            position: absolute; z-index: 7; pointer-events: none;
+            border: 2px solid rgba(255,255,255,0.7); border-radius: 50%;
+            transform: translate(-50%,-50%) scale(0.4); opacity: 0.8;
+            animation: wakeOut 0.65s ease-out forwards;
+        }
+        @keyframes wakeOut { to { transform: translate(-50%,-50%) scale(1.4); opacity: 0; } }
+
+        /* Spark/droplet burst particles (checkpoint shatter, gem collect, splash) */
+        .spark {
+            position: absolute; z-index: 23; pointer-events: none;
+            font-size: 13px; left: 0; top: 0;
+            transform: translate(-50%,-50%);
+            animation: sparkFly 0.7s ease-out forwards;
+        }
+        @keyframes sparkFly {
+            0%   { transform: translate(-50%,-50%) scale(0.4); opacity: 1; }
+            100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.1); opacity: 0; }
+        }
+
+        /* Lurking creatures: slow idle sway/breathe so the river feels alive */
+        .maze-cell img.lurk {
+            animation: lurkSway 3.4s ease-in-out infinite;
+            animation-delay: var(--lurk-delay, 0s);
+            transform-origin: 50% 80%;
+        }
+        @keyframes lurkSway {
+            0%,100% { transform: rotate(-3deg) scale(1); }
+            50%     { transform: rotate(3deg) scale(1.05); }
+        }
+
+        /* Win: 1–3 star rating */
+        .win-stars-rating { display: flex; justify-content: center; gap: 8px; margin: 4px 0 6px; }
+        .win-stars-rating .wstar { font-size: 34px; filter: grayscale(1) opacity(0.4); transform: scale(0.8); }
+        .win-stars-rating .wstar.on { filter: none; animation: starPop 0.5s cubic-bezier(.2,1.4,.4,1) forwards; }
+        @keyframes starPop { 0% { transform: scale(0) rotate(-40deg); } 70% { transform: scale(1.35) rotate(10deg); } 100% { transform: scale(1) rotate(0); } }
+        .new-best {
+            display: inline-block; margin: 2px auto 6px; padding: 4px 14px;
+            background: linear-gradient(135deg,#FFD700,#FF8C00); color:#5a2b00;
+            font-weight: 700; border-radius: 14px; font-size: 14px;
+            animation: starPop 0.5s ease forwards, winTitlePop 1.6s ease-in-out 0.5s infinite;
+        }
+        /* Win badges */
+        .win-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 10px; }
+        .win-badge-chip {
+            background: rgba(255,255,255,0.16); border: 1px solid rgba(255,215,0,0.5);
+            color: #FFE680; font-size: 12px; font-weight: 700;
+            padding: 4px 10px; border-radius: 12px;
+        }
+        /* Princess lifts Moses: basket rises into her arms */
+        .princess-img-box .win-moses {
+            position: absolute; left: 50%; bottom: -8px;
+            width: 52%; height: auto; transform: translate(-50%, 60%);
+            opacity: 0; z-index: 2; pointer-events: none;
+        }
+        .princess-img-box.lift .win-moses { animation: mosesLift 1.6s ease-out 0.3s forwards; }
+        @keyframes mosesLift {
+            0%   { transform: translate(-50%, 60%) scale(0.7); opacity: 0; }
+            40%  { opacity: 1; }
+            70%  { transform: translate(-50%, -6%) scale(0.92); }
+            85%  { transform: translate(-50%, -14%) scale(0.92); }
+            100% { transform: translate(-50%, -10%) scale(0.9); opacity: 1; }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             .wave-layer, .wave-deco, .cover-wave-scatter img, .wave-anchor img,
             .side-wave-img, .ctrl-wave-img, .hero-section img, .maze-side-deco img,
             .start-btn, .win-title, .princess-img-box, .princess-img-box img,
             .danger-img-box img, .dp, .ws, .win-sparkle, .danger-ring,
             .maze-cell.path.shimmer::after, .maze-cell.start, .maze-cell.finish,
+            #mosesSprite, .gem, .shield-bubble, .maze-cell img.lurk, .new-best,
             #preloader img, .puzzle-modal .modal-content::before {
                 animation: none !important;
             }
             .maze-cell.path.shimmer::after { display: none !important; }
+            .princess-img-box .win-moses { animation: none !important; opacity: 1; transform: translate(-50%, -10%) scale(0.9); }
             #mosesSprite { transition: none !important; }
             html { scroll-behavior: auto !important; }
         }
@@ -1892,14 +1983,20 @@
             <div class="win-sub">Moses has safely reached Pharaoh's daughter!</div>
             <div class="princess-img-box">
                 <img src="assets/images/newest princess.png" alt="Princess">
+                <!-- Moses's basket rises up into the princess's arms on win -->
+                <img class="win-moses" src="assets/images/moses in basket.png" alt="Baby Moses">
             </div>
+            <div class="win-stars-rating" id="winStars" aria-label="Star rating"></div>
+            <div class="new-best" id="newBest" style="display:none;">🎉 NEW BEST! 🎉</div>
             <div class="achieve-badge" id="achievementLevel">Amazing!</div>
             <div class="achieve-msg" id="achievementMessage">Great job!</div>
+            <div class="win-badges" id="winBadges"></div>
             <div class="score-table">
                 <div class="score-row"><span>🎯 Difficulty:</span><span class="score-val" id="finalDifficulty">Easy</span></div>
                 <div class="score-row"><span>⭐ Checkpoints:</span><span class="score-val" id="finalCheckpoints">10/10</span></div>
                 <div class="score-row"><span>💡 Clues Used:</span><span class="score-val" id="finalCluesUsed">0</span></div>
                 <div class="score-row"><span>🏆 Final Score:</span><span class="score-val" id="finalScore">100</span></div>
+                <div class="score-row"><span>🥇 Your Best:</span><span class="score-val" id="finalBest">—</span></div>
             </div>
             <div class="win-btns">
                 <button class="modal-button win-play" onclick="playAgain()">🔄 Play Again</button>
@@ -2179,6 +2276,15 @@
         let audioUnlocked = false;
         let moveSoundTimer = null;
 
+        // ===== THRILLS state =====
+        let streak = 0;              // consecutive clean (no-clue) checkpoint solves
+        let clueUsedThisCp = false;  // was a clue used on the current checkpoint?
+        let bonusPoints = 0;         // points earned from treasure gems (for the badge)
+        let hasShield = false;       // does Moses currently have a shield bubble?
+        let gemCells = new Set();    // "x,y" of remaining treasure gems
+        let shieldCells = new Set(); // "x,y" of remaining shield bubbles
+        let wrongThisRun = 0;        // wrong answers this run (for Perfect Run badge)
+
         // ========== PLAY SOUND HELPERS ==========
         function playSound(sound) {
             if (!sound || !audioUnlocked) return;
@@ -2457,11 +2563,17 @@
             currentPuzzleCheckpointIndex = 0;
             gameBlocked = false;
             playerX = 0; playerY = 0;
+            // reset thrills
+            streak = 0; clueUsedThisCp = false; bonusPoints = 0;
+            hasShield = false; wrongThisRun = 0;
+            gemCells.clear(); shieldCells.clear();
 
             generateMaze();
             renderMaze();
+            placeCollectibles();   // scatter treasure gems + shield bubbles on the water
             buildHudDots();
             updateHUD();
+            updateShieldHud();
 
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
@@ -2590,6 +2702,8 @@
                         cell.classList.add('obstacle');
                         const img = document.createElement('img');
                         img.src = 'assets/images/black bomb.png'; img.alt = 'Bomb';
+                        img.className = 'lurk';
+                        img.style.setProperty('--lurk-delay', (-Math.random() * 4).toFixed(2) + 's');
                         cell.appendChild(img);
                     }
                     else if (ct === 0) {
@@ -2600,6 +2714,9 @@
                         cell.dataset.dangerMsg = d.msg;
                         const img = document.createElement('img');
                         img.src = d.src; img.alt = 'Danger';
+                        // lurking creatures sway/breathe gently so the river feels alive
+                        img.className = 'lurk';
+                        img.style.setProperty('--lurk-delay', (-Math.random() * 4).toFixed(2) + 's');
                         cell.appendChild(img);
                     }
                     grid.appendChild(cell);
@@ -2769,20 +2886,21 @@
 
             playMoveSound();
 
-            // Creature obstacle
-            if (ct === 0) {
+            // Creature obstacle / bomb — a shield (if held) absorbs the hit, no life lost
+            if (ct === 0 || ct === 14) {
+                if (hasShield) {
+                    hasShield = false;
+                    updateShieldHud();
+                    popShield(newCell);
+                    return; // danger averted — Moses stays put, keeps going
+                }
                 gameBlocked = true;
                 lives--;
+                streak = 0; // losing a life breaks the answer streak
+                splashBurst(newCell);
                 playSound(splashSound);
-                showDangerModal(newCell.dataset.dangerSrc, newCell.dataset.dangerMsg);
-                return;
-            }
-            // Bomb
-            if (ct === 14) {
-                gameBlocked = true;
-                lives--;
-                playSound(splashSound);
-                showDangerModal('assets/images/black bomb.png', 'A bomb exploded right next to Moses!');
+                if (ct === 0) showDangerModal(newCell.dataset.dangerSrc, newCell.dataset.dangerMsg);
+                else showDangerModal('assets/images/black bomb.png', 'A bomb exploded right next to Moses!');
                 return;
             }
 
@@ -2806,9 +2924,16 @@
                 prevStart.classList.add('start-vacated');
             }
 
-            // Move Moses
+            // Move Moses (leave a little wake ripple behind on the water)
+            const prevX = playerX, prevY = playerY;
             playerX = newX; playerY = newY;
             resetPlayerPosition();
+            spawnWake(prevX, prevY);
+
+            // Collect a treasure gem / shield bubble if Moses landed on one
+            const collKey = newX + ',' + newY;
+            if (gemCells.has(collKey)) collectGem(newCell, newX, newY);
+            if (shieldCells.has(collKey)) collectShield(newCell, newX, newY);
 
             // Checkpoint
             if (ct >= 3 && ct <= 12) {
@@ -2861,6 +2986,7 @@
             if (!q) { gameBlocked = false; return; }
 
             currentClueIndex = 0;
+            clueUsedThisCp = false; // fresh checkpoint — eligible for a streak unless a clue is used
             document.getElementById('puzzleTitle').textContent = `⭐ Checkpoint ${cpIdx + 1} of 10`;
             document.getElementById('puzzleQuestion').textContent = q.question;
             document.getElementById('clueBox').style.display = 'none';
@@ -2878,6 +3004,7 @@
             if (!q) return;
             gameScore = Math.max(0, gameScore - 5);
             cluesUsed++;
+            clueUsedThisCp = true; // using a clue makes this checkpoint not count toward a streak
             const box = document.getElementById('clueBox');
             if (currentClueIndex < q.clues.length) {
                 box.textContent = '💡 ' + q.clues[currentClueIndex];
@@ -2910,6 +3037,7 @@
                 completedCheckpoints.add(currentPuzzleCheckpointIndex);
                 markCheckpointCellDone(currentPuzzleCheckpointIndex);
                 updateHudDots();
+                onCheckpointSolved(currentPuzzleCheckpointIndex); // star-shatter + streak + milestone cheers
                 // Show correct answer so kids learn the proper spelling
                 const statusEl = document.getElementById('puzzleStatus');
                 statusEl.innerHTML = '<div style="margin-top:6px;padding:8px 14px;background:linear-gradient(135deg,#1a5e1a,#2e7d32);border:2px solid #FFD700;border-radius:10px;text-align:center;">' +
@@ -2923,6 +3051,8 @@
                     gameBlocked = false;
                 }, 2800);
             } else {
+                wrongThisRun++;       // a wrong attempt rules out the Perfect Run badge
+                streak = 0;           // and breaks the current streak
                 playSound(wrongSound);
                 haptic(140);
                 feedbackBadge('❌', 'no');
@@ -3080,6 +3210,7 @@
 
             document.getElementById('achievementLevel').textContent  = level;
             document.getElementById('achievementMessage').textContent = msg;
+            renderWinExtras(); // ⭐ star rating + personal best + badges + princess-lift cinematic
             document.getElementById('winModal').classList.add('active');
         }
 
@@ -3439,6 +3570,176 @@
 
         // Start preloading right away (runs behind the access gate / cover page)
         preloadImages();
+
+        /* ============================================================
+           THRILLS (2026-06-25): treasure gems, shield power-up, answer
+           streaks, star rating + personal best, badges, particle bursts,
+           Moses wake trail, princess-lift cinematic. All additive.
+           ============================================================ */
+
+        function cellByXY(x, y) {
+            const cells = document.querySelectorAll('.maze-cell');
+            return cells[y * 20 + x] || null;
+        }
+
+        // ---- Particle bursts (shatter / gem / splash) ----
+        function sparkleAt(cell, emoji, count) {
+            const container = document.getElementById('mazeContainer');
+            if (!container || !cell) return;
+            const cx = cell.offsetLeft + cell.offsetWidth / 2;
+            const cy = cell.offsetTop + cell.offsetHeight / 2;
+            const n = count || 6;
+            for (let i = 0; i < n; i++) {
+                const p = document.createElement('div');
+                p.className = 'spark'; p.textContent = emoji || '✨';
+                p.style.left = cx + 'px'; p.style.top = cy + 'px';
+                const ang = (Math.PI * 2 / n) * i + Math.random() * 0.5;
+                const dist = 16 + Math.random() * 16;
+                p.style.setProperty('--dx', (Math.cos(ang) * dist).toFixed(1) + 'px');
+                p.style.setProperty('--dy', (Math.sin(ang) * dist).toFixed(1) + 'px');
+                container.appendChild(p);
+                setTimeout(() => p.remove(), 720);
+            }
+        }
+        function splashBurst(cell) {
+            if (prefersReducedMotion()) return;
+            sparkleAt(cell, '💧', 8);
+        }
+
+        // ---- Moses wake ripple ----
+        function spawnWake(px, py) {
+            if (prefersReducedMotion()) return;
+            const container = document.getElementById('mazeContainer');
+            const cell = cellByXY(px, py);
+            if (!container || !cell) return;
+            const r = document.createElement('div');
+            r.className = 'wake-ripple';
+            const sz = cell.offsetWidth * 0.7;
+            r.style.left = (cell.offsetLeft + cell.offsetWidth / 2) + 'px';
+            r.style.top  = (cell.offsetTop + cell.offsetHeight / 2) + 'px';
+            r.style.width = sz + 'px'; r.style.height = sz + 'px';
+            container.appendChild(r);
+            setTimeout(() => r.remove(), 680);
+        }
+
+        // ---- Treasure gems + shield bubbles ----
+        function placeCollectibles() {
+            const path = [...document.querySelectorAll('.maze-cell.path')]
+                .filter(c => !(c.dataset.x === '0' && c.dataset.y === '0'));
+            shuffleInPlace(path);
+            let i = 0;
+            for (let g = 0; g < 6 && i < path.length; g++, i++) {
+                const c = path[i];
+                gemCells.add(c.dataset.x + ',' + c.dataset.y);
+                const el = document.createElement('div'); el.className = 'gem'; el.textContent = '💎';
+                c.appendChild(el);
+            }
+            for (let s = 0; s < 2 && i < path.length; s++, i++) {
+                const c = path[i];
+                shieldCells.add(c.dataset.x + ',' + c.dataset.y);
+                const el = document.createElement('div'); el.className = 'shield-bubble'; el.textContent = '🛡️';
+                c.appendChild(el);
+            }
+        }
+        function collectGem(cell, x, y) {
+            gemCells.delete(x + ',' + y);
+            const g = cell.querySelector('.gem'); if (g) g.remove();
+            gameScore += 5; bonusPoints += 5;
+            playSound(checkpointSound); haptic(12);
+            scorePop('+5'); sparkleAt(cell, '💎', 6);
+            updateHUD();
+        }
+        function collectShield(cell, x, y) {
+            shieldCells.delete(x + ',' + y);
+            const s = cell.querySelector('.shield-bubble'); if (s) s.remove();
+            hasShield = true; updateShieldHud();
+            playSound(successChime); haptic([15, 30, 15]);
+            sparkleAt(cell, '🫧', 6);
+            showFlashMessage('🛡️ Shield ready — it blocks one hit!', 'success');
+        }
+        function popShield(cell) {
+            playSound(splashSound); haptic([30, 40, 60]);
+            sparkleAt(cell || cellByXY(playerX, playerY), '🫧', 8);
+            showFlashMessage('🛡️ Your shield saved Moses!', 'success');
+        }
+        function updateShieldHud() {
+            const sprite = document.getElementById('mosesSprite');
+            if (sprite) sprite.classList.toggle('shielded', hasShield);
+        }
+
+        // ---- Checkpoint solved: star-shatter + streak + milestone cheers ----
+        function onCheckpointSolved(cpIdx) {
+            const cell = cellByXY(playerX, playerY);
+            if (cell) sparkleAt(cell, '✨', 7); // the star "shatters" into sparkles
+
+            if (!clueUsedThisCp) {
+                streak++;
+                if (streak >= 2) {
+                    const bonus = streak * 2;
+                    gameScore += bonus;
+                    haptic([20, 30, 20, 30, 40]);
+                    showFlashMessage('🔥 ' + streak + ' in a row!  +' + bonus, 'success');
+                    if (streak >= 3) miniConfetti();
+                }
+            } else {
+                streak = 0;
+            }
+
+            const done = completedCheckpoints.size;
+            if (done === 5)      setTimeout(() => showFlashMessage('🎉 Halfway there!', 'warning'), 700);
+            else if (done === 9) setTimeout(() => showFlashMessage('👑 Almost to the princess!', 'warning'), 700);
+            updateHUD();
+        }
+
+        // ---- Win extras: star rating, personal best, badges, princess lift ----
+        function computeStars() {
+            const cleanRun = (cluesUsed === 0 && lives === MAX_LIVES);
+            if (gameScore >= 90 || cleanRun) return 3;
+            if (gameScore >= 65) return 2;
+            return 1;
+        }
+        function bestKey() { return 'bek.moses_river.best.' + currentDifficulty; }
+        function getBest() { try { return parseInt(localStorage.getItem(bestKey()) || '0', 10) || 0; } catch (e) { return 0; } }
+        function saveBest(v) { try { localStorage.setItem(bestKey(), String(v)); } catch (e) {} }
+        function earnedBadges() {
+            const b = [];
+            if (cluesUsed === 0 && wrongThisRun === 0 && lives === MAX_LIVES) b.push('🏆 Perfect Run!');
+            if (cluesUsed === 0) b.push('💡 No Clues!');
+            if (lives === MAX_LIVES) b.push('❤️ All 3 Lives!');
+            if (bonusPoints > 0) b.push('💎 Treasure Hunter');
+            return b;
+        }
+        function renderWinExtras() {
+            const stars = computeStars();
+            const se = document.getElementById('winStars');
+            if (se) {
+                se.innerHTML = '';
+                for (let i = 0; i < 3; i++) {
+                    const s = document.createElement('span');
+                    s.className = 'wstar' + (i < stars ? ' on' : '');
+                    s.textContent = '⭐';
+                    s.style.animationDelay = (0.3 + i * 0.22) + 's';
+                    se.appendChild(s);
+                }
+            }
+            const prevBest = getBest();
+            const nb = document.getElementById('newBest');
+            if (gameScore > prevBest) { saveBest(gameScore); if (nb) nb.style.display = 'block'; }
+            else if (nb) nb.style.display = 'none';
+            const fb = document.getElementById('finalBest');
+            if (fb) fb.textContent = Math.max(prevBest, gameScore);
+
+            const bd = document.getElementById('winBadges');
+            if (bd) {
+                bd.innerHTML = '';
+                earnedBadges().forEach(t => {
+                    const c = document.createElement('span'); c.className = 'win-badge-chip'; c.textContent = t;
+                    bd.appendChild(c);
+                });
+            }
+            const box = document.querySelector('.win-modal .princess-img-box');
+            if (box) { box.classList.remove('lift'); void box.offsetWidth; box.classList.add('lift'); }
+        }
     </script>
 </body>
 </html>
