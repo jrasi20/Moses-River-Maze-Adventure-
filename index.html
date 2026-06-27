@@ -1654,7 +1654,8 @@
             display: inline-block; width: 0.95em; height: 0.95em; vertical-align: -0.14em;
             background: linear-gradient(135deg, #ffe1f4 0%, #ff5ec2 45%, #d6118a 100%);
             clip-path: polygon(50% 0%, 88% 38%, 50% 100%, 12% 38%);
-            filter: drop-shadow(0 0 2px rgba(255,90,200,0.95));
+            /* golden halo so the pink gem icon pops, matching the in-game gems */
+            filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 4px #FFD700) drop-shadow(0 0 2px rgba(255,90,200,0.95));
         }
 
         /* Wake ripple left behind as Moses moves */
@@ -2055,7 +2056,7 @@
                 <div class="score-row"><span>⭐ Checkpoints:</span><span class="score-val" id="finalCheckpoints">10/10</span></div>
                 <div class="score-row"><span>💡 Clues Used:</span><span class="score-val" id="finalCluesUsed">0</span></div>
                 <div class="score-row"><span>🏆 Final Score:</span><span class="score-val" id="finalScore">100</span></div>
-                <div class="score-row"><span>🥇 Your Best:</span><span class="score-val" id="finalBest">—</span></div>
+                <div class="score-row"><span id="finalBestLabel">🥇 Your Best:</span><span class="score-val" id="finalBest">—</span></div>
             </div>
             <div class="win-btns">
                 <button class="modal-button win-play" onclick="playAgain()">🔄 Play Again</button>
@@ -3878,10 +3879,16 @@
                     se.appendChild(s);
                 }
             }
+            // Personal best is kept PER DIFFICULTY — label it so it's clear which level
+            const diffName = currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1);
             const prevBest = getBest();
             const nb = document.getElementById('newBest');
-            if (gameScore > prevBest) { saveBest(gameScore); if (nb) nb.style.display = 'block'; }
-            else if (nb) nb.style.display = 'none';
+            if (gameScore > prevBest) {
+                saveBest(gameScore);
+                if (nb) { nb.textContent = '🎉 NEW ' + diffName.toUpperCase() + ' BEST! 🎉'; nb.style.display = 'block'; }
+            } else if (nb) { nb.style.display = 'none'; }
+            const fbLabel = document.getElementById('finalBestLabel');
+            if (fbLabel) fbLabel.textContent = '🥇 Your Best (' + diffName + '):';
             const fb = document.getElementById('finalBest');
             if (fb) fb.textContent = Math.max(prevBest, gameScore);
 
