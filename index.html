@@ -1584,10 +1584,11 @@
         /* Moses comes alive: a gentle boat-like ROCK that stays WITHIN the tile
            (rotate-dominant, only a tiny lift so the basket never leaves its cell) */
         @keyframes mosesBob {
-            0%,100% { transform: rotate(-3deg); }
-            50%     { transform: translateY(-4%) rotate(3deg); }
+            0%,100% { transform: rotate(-3.5deg); }
+            50%     { transform: rotate(3.5deg); }
         }
-        #mosesSprite { animation: mosesBob 3s ease-in-out infinite; transform-origin: 50% 70%; }
+        /* pivot at the basket's base so it ROCKS like a boat and never rises above its tile */
+        #mosesSprite { animation: mosesBob 3s ease-in-out infinite; transform-origin: 50% 92%; }
         /* Shield: blue bubble glow around Moses */
         #mosesSprite.shielded {
             filter: drop-shadow(0 0 5px #4fc3f7) drop-shadow(0 0 11px #29b6f6) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
@@ -1597,7 +1598,7 @@
         .gem {
             position: absolute; z-index: 9; pointer-events: none;
             left: 50%; top: 50%; width: 56%; height: 56%;
-            transform: translate(-50%,-56%);
+            transform: translate(-50%,-50%);
             background: linear-gradient(135deg, #ffe1f4 0%, #ff5ec2 45%, #d6118a 100%);
             clip-path: polygon(50% 1%, 87% 37%, 50% 99%, 13% 37%);
             animation: dropFloat 2.4s ease-in-out infinite, gemGlitter 1.3s ease-in-out infinite;
@@ -1606,30 +1607,32 @@
         .shield-bubble {
             position: absolute; z-index: 9; pointer-events: none;
             left: 50%; top: 50%; font-size: 80%; line-height: 1;
-            transform: translate(-50%,-56%);
+            transform: translate(-50%,-50%);
             animation: dropFloat 2.6s ease-in-out infinite, shieldGlitter 1.4s ease-in-out infinite;
         }
         /* Storm cloud — the BAD drop kids should dodge (catching it loses points) */
         .bad-drop {
             position: absolute; z-index: 9; pointer-events: none;
             left: 50%; top: 50%; font-size: 84%; line-height: 1;
-            transform: translate(-50%,-56%);
+            transform: translate(-50%,-50%);
             animation: dropFloat 2.5s ease-in-out infinite, cloudGlitter 1.7s ease-in-out infinite;
         }
         /* gentle hover once it has landed */
-        @keyframes dropFloat { 0%,100% { transform: translate(-50%,-56%) scale(1); } 50% { transform: translate(-50%,-46%) scale(1.1); } }
+        @keyframes dropFloat { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-58%) scale(1.08); } }
         /* GLITTER: the glow twinkles brighter/dimmer (each keeps its own colour) */
+        /* Each drop wears a GOLDEN HALO so it pops against the blue water (esp. the
+           blue shield), plus a twinkle that brightens/dims. */
         @keyframes gemGlitter {
-            0%,100% { filter: drop-shadow(0 0 4px rgba(255,90,200,0.95)) drop-shadow(0 0 8px rgba(255,150,225,0.7)); }
-            50%     { filter: drop-shadow(0 0 9px #fff) drop-shadow(0 0 17px rgba(255,120,220,1)); }
+            0%,100% { filter: drop-shadow(0 0 5px #FFD700) drop-shadow(0 0 4px rgba(255,90,200,0.95)); }
+            50%     { filter: drop-shadow(0 0 11px #FFC107) drop-shadow(0 0 18px #FFD700) drop-shadow(0 0 8px #fff); }
         }
         @keyframes shieldGlitter {
-            0%,100% { filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px rgba(120,220,255,0.85)); }
-            50%     { filter: drop-shadow(0 0 9px #fff) drop-shadow(0 0 17px rgba(120,230,255,1)); }
+            0%,100% { filter: drop-shadow(0 0 5px #FFD700) drop-shadow(0 0 6px rgba(120,220,255,0.9)); }
+            50%     { filter: drop-shadow(0 0 12px #FFC107) drop-shadow(0 0 20px #FFD700) drop-shadow(0 0 8px #fff); }
         }
         @keyframes cloudGlitter {
-            0%,100% { filter: drop-shadow(0 0 4px rgba(70,80,120,0.9)); }
-            50%     { filter: drop-shadow(0 0 10px rgba(190,200,255,0.95)) brightness(1.18); }
+            0%,100% { filter: drop-shadow(0 0 5px #FFD700) drop-shadow(0 0 4px rgba(70,80,120,0.95)); }
+            50%     { filter: drop-shadow(0 0 12px #FFC107) drop-shadow(0 0 10px rgba(190,200,255,0.95)) brightness(1.15); }
         }
         /* SNOW-LIKE fall: drift + tumble down from above, then settle into the hover */
         .gem.drop-in           { animation: dropSnow 1.5s ease-in-out, dropFloat 2.4s ease-in-out 1.5s infinite, gemGlitter 1.3s ease-in-out infinite; }
@@ -1640,11 +1643,11 @@
             12%  { opacity: 1; }
             35%  { transform: translate(-74%,-210%) rotate(18deg) scale(0.95); }
             60%  { transform: translate(-30%,-120%) rotate(-12deg) scale(1.05); }
-            82%  { transform: translate(-60%,-58%) rotate(6deg) scale(1); }
-            100% { transform: translate(-50%,-56%) rotate(0deg) scale(1); }
+            82%  { transform: translate(-58%,-52%) rotate(6deg) scale(1); }
+            100% { transform: translate(-50%,-50%) rotate(0deg) scale(1); }
         }
         .gem.fade-out, .shield-bubble.fade-out, .bad-drop.fade-out { animation: dropFade 0.4s ease forwards !important; }
-        @keyframes dropFade { to { transform: translate(-50%,-72%) scale(0.4); opacity: 0; } }
+        @keyframes dropFade { to { transform: translate(-50%,-64%) scale(0.4); opacity: 0; } }
 
         /* Wake ripple left behind as Moses moves */
         .wake-ripple {
@@ -2081,6 +2084,9 @@
     <audio id="winSound"></audio>
     <audio id="bigWinSound"></audio>
     <audio id="btnClickSound"></audio>
+    <audio id="gemSound"></audio>
+    <audio id="shieldSound"></audio>
+    <audio id="cloudSound"></audio>
 
     <script>
         // ========== ACCESS CODE GATE ==========
@@ -2292,6 +2298,9 @@
         const winSound       = document.getElementById('winSound');
         const bigWinSound    = document.getElementById('bigWinSound');
         const btnClickSound  = document.getElementById('btnClickSound');
+        const gemSound       = document.getElementById('gemSound');
+        const shieldSound    = document.getElementById('shieldSound');
+        const cloudSound     = document.getElementById('cloudSound');
 
         coverMusic.src      = 'assets/audio/background music loop.mp3';
         bgMusic.src         = 'assets/audio/bg music 2.mp3';
@@ -2306,6 +2315,9 @@
         winSound.src        = 'assets/audio/win sound.mp3';
         bigWinSound.src     = 'assets/audio/success trumpet.mp3';
         btnClickSound.src   = 'assets/audio/magic button click 2.mp3';
+        gemSound.src        = 'assets/audio/collect.mp3';        // pink gem grabbed
+        shieldSound.src     = 'assets/audio/whoosh ready.mp3';   // shield ready
+        cloudSound.src      = 'assets/audio/lost point.mp3';     // caught a storm cloud (lose points)
 
         coverMusic.volume      = 0.28;
         bgMusic.volume         = 0.22;
@@ -2319,6 +2331,9 @@
         gameOverSound.volume   = 0.7;
         winSound.volume        = 0.8;
         bigWinSound.volume     = 0.8;
+        gemSound.volume        = 0.85;
+        shieldSound.volume     = 0.85;
+        cloudSound.volume      = 0.8;
 
         // ========== GAME STATE ==========
         const MAX_LIVES = 3;
@@ -2377,7 +2392,7 @@
             setTimeout(() => {
                 [bgMusic, moveSound, checkpointSound, successChime, successSound,
                  wrongSound, splashSound, dangerSound, gameOverSound, winSound,
-                 bigWinSound, btnClickSound].forEach(a => {
+                 bigWinSound, btnClickSound, gemSound, shieldSound, cloudSound].forEach(a => {
                     if (a) {
                         const origVol = a.volume;
                         a.volume = 0;
@@ -3744,7 +3759,16 @@
             el.className = cls + ' drop-in';
             if (type === 'shield') el.textContent = '🛡️';
             else if (type === 'bad') el.textContent = '⛈️';
-            cell.appendChild(el);
+            // Render in the UNCLIPPED maze container (not the cell, which has
+            // overflow:hidden) so the falling-from-above is fully visible and the
+            // item isn't clipped. Positioned at the target cell's pixel centre.
+            const container = document.getElementById('mazeContainer');
+            const csz = cell.offsetWidth;
+            el.style.left = (cell.offsetLeft + csz / 2) + 'px';
+            el.style.top  = (cell.offsetTop + cell.offsetHeight / 2) + 'px';
+            if (type === 'gem') { el.style.width = Math.round(csz * 0.7) + 'px'; el.style.height = Math.round(csz * 0.7) + 'px'; }
+            else { el.style.fontSize = Math.round(csz * 0.82) + 'px'; }
+            (container || cell).appendChild(el);
             const drop = { key: pick.x + ',' + pick.y, x: pick.x, y: pick.y, el, type: type, expireId: null };
             drop.expireId = setTimeout(() => {
                 el.classList.add('fade-out');
@@ -3762,19 +3786,19 @@
             activeDrops.splice(i, 1);
             if (d.type === 'shield') {
                 hasShield = true; updateShieldHud();
-                playSound(successChime); haptic([15, 30, 15]);
+                playSound(shieldSound); haptic([15, 30, 15]);
                 sparkleAt(cell, '🫧', 6);
                 showFlashMessage('🛡️ Shield ready — it blocks one hit!', 'success');
             } else if (d.type === 'bad') {
                 // storm cloud — caught it, lose points (never below 0)
                 gameScore = Math.max(0, gameScore - 5);
-                playSound(wrongSound); haptic(90);
+                playSound(cloudSound); haptic(90);
                 scorePop('-5', '#ff5b5b'); sparkleAt(cell, '💦', 6);
                 showFlashMessage('⛈️ A storm cloud washed away 5 points!', 'error');
                 updateHUD();
             } else {
                 gameScore += 5; bonusPoints += 5;
-                playSound(checkpointSound); haptic(12);
+                playSound(gemSound); haptic(12);
                 scorePop('+5'); sparkleAt(cell, '✨', 6);
                 updateHUD();
             }

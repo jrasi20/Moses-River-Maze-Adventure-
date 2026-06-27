@@ -5,7 +5,7 @@
    - Static assets (images, audio, icons, fonts): CACHE-FIRST (instant,
      and works fully offline once played).
    Bump CACHE_VERSION whenever assets change to retire old caches. */
-const CACHE_VERSION = 'moses-river-v3';
+const CACHE_VERSION = 'moses-river-v4';
 
 // Core shell + ALL images and audio (~13MB total) precached on install, so after
 // the first online load the game is fully playable OFFLINE — including sound —
@@ -46,7 +46,10 @@ const PRECACHE = [
   'assets/audio/success%20trumpet.mp3',
   'assets/audio/uh%20oh.mp3',
   'assets/audio/water%20splash.mp3',
-  'assets/audio/win%20sound.mp3'
+  'assets/audio/win%20sound.mp3',
+  'assets/audio/collect.mp3',
+  'assets/audio/whoosh%20ready.mp3',
+  'assets/audio/lost%20point.mp3'
 ];
 
 self.addEventListener('install', (event) => {
