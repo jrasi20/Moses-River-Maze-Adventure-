@@ -1648,6 +1648,14 @@
         }
         .gem.fade-out, .shield-bubble.fade-out, .bad-drop.fade-out { animation: dropFade 0.4s ease forwards !important; }
         @keyframes dropFade { to { transform: translate(-50%,-64%) scale(0.4); opacity: 0; } }
+        /* Inline PINK gem icon for text/instructions/badges (matches the in-game gem;
+           there is no pink-gem emoji, so we draw one) */
+        .gem-ico {
+            display: inline-block; width: 0.95em; height: 0.95em; vertical-align: -0.14em;
+            background: linear-gradient(135deg, #ffe1f4 0%, #ff5ec2 45%, #d6118a 100%);
+            clip-path: polygon(50% 0%, 88% 38%, 50% 100%, 12% 38%);
+            filter: drop-shadow(0 0 2px rgba(255,90,200,0.95));
+        }
 
         /* Wake ripple left behind as Moses moves */
         .wake-ripple {
@@ -1821,7 +1829,7 @@
             <div class="instr-item"><span class="ei">⭐</span><span><strong>Visit all 10 checkpoints in order</strong> and answer Bible questions correctly.</span></div>
             <div class="instr-item"><span class="ei">💡</span><span><strong>Use clue buttons</strong> if you need help — each clue costs 5 points.</span></div>
             <div class="instr-item"><span class="ei">🚫</span><span><strong>You must answer each question</strong> to continue — no skipping!</span></div>
-            <div class="instr-item"><span class="ei">💎</span><span><strong>Catch the pink gems!</strong> They drop in near Moses — grab each for <strong>+5 bonus points</strong> to boost your score, earn more ⭐ stars, and beat your best!</span></div>
+            <div class="instr-item"><span class="ei"><span class="gem-ico"></span></span><span><strong>Catch the pink gems!</strong> They drop in near Moses — grab each for <strong>+5 bonus points</strong> to boost your score, earn more ⭐ stars, and beat your best!</span></div>
             <div class="instr-item"><span class="ei">🛡️</span><span><strong>Grab a shield bubble</strong> to save Moses from one creature bump — no life lost!</span></div>
             <div class="instr-item"><span class="ei">⛈️</span><span><strong>Dodge the storm clouds!</strong> If Moses catches one, it washes away <strong>5 points</strong> — so move around them.</span></div>
         </div>
@@ -1844,7 +1852,7 @@
         </div>
 
         <div class="score-info-box">
-            <strong>⭐ Scoring:</strong> <strong>+10 pts</strong> per correct answer, <strong>+5 pts</strong> per pink gem 💎, <strong>-5 pts</strong> per clue, and <strong>-5 pts</strong> if you catch a storm cloud ⛈️. More points = more stars!
+            <strong>⭐ Scoring:</strong> <strong>+10 pts</strong> per correct answer, <strong>+5 pts</strong> per pink gem <span class="gem-ico"></span>, <strong>-5 pts</strong> per clue, and <strong>-5 pts</strong> if you catch a storm cloud ⛈️. More points = more stars!
         </div>
 
         <!-- Waves: above difficulty -->
@@ -1962,7 +1970,7 @@
             <div class="ii"><span class="ik">⭐</span><span><strong>Checkpoints:</strong> Visit all 10 gold stars IN ORDER and answer Bible questions correctly.</span></div>
             <div class="ii"><span class="ik">❓</span><span><strong>Questions:</strong> Try as many times as needed. Answer correctly to unlock each checkpoint!</span></div>
             <div class="ii"><span class="ik">💡</span><span><strong>Clues:</strong> Each clue costs 5 points — use them wisely!</span></div>
-            <div class="ii"><span class="ik">💎</span><span><strong>Gems:</strong> Pink gems drop in near Moses — catch them for <strong>+5 points</strong> each! More points means more ⭐ stars and a higher best score.</span></div>
+            <div class="ii"><span class="ik"><span class="gem-ico"></span></span><span><strong>Gems:</strong> Pink gems drop in near Moses — catch them for <strong>+5 points</strong> each! More points means more ⭐ stars and a higher best score.</span></div>
             <div class="ii"><span class="ik">🛡️</span><span><strong>Shields:</strong> Grab a shield bubble to block one creature/bomb hit — Moses keeps his life!</span></div>
             <div class="ii"><span class="ik">⛈️</span><span><strong>Storm clouds:</strong> Dodge these! Catching one washes away <strong>5 points</strong>.</span></div>
             <div class="ii"><span class="ik">🏆</span><span><strong>Winning:</strong> Reach FINISH after ALL 10 checkpoints are done!</span></div>
@@ -2658,6 +2666,8 @@
                 });
             });
 
+            // Fresh game → restart the background music loop from the beginning
+            try { bgMusic.currentTime = 0; } catch (e) {}
             startBgMusic();
         }
         
@@ -3852,7 +3862,7 @@
             if (cluesUsed === 0 && wrongThisRun === 0 && lives === MAX_LIVES) b.push('🏆 Perfect Run!');
             if (cluesUsed === 0) b.push('💡 No Clues!');
             if (lives === MAX_LIVES) b.push('❤️ All 3 Lives!');
-            if (bonusPoints > 0) b.push('💎 Treasure Hunter');
+            if (bonusPoints > 0) b.push('<span class="gem-ico"></span> Treasure Hunter');
             return b;
         }
         function renderWinExtras() {
@@ -3879,7 +3889,7 @@
             if (bd) {
                 bd.innerHTML = '';
                 earnedBadges().forEach(t => {
-                    const c = document.createElement('span'); c.className = 'win-badge-chip'; c.textContent = t;
+                    const c = document.createElement('span'); c.className = 'win-badge-chip'; c.innerHTML = t;
                     bd.appendChild(c);
                 });
             }
