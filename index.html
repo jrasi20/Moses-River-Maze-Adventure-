@@ -1738,6 +1738,35 @@
             #mosesSprite { transition: none !important; }
             html { scroll-behavior: auto !important; }
         }
+
+        /* ============================================================
+           iPhone / iPad SAFARI PERFORMANCE — iOS ONLY (Android + desktop keep the
+           full visuals). iOS has a hard GPU-memory ceiling; the maze's ~140
+           per-creature sway animations + ~66 per-cell water-ripple layers (each
+           will-change:transform) + animated filters can exhaust it and CRASH
+           Safari the instant the maze renders. Disable those heavy per-element FX
+           on iOS. The `.ios` class is added to <html> from JS on iOS devices.
+           ============================================================ */
+        html.ios .maze-cell img.lurk { animation: none !important; }            /* ~140 layers */
+        html.ios .maze-cell.path.shimmer::after { display: none !important; }   /* ~66 layers + will-change */
+        /* Drops: keep visible + gently floating, but drop the animated-filter glitter
+           (a static golden halo instead — far cheaper on iOS). */
+        html.ios .gem           { filter: drop-shadow(0 0 3px #FFD700) drop-shadow(0 0 3px rgba(255,90,200,0.9)) !important; }
+        html.ios .shield-bubble { filter: drop-shadow(0 0 3px #FFD700) drop-shadow(0 0 4px rgba(120,220,255,0.95)) !important; }
+        html.ios .bad-drop      { filter: drop-shadow(0 0 3px #FFD700) !important; }
+        html.ios .gem, html.ios .shield-bubble, html.ios .bad-drop { animation: dropFloat 2.6s ease-in-out infinite !important; }
+        html.ios .gem.drop-in, html.ios .shield-bubble.drop-in, html.ios .bad-drop.drop-in {
+            animation: dropSnow 1.5s ease-in-out, dropFloat 2.6s ease-in-out 1.5s infinite !important;
+        }
+        html.ios #mosesSprite { will-change: auto; }
+        /* backdrop-filter blur is very memory-heavy on iOS — drop it there */
+        html.ios .cover-story-box, html.ios .access-box { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+        /* Block iOS double-tap-to-zoom / tap delay on all controls (harmless on Android/desktop) */
+        .dpad-btn, .action-btn, .difficulty-btn, .modal-button, .start-btn, .access-btn,
+        .info-btn, .restart-btn, .menu-btn, .install-btn, .clue-btn, .success-btn, .exit-btn {
+            touch-action: manipulation;
+        }
     </style>
 </head>
 <body>
@@ -2098,6 +2127,18 @@
     <audio id="cloudSound"></audio>
 
     <script>
+        // ========== iOS DETECTION + ZOOM BLOCKING ==========
+        // iOS Safari has a hard GPU-memory ceiling. Tagging <html> with `.ios` lets
+        // the stylesheet disable the heaviest per-element animations on iPhone/iPad
+        // ONLY (they were crashing Safari on game start). Android + desktop unaffected.
+        var IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent || '') ||
+                     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (IS_IOS) { try { document.documentElement.classList.add('ios'); } catch (e) {} }
+        // Block iOS pinch + double-tap zoom (iOS ignores user-scalable=no). These
+        // events don't fire on Android/desktop, so this is effectively iOS-only.
+        document.addEventListener('gesturestart',  function (e) { e.preventDefault(); }, { passive: false });
+        document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false });
+
         // ========== ACCESS CODE GATE ==========
         // Codes are stored as SHA-256 hashes so the plaintext is NOT visible in the
         // page source. To add a code: SHA-256(uppercase, trimmed) -> add the hex below.
