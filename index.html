@@ -889,7 +889,7 @@
             /* --- MAZE GRID: responsive cells for phones (28px) to iPads (36px) --- */
             .maze-grid {
                 display: grid;
-                --cell: clamp(28px, 4.6vw, 36px);
+                --cell: clamp(28px, calc((100dvh - 226px) / 16), 44px);
                 grid-template-columns: repeat(20, var(--cell));
                 grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
@@ -948,11 +948,14 @@
 
             /* --- MAZE CONTAINER: responsive cells for phone/tablet --- */
             .maze-container {
-                --cell: clamp(28px, 4.6vw, 36px);
+                --cell: clamp(28px, calc((100dvh - 226px) / 16), 44px);
                 width: calc(20 * var(--cell));
                 height: calc(16 * var(--cell));
                 position: relative;
                 min-width: 100%;
+                max-width: none;      /* let the maze be its true width (base caps at 100%) */
+                max-height: none;
+                aspect-ratio: auto;   /* width/height are explicit here */
             }
 
             /* --- CHECKPOINT STARS: force visible on small cells --- */
@@ -983,7 +986,7 @@
                 display: flex !important;
                 flex-shrink: 0;
                 padding: 3px 0;
-                --cell: clamp(28px, 4.6vw, 36px);
+                --cell: clamp(28px, calc((100dvh - 226px) / 16), 44px);
                 width: calc(20 * var(--cell)); /* match maze width */
             }
             .mobile-start-label {
@@ -1340,8 +1343,10 @@
             .dpad-btn { height: 30px; font-size: 14px; min-width: 30px; }
             .dpad-spacer { height: 30px; }
             .action-btn { font-size: 11px !important; height: 28px !important; }
-            .maze-container {
-                width: min(calc(100vw - 6px), calc((100dvh - 230px) * 1.25));
+            /* tiny phones: keep the height-filling --cell (from the portrait block),
+               just allow a slightly smaller floor so it doesn't force huge scroll */
+            .maze-grid, .maze-container, .mobile-start-label, .mobile-finish-label {
+                --cell: clamp(26px, calc((100dvh - 214px) / 16), 40px);
             }
         }
 
@@ -1554,6 +1559,16 @@
             transform: scale(1.05);     /* a touch larger; small pulse so Moses stays aligned on it */
             animation: cellBeaconRed 1.6s ease-in-out infinite !important;
         }
+        /* FINISH (princess) gets a distinct constant GOLDEN halo so kids always see
+           where to reach (start stays red — where you begin). */
+        @keyframes cellBeaconGold {
+            0%,100% { transform: scale(1.06); box-shadow: 0 0 9px 2px rgba(255,215,0,0.85), inset 0 0 8px rgba(255,240,160,0.5); }
+            50%     { transform: scale(1.14); box-shadow: 0 0 24px 6px rgba(255,215,0,1), inset 0 0 15px rgba(255,240,160,0.8); }
+        }
+        .maze-cell.finish {
+            z-index: 9;
+            animation: cellBeaconGold 1.6s ease-in-out infinite !important;
+        }
         /* Once Moses leaves START it becomes a normal water cell again */
         .maze-cell.start.start-vacated { transform: none !important; z-index: auto; }
 
@@ -1588,7 +1603,12 @@
             50%     { transform: rotate(3.5deg); }
         }
         /* pivot at the basket's base so it ROCKS like a boat and never rises above its tile */
-        #mosesSprite { animation: mosesBob 3s ease-in-out infinite; transform-origin: 50% 92%; }
+        #mosesSprite { animation: mosesBob 3s ease-in-out infinite, mosesGlow 1.6s ease-in-out infinite; transform-origin: 50% 92%; }
+        /* Constant GOLDEN HALO so Moses is easy to spot on the busy maze at all times */
+        @keyframes mosesGlow {
+            0%,100% { filter: drop-shadow(0 0 3px #FFD700) drop-shadow(0 0 7px rgba(255,193,7,0.9)) drop-shadow(0 2px 3px rgba(0,0,0,0.5)); }
+            50%     { filter: drop-shadow(0 0 6px #FFF176) drop-shadow(0 0 15px #FFD700) drop-shadow(0 2px 3px rgba(0,0,0,0.5)); }
+        }
         /* Shield: blue bubble glow around Moses */
         #mosesSprite.shielded {
             filter: drop-shadow(0 0 5px #4fc3f7) drop-shadow(0 0 11px #29b6f6) drop-shadow(0 2px 4px rgba(0,0,0,0.5));
@@ -1758,7 +1778,18 @@
         html.ios .gem.drop-in, html.ios .shield-bubble.drop-in, html.ios .bad-drop.drop-in {
             animation: dropSnow 1.5s ease-in-out, dropFloat 2.6s ease-in-out 1.5s infinite !important;
         }
-        html.ios #mosesSprite { will-change: auto; }
+        /* iOS: keep the boat-rock + a STATIC gold halo (no per-frame filter pulse) */
+        html.ios #mosesSprite {
+            will-change: auto;
+            animation: mosesBob 3s ease-in-out infinite !important;
+            filter: drop-shadow(0 0 4px #FFD700) drop-shadow(0 0 9px rgba(255,193,7,0.95)) drop-shadow(0 2px 3px rgba(0,0,0,0.5)) !important;
+        }
+        /* iOS: keep the finish (princess) gold halo but as a lighter static glow */
+        html.ios .maze-cell.finish {
+            animation: none !important;
+            box-shadow: 0 0 12px 3px rgba(255,215,0,0.95), inset 0 0 10px rgba(255,240,160,0.6) !important;
+            transform: scale(1.06) !important;
+        }
         /* backdrop-filter blur is very memory-heavy on iOS — drop it there */
         html.ios .cover-story-box, html.ios .access-box { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 
