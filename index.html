@@ -889,7 +889,7 @@
             /* --- MAZE GRID: responsive cells for phones (28px) to iPads (36px) --- */
             .maze-grid {
                 display: grid;
-                --cell: clamp(28px, calc((100dvh - 226px) / 16), 44px);
+                --cell: clamp(28px, calc((100dvh - 226px) / 16), 60px);
                 grid-template-columns: repeat(20, var(--cell));
                 grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
@@ -948,7 +948,7 @@
 
             /* --- MAZE CONTAINER: responsive cells for phone/tablet --- */
             .maze-container {
-                --cell: clamp(28px, calc((100dvh - 226px) / 16), 44px);
+                --cell: clamp(28px, calc((100dvh - 226px) / 16), 60px);
                 width: calc(20 * var(--cell));
                 height: calc(16 * var(--cell));
                 position: relative;
@@ -986,7 +986,7 @@
                 display: flex !important;
                 flex-shrink: 0;
                 padding: 3px 0;
-                --cell: clamp(28px, calc((100dvh - 226px) / 16), 44px);
+                --cell: clamp(28px, calc((100dvh - 226px) / 16), 60px);
                 width: calc(20 * var(--cell)); /* match maze width */
             }
             .mobile-start-label {
@@ -1078,8 +1078,12 @@
             .score-row { font-size: 13px; }
         }
 
-        /* ===== iPAD PORTRAIT OVERRIDES (600px–1024px) ===== */
-        @media (min-width: 600px) and (max-width: 1024px) and (orientation: portrait) {
+        /* ===== iPAD PORTRAIT OVERRIDES (600px–1024px, TABLET-SHAPED only) =====
+           Scoped to squarish (tablet) aspect ratios. Large/tall Android PHONES that
+           happen to be 600–1024px CSS-wide are taller than 5:3, so they fall through
+           to the phone portrait block above (which fills the height) instead of this
+           centered, width-fit tablet layout. */
+        @media (min-width: 600px) and (max-width: 1024px) and (orientation: portrait) and (min-aspect-ratio: 3/5) {
             /* Bigger cells: fill iPad width (768px → ~37px cells) */
             .maze-grid {
                 --cell: clamp(34px, calc((100vw - 16px) / 20), 42px);
