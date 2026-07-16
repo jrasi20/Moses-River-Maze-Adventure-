@@ -889,7 +889,7 @@
             /* --- MAZE GRID: responsive cells for phones (28px) to iPads (36px) --- */
             .maze-grid {
                 display: grid;
-                --cell: clamp(28px, calc((100dvh - 226px) / 16), 60px);
+                --cell: clamp(28px, calc((100dvh - 240px) / 16), 96px);
                 grid-template-columns: repeat(20, var(--cell));
                 grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
@@ -948,7 +948,7 @@
 
             /* --- MAZE CONTAINER: responsive cells for phone/tablet --- */
             .maze-container {
-                --cell: clamp(28px, calc((100dvh - 226px) / 16), 60px);
+                --cell: clamp(28px, calc((100dvh - 240px) / 16), 96px);
                 width: calc(20 * var(--cell));
                 height: calc(16 * var(--cell));
                 position: relative;
@@ -986,7 +986,7 @@
                 display: flex !important;
                 flex-shrink: 0;
                 padding: 3px 0;
-                --cell: clamp(28px, calc((100dvh - 226px) / 16), 60px);
+                --cell: clamp(28px, calc((100dvh - 240px) / 16), 96px);
                 width: calc(20 * var(--cell)); /* match maze width */
             }
             .mobile-start-label {
@@ -1350,7 +1350,7 @@
             /* tiny phones: keep the height-filling --cell (from the portrait block),
                just allow a slightly smaller floor so it doesn't force huge scroll */
             .maze-grid, .maze-container, .mobile-start-label, .mobile-finish-label {
-                --cell: clamp(26px, calc((100dvh - 214px) / 16), 40px);
+                --cell: clamp(26px, calc((100dvh - 240px) / 16), 96px);
             }
         }
 
@@ -1563,15 +1563,15 @@
             transform: scale(1.05);     /* a touch larger; small pulse so Moses stays aligned on it */
             animation: cellBeaconRed 1.6s ease-in-out infinite !important;
         }
-        /* FINISH (princess) gets a distinct constant GOLDEN halo so kids always see
-           where to reach (start stays red — where you begin). */
-        @keyframes cellBeaconGold {
-            0%,100% { transform: scale(1.06); box-shadow: 0 0 9px 2px rgba(255,215,0,0.85), inset 0 0 8px rgba(255,240,160,0.5); }
-            50%     { transform: scale(1.14); box-shadow: 0 0 24px 6px rgba(255,215,0,1), inset 0 0 15px rgba(255,240,160,0.8); }
+        /* FINISH (princess) gets a distinct constant VIOLET halo so kids always see
+           where to reach — different from the gold collectibles (start stays red). */
+        @keyframes cellBeaconViolet {
+            0%,100% { transform: scale(1.06); box-shadow: 0 0 10px 2px rgba(224,64,251,0.9), inset 0 0 8px rgba(240,180,255,0.5); }
+            50%     { transform: scale(1.14); box-shadow: 0 0 26px 7px rgba(192,38,211,1), inset 0 0 15px rgba(240,180,255,0.8); }
         }
         .maze-cell.finish {
             z-index: 9;
-            animation: cellBeaconGold 1.6s ease-in-out infinite !important;
+            animation: cellBeaconViolet 1.6s ease-in-out infinite !important;
         }
         /* Once Moses leaves START it becomes a normal water cell again */
         .maze-cell.start.start-vacated { transform: none !important; z-index: auto; }
@@ -1608,10 +1608,11 @@
         }
         /* pivot at the basket's base so it ROCKS like a boat and never rises above its tile */
         #mosesSprite { animation: mosesBob 3s ease-in-out infinite, mosesGlow 1.6s ease-in-out infinite; transform-origin: 50% 92%; }
-        /* Constant GOLDEN HALO so Moses is easy to spot on the busy maze at all times */
+        /* Constant VIOLET halo so Moses is easy to spot — a distinct colour from the
+           gold gems/clouds/shields and high-contrast against the blue water. */
         @keyframes mosesGlow {
-            0%,100% { filter: drop-shadow(0 0 3px #FFD700) drop-shadow(0 0 7px rgba(255,193,7,0.9)) drop-shadow(0 2px 3px rgba(0,0,0,0.5)); }
-            50%     { filter: drop-shadow(0 0 6px #FFF176) drop-shadow(0 0 15px #FFD700) drop-shadow(0 2px 3px rgba(0,0,0,0.5)); }
+            0%,100% { filter: drop-shadow(0 0 4px #e040fb) drop-shadow(0 0 8px rgba(156,39,176,0.95)) drop-shadow(0 2px 3px rgba(0,0,0,0.55)); }
+            50%     { filter: drop-shadow(0 0 8px #ea80fc) drop-shadow(0 0 17px #c026d3) drop-shadow(0 2px 3px rgba(0,0,0,0.55)); }
         }
         /* Shield: blue bubble glow around Moses */
         #mosesSprite.shielded {
@@ -1782,16 +1783,16 @@
         html.ios .gem.drop-in, html.ios .shield-bubble.drop-in, html.ios .bad-drop.drop-in {
             animation: dropSnow 1.5s ease-in-out, dropFloat 2.6s ease-in-out 1.5s infinite !important;
         }
-        /* iOS: keep the boat-rock + a STATIC gold halo (no per-frame filter pulse) */
+        /* iOS: keep the boat-rock + a STATIC violet halo (no per-frame filter pulse) */
         html.ios #mosesSprite {
             will-change: auto;
             animation: mosesBob 3s ease-in-out infinite !important;
-            filter: drop-shadow(0 0 4px #FFD700) drop-shadow(0 0 9px rgba(255,193,7,0.95)) drop-shadow(0 2px 3px rgba(0,0,0,0.5)) !important;
+            filter: drop-shadow(0 0 4px #e040fb) drop-shadow(0 0 10px rgba(156,39,176,0.95)) drop-shadow(0 2px 3px rgba(0,0,0,0.5)) !important;
         }
-        /* iOS: keep the finish (princess) gold halo but as a lighter static glow */
+        /* iOS: static violet halo on the finish (princess) tile */
         html.ios .maze-cell.finish {
             animation: none !important;
-            box-shadow: 0 0 12px 3px rgba(255,215,0,0.95), inset 0 0 10px rgba(255,240,160,0.6) !important;
+            box-shadow: 0 0 13px 3px rgba(224,64,251,0.95), inset 0 0 10px rgba(240,180,255,0.6) !important;
             transform: scale(1.06) !important;
         }
         /* backdrop-filter blur is very memory-heavy on iOS — drop it there */
@@ -2169,10 +2170,15 @@
         var IS_IOS = /iphone|ipad|ipod/i.test(navigator.userAgent || '') ||
                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         if (IS_IOS) { try { document.documentElement.classList.add('ios'); } catch (e) {} }
-        // Block iOS pinch + double-tap zoom (iOS ignores user-scalable=no). These
-        // events don't fire on Android/desktop, so this is effectively iOS-only.
-        document.addEventListener('gesturestart',  function (e) { e.preventDefault(); }, { passive: false });
-        document.addEventListener('gesturechange', function (e) { e.preventDefault(); }, { passive: false });
+        // Block iOS pinch-zoom ONLY while the game (maze/D-pad) is on screen, so it
+        // can't fight the controls. The cover, access gate, and instructions stay
+        // fully zoomable (double-tap-zoom on the D-pad is handled by touch-action).
+        function _gameOnScreen() {
+            var gp = document.getElementById('gamePage');
+            return gp && gp.style.display !== 'none' && gp.style.display !== '';
+        }
+        document.addEventListener('gesturestart',  function (e) { if (_gameOnScreen()) e.preventDefault(); }, { passive: false });
+        document.addEventListener('gesturechange', function (e) { if (_gameOnScreen()) e.preventDefault(); }, { passive: false });
 
         // ========== ACCESS CODE GATE ==========
         // Codes are stored as SHA-256 hashes so the plaintext is NOT visible in the
