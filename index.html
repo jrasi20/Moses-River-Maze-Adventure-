@@ -889,7 +889,7 @@
             /* --- MAZE GRID: responsive cells for phones (28px) to iPads (36px) --- */
             .maze-grid {
                 display: grid;
-                --cell: clamp(28px, calc((100dvh - 240px) / 16), 96px);
+                --cell: clamp(26px, calc((100dvh - 300px) / 16), 88px);
                 grid-template-columns: repeat(20, var(--cell));
                 grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
@@ -904,27 +904,27 @@
                 min-height: var(--cell);
             }
 
-            /* --- HUD: compact single row --- */
+            /* --- HUD: fixed top bar, sizes scale UP on bigger phones, never overflows --- */
             .game-header {
+                flex: 0 0 auto;
                 height: auto;
-                min-height: 40px;
-                padding: 4px 8px;
-                gap: 4px;
+                min-height: clamp(46px, 7vh, 62px);
+                padding: 5px 10px;
+                gap: 6px;
+                overflow: hidden;
             }
             .game-title {
-                font-size: 11px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 120px;
+                font-size: clamp(11px, 3.2vw, 15px);
+                white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                flex: 1 1 auto; min-width: 0;
             }
-            .hud-stats { gap: 4px; }
-            .hud-card { padding: 1px 6px; min-width: 46px; }
-            .hud-label { font-size: 9px; letter-spacing: 0.3px; }
-            .hud-value { font-size: 16px; }
-            .hud-dots { max-width: 90px; gap: 1.5px; }
-            .hud-dot { width: 7px; height: 7px; }
-            #checkpointCount { font-size: 11px !important; }
+            .hud-stats { gap: clamp(4px, 1.6vw, 8px); flex-shrink: 0; }
+            .hud-card { padding: clamp(2px,0.6vh,4px) clamp(6px,2vw,11px); min-width: clamp(46px, 13vw, 66px); }
+            .hud-label { font-size: clamp(9px, 2.4vw, 12px); letter-spacing: 0.3px; }
+            .hud-value { font-size: clamp(15px, 4.6vw, 23px); }
+            .hud-dots { max-width: clamp(70px, 22vw, 112px); gap: 2px; }
+            .hud-dot { width: clamp(7px, 2vw, 10px); height: clamp(7px, 2vw, 10px); }
+            #checkpointCount { font-size: clamp(11px, 3vw, 15px) !important; }
 
             /* --- GAME CONTENT: column layout, maze + controls --- */
             .game-content {
@@ -935,10 +935,12 @@
                 overflow: hidden;
             }
 
-            /* --- MAZE WRAPPER: scrollable viewport for mobile --- */
+            /* --- MAZE WRAPPER: the ONLY flexible element — takes leftover space and
+                   scrolls the maze inside, so HUD + controls are never pushed off --- */
             .maze-wrapper {
-                flex: 1;
+                flex: 1 1 0;
                 min-height: 0;
+                min-width: 0;
                 overflow: auto;
                 -webkit-overflow-scrolling: touch;
                 touch-action: pan-x pan-y;
@@ -948,7 +950,7 @@
 
             /* --- MAZE CONTAINER: responsive cells for phone/tablet --- */
             .maze-container {
-                --cell: clamp(28px, calc((100dvh - 240px) / 16), 96px);
+                --cell: clamp(26px, calc((100dvh - 300px) / 16), 88px);
                 width: calc(20 * var(--cell));
                 height: calc(16 * var(--cell));
                 position: relative;
@@ -986,7 +988,7 @@
                 display: flex !important;
                 flex-shrink: 0;
                 padding: 3px 0;
-                --cell: clamp(28px, calc((100dvh - 240px) / 16), 96px);
+                --cell: clamp(26px, calc((100dvh - 300px) / 16), 88px);
                 width: calc(20 * var(--cell)); /* match maze width */
             }
             .mobile-start-label {
@@ -1016,43 +1018,43 @@
                 display: none !important;
             }
 
-            /* --- CONTROLS PANEL: horizontal row at bottom, fixed height --- */
+            /* --- CONTROLS PANEL: FIXED bottom row, never shrinks/hides, sizes scale up --- */
             .controls-panel {
                 width: 100%;
-                flex-shrink: 0;
+                flex: 0 0 auto;
                 flex-direction: row;
                 align-items: stretch;
-                gap: 4px;
+                gap: 6px;
                 overflow: visible;
-                height: auto;
-                max-height: 130px;
+                height: clamp(150px, 21vh, 205px);
             }
 
-            /* --- D-PAD: compact --- */
+            /* --- D-PAD: bigger, contained in its box --- */
             .dpad-section {
-                padding: 4px 6px;
-                border-radius: 8px;
+                padding: clamp(4px,1vh,8px) clamp(6px,2vw,12px);
+                border-radius: 10px;
                 flex-shrink: 0;
+                display: flex; flex-direction: column; justify-content: center;
             }
-            .dpad-label { font-size: 9px; margin-bottom: 2px; }
-            .dpad { gap: 2px; }
+            .dpad-label { font-size: clamp(9px,2.4vw,12px); margin-bottom: clamp(2px,0.8vh,5px); }
+            .dpad { gap: clamp(3px,1vw,5px); }
             .dpad-btn {
-                height: 34px; font-size: 16px;
-                border-radius: 6px; min-width: 34px;
+                height: clamp(42px, 11.5vw, 54px); font-size: clamp(16px,4.6vw,22px);
+                border-radius: 8px; min-width: clamp(42px, 11.5vw, 54px);
             }
-            .dpad-spacer { height: 34px; }
+            .dpad-spacer { height: clamp(42px, 11.5vw, 54px); }
 
             /* --- ACTION BUTTONS: vertical stack next to D-pad --- */
             .buttons-section {
                 flex-direction: column !important;
                 flex: 1;
                 justify-content: space-evenly;
-                gap: 3px; padding: 2px 0;
+                gap: clamp(4px,1vh,8px); padding: clamp(2px,0.6vh,6px) 0;
             }
             .action-btn {
-                height: 32px !important; max-width: none !important;
-                font-size: 12px !important; padding: 0 6px !important;
-                border-radius: 6px;
+                height: clamp(34px, 5vh, 48px) !important; max-width: none !important;
+                font-size: clamp(12px,3.6vw,16px) !important; padding: 0 8px !important;
+                border-radius: 8px;
             }
 
             /* --- MODALS: scrollable --- */
@@ -1191,23 +1193,27 @@
                 display: block;
             }
 
-            /* --- MAZE: fixed 24px cells for landscape readability --- */
+            /* --- MAZE: cells fill the wrapper WIDTH so there's no gap before the
+                   controls (scrolls vertically, auto-follows Moses) --- */
             .maze-grid {
                 display: grid;
-                grid-template-columns: repeat(20, 24px);
-                grid-template-rows: repeat(16, 24px);
+                --cell: clamp(24px, calc((100vw - 178px) / 20), 56px);
+                grid-template-columns: repeat(20, var(--cell));
+                grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
-                width: calc(20 * 24px);
-                height: calc(16 * 24px);
+                width: calc(20 * var(--cell));
+                height: calc(16 * var(--cell));
             }
             .maze-cell {
-                width: 24px; height: 24px;
-                min-width: 24px; min-height: 24px;
+                width: var(--cell); height: var(--cell);
+                min-width: var(--cell); min-height: var(--cell);
             }
             .maze-container {
-                width: calc(20 * 24px);
-                height: calc(16 * 24px);
+                --cell: clamp(24px, calc((100vw - 178px) / 20), 56px);
+                width: calc(20 * var(--cell));
+                height: calc(16 * var(--cell));
                 position: relative;
+                max-width: none; max-height: none; aspect-ratio: auto; min-width: 100%;
             }
 
             /* --- CHECKPOINT STARS: force visible in landscape --- */
@@ -1227,7 +1233,8 @@
             .mobile-start-label {
                 display: flex !important;
                 flex-shrink: 0;
-                width: calc(20 * 24px);
+                --cell: clamp(24px, calc((100vw - 178px) / 20), 56px);
+                width: calc(20 * var(--cell));
                 padding: 1px 0;
                 justify-content: flex-start;
             }
@@ -1311,46 +1318,30 @@
             .answer-input { padding: 6px; font-size: 15px; margin-bottom: 6px; }
         }
 
-        /* ===== iPAD LANDSCAPE OVERRIDES (600px+ height = iPad, not phone) ===== */
+        /* ===== iPAD / large LANDSCAPE (600–1200px) ===== */
         @media (min-width: 600px) and (max-width: 1200px) and (orientation: landscape) {
-            /* Bigger cells for iPad landscape (more screen than phone) */
-            .maze-grid {
-                grid-template-columns: repeat(20, 32px);
-                grid-template-rows: repeat(16, 32px);
-                width: calc(20 * 32px);
-                height: calc(16 * 32px);
-            }
-            .maze-cell {
-                width: 32px; height: 32px;
-                min-width: 32px; min-height: 32px;
-            }
-            .maze-container {
-                width: calc(20 * 32px);
-                height: calc(16 * 32px);
-            }
-            .mobile-start-label {
-                width: calc(20 * 32px);
-            }
-            /* Wider controls column */
-            .controls-panel { width: 160px; }
-            .dpad-btn { height: 36px !important; min-width: 36px !important; font-size: 16px; }
-            .dpad-spacer { height: 36px; }
-            .action-btn { height: 34px; font-size: 12px; }
+            /* cells come from the fill-width formula in the base landscape block —
+               no fixed size here, so the maze fills the width (no right gap). */
+            /* Wider controls column + bigger, tappable controls */
+            .controls-panel { width: 168px; }
+            .dpad-btn { height: 40px !important; min-width: 40px !important; font-size: 18px; }
+            .dpad-spacer { height: 40px; }
+            .action-btn { height: 38px; font-size: 13px; }
         }
 
-        /* Extra small phones portrait (<=380px) */
+        /* Extra small phones portrait (<=380px) — still keep controls comfortably tappable */
         @media (max-width: 380px) and (orientation: portrait) {
-            .game-title { max-width: 80px; font-size: 10px; }
-            .hud-card { padding: 1px 4px; min-width: 40px; }
-            .hud-value { font-size: 14px; }
+            .game-title { max-width: 84px; font-size: 11px; }
+            .hud-card { padding: 2px 5px; min-width: 42px; }
+            .hud-value { font-size: 15px; }
             .hud-dots { display: none; }
-            .dpad-btn { height: 30px; font-size: 14px; min-width: 30px; }
-            .dpad-spacer { height: 30px; }
-            .action-btn { font-size: 11px !important; height: 28px !important; }
+            .dpad-btn { height: clamp(38px, 11.5vw, 44px); font-size: 16px; min-width: clamp(38px, 11.5vw, 44px); }
+            .dpad-spacer { height: clamp(38px, 11.5vw, 44px); }
+            .action-btn { font-size: 12px !important; height: clamp(32px, 4.6vh, 40px) !important; }
             /* tiny phones: keep the height-filling --cell (from the portrait block),
                just allow a slightly smaller floor so it doesn't force huge scroll */
             .maze-grid, .maze-container, .mobile-start-label, .mobile-finish-label {
-                --cell: clamp(26px, calc((100dvh - 240px) / 16), 96px);
+                --cell: clamp(24px, calc((100dvh - 300px) / 16), 88px);
             }
         }
 
@@ -1371,6 +1362,22 @@
                 max-width: 100%;
                 padding: 0 6px;
             }
+        }
+
+        /* Bigger phones in portrait: scale the COVER content up so it fills the wider
+           screen (was capped at 580px → looked small/"zoomed out" on large phones). */
+        @media (orientation: portrait) and (min-width: 540px) {
+            .cover-story-box, .how-to-play-box, .danger-box, .score-info-box { max-width: min(93vw, 700px); }
+            .hero-section { max-width: min(93vw, 700px); gap: clamp(12px, 3vw, 26px); }
+            .cover-title  { font-size: clamp(38px, 9vw, 56px) !important; }
+            .cover-brand  { font-size: clamp(22px, 4.4vw, 32px); }
+            .cover-logo   { width: clamp(120px, 22vw, 172px); }
+            .hero-section img { width: clamp(78px, 13.5vw, 120px); height: clamp(78px, 13.5vw, 120px); }
+            .cover-story-box { font-size: clamp(17px, 3vw, 23px); }
+            .how-to-play-box h3, .danger-box h4 { font-size: clamp(19px, 3.4vw, 26px); }
+            .instr-item, .danger-box p, .score-info-box { font-size: clamp(15px, 2.7vw, 21px); }
+            .difficulty-btn { font-size: clamp(17px, 3.2vw, 24px); padding: clamp(12px,2vh,18px) clamp(24px,4vw,36px); min-width: clamp(105px,20vw,150px); }
+            .start-btn { font-size: clamp(24px, 5vw, 34px); padding: clamp(16px,2.4vh,24px) clamp(40px,8vw,64px); }
         }
 
         /* ===== ACCESS GATE PAGE ===== */
@@ -1951,7 +1958,7 @@
             <div class="hud-stats">
                 <div class="hud-card">
                     <div class="hud-label">❤️ Lives</div>
-                    <div class="hud-value" id="livesDisplay" style="font-size:15px;">❤️❤️❤️</div>
+                    <div class="hud-value" id="livesDisplay" style="font-size:clamp(13px,3.8vw,19px);">❤️❤️❤️</div>
                 </div>
                 <div class="hud-card">
                     <div class="hud-label">Score</div>
@@ -2179,6 +2186,20 @@
         }
         document.addEventListener('gesturestart',  function (e) { if (_gameOnScreen()) e.preventDefault(); }, { passive: false });
         document.addEventListener('gesturechange', function (e) { if (_gameOnScreen()) e.preventDefault(); }, { passive: false });
+
+        // ===== FULLSCREEN on first user gesture (reclaim the browser chrome / URL bar
+        // so the game uses the WHOLE screen). Best-effort; iOS Safari just no-ops. =====
+        function _goFullscreen() {
+            try {
+                if (document.fullscreenElement || document.webkitFullscreenElement) return;
+                var el = document.documentElement;
+                var rq = el.requestFullscreen || el.webkitRequestFullscreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+                if (rq) { var p = rq.call(el); if (p && p.catch) p.catch(function () {}); }
+            } catch (e) {}
+        }
+        ['pointerdown', 'touchend', 'click', 'keydown'].forEach(function (ev) {
+            try { document.addEventListener(ev, _goFullscreen, { once: true, capture: true }); } catch (e) {}
+        });
 
         // ========== ACCESS CODE GATE ==========
         // Codes are stored as SHA-256 hashes so the plaintext is NOT visible in the
