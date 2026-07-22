@@ -889,7 +889,7 @@
             /* --- MAZE GRID: responsive cells for phones (28px) to iPads (36px) --- */
             .maze-grid {
                 display: grid;
-                --cell: clamp(26px, calc((100dvh - 300px) / 16), 88px);
+                --cell: clamp(26px, calc((100dvh - 300px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) / 16), 88px);
                 grid-template-columns: repeat(20, var(--cell));
                 grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
@@ -950,7 +950,7 @@
 
             /* --- MAZE CONTAINER: responsive cells for phone/tablet --- */
             .maze-container {
-                --cell: clamp(26px, calc((100dvh - 300px) / 16), 88px);
+                --cell: clamp(26px, calc((100dvh - 300px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) / 16), 88px);
                 width: calc(20 * var(--cell));
                 height: calc(16 * var(--cell));
                 position: relative;
@@ -988,7 +988,7 @@
                 display: flex !important;
                 flex-shrink: 0;
                 padding: 3px 0;
-                --cell: clamp(26px, calc((100dvh - 300px) / 16), 88px);
+                --cell: clamp(26px, calc((100dvh - 300px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) / 16), 88px);
                 width: calc(20 * var(--cell)); /* match maze width */
             }
             .mobile-start-label {
@@ -1197,7 +1197,7 @@
                    controls (scrolls vertically, auto-follows Moses) --- */
             .maze-grid {
                 display: grid;
-                --cell: clamp(24px, calc((100vw - 178px) / 20), 56px);
+                --cell: clamp(24px, calc((100vw - 178px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 20), 56px);
                 grid-template-columns: repeat(20, var(--cell));
                 grid-template-rows: repeat(16, var(--cell));
                 gap: 0;
@@ -1209,7 +1209,7 @@
                 min-width: var(--cell); min-height: var(--cell);
             }
             .maze-container {
-                --cell: clamp(24px, calc((100vw - 178px) / 20), 56px);
+                --cell: clamp(24px, calc((100vw - 178px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 20), 56px);
                 width: calc(20 * var(--cell));
                 height: calc(16 * var(--cell));
                 position: relative;
@@ -1233,7 +1233,7 @@
             .mobile-start-label {
                 display: flex !important;
                 flex-shrink: 0;
-                --cell: clamp(24px, calc((100vw - 178px) / 20), 56px);
+                --cell: clamp(24px, calc((100vw - 178px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) / 20), 56px);
                 width: calc(20 * var(--cell));
                 padding: 1px 0;
                 justify-content: flex-start;
@@ -1341,7 +1341,7 @@
             /* tiny phones: keep the height-filling --cell (from the portrait block),
                just allow a slightly smaller floor so it doesn't force huge scroll */
             .maze-grid, .maze-container, .mobile-start-label, .mobile-finish-label {
-                --cell: clamp(24px, calc((100dvh - 300px) / 16), 88px);
+                --cell: clamp(24px, calc((100dvh - 300px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) / 16), 88px);
             }
         }
 
@@ -1810,6 +1810,16 @@
         .info-btn, .restart-btn, .menu-btn, .install-btn, .clue-btn, .success-btn, .exit-btn {
             touch-action: manipulation;
         }
+
+        /* Visible keyboard focus (only for keyboard users — touch/mouse unaffected) */
+        button:focus-visible,
+        .access-input:focus-visible,
+        .answer-input:focus-visible,
+        a:focus-visible {
+            outline: 4px solid #fff;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1835,9 +1845,10 @@
         <div class="access-box">
             <h3>🔑 Enter Access Code</h3>
             <p>Enter the access code from your Etsy purchase to play this game.</p>
-            <input type="text" class="access-input" id="accessCodeInput" placeholder="- - - - -" maxlength="10" autocomplete="off">
+            <input type="text" class="access-input" id="accessCodeInput" placeholder="- - - - -" maxlength="10" autocomplete="off"
+                   autocapitalize="characters" spellcheck="false" aria-label="Etsy access code" aria-describedby="accessError">
             <button class="access-btn" onclick="checkAccessCode()">▶ Play Game</button>
-            <div class="access-error" id="accessError"></div>
+            <div class="access-error" id="accessError" role="status" aria-live="polite"></div>
         </div>
         <div class="access-footer">© 2026 Bible Explorer Kids · For personal use only</div>
     </div>
@@ -3608,10 +3619,11 @@
             document.querySelectorAll('.tour-highlight').forEach(e => e.classList.remove('tour-highlight'));
             __tourActive = false;
             const container = document.getElementById('mazeContainer');
+            const grid      = document.getElementById('mazeGrid');
             const wrapper   = document.getElementById('mazeWrapper');
             const startCell  = document.querySelector('.maze-cell.start');
             const finishCell = document.querySelector('.maze-cell.finish');
-            if (!container || !wrapper || !startCell || !finishCell) return;
+            if (!container || !grid || !wrapper || !startCell || !finishCell) return;
             const reduce = prefersReducedMotion();
             __tourActive = true;
             gameBlocked = true;
@@ -3635,8 +3647,11 @@
             marker.style.top  = sy + 'px';
             container.appendChild(marker);
 
-            const canScroll = (wrapper.scrollWidth  > wrapper.clientWidth  + 4) ||
-                              (wrapper.scrollHeight > wrapper.clientHeight + 4);
+            // Measure the BOARD, not the wrapper: the decorative START/FINISH labels
+            // inflate the wrapper's scrollWidth, which made the tour pan even when the
+            // maze itself already fitted the viewport.
+            const canScroll = (grid.offsetWidth  > wrapper.clientWidth  + 4) ||
+                              (grid.offsetHeight > wrapper.clientHeight + 4);
             const DUR = 2600;
 
             let markerAnim = null;
